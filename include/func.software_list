@@ -1,0 +1,252 @@
+<?php
+
+function manageDisplaySoftware($ID)
+{
+  // Global variable for DataBase Handle
+  global $adb;
+
+  // Define array variable 
+  $slist = array();
+
+   // Get "groupname" From computer Table Based on computer_id Number
+   $query = "SELECT groupname FROM computer WHERE computer_id = $ID";
+   $sth = $adb->prepare($query) or die( mysql_error().': '.$query);
+   $res = $sth->execute();
+   list($groupname) = $sth->fetchrow_array($res);
+
+  // Get software list for computer_id 
+  $query = "SELECT software_id 
+            FROM computer_software 
+            WHERE computer_id = $ID";
+  $sth1 = $adb->prepare($query);
+  $res1 = $sth1->execute()  or die( mysql_error().': '.$query );
+
+  // Get all software_ids for this computer
+  while ( list($software_id) = $sth1->fetchrow_array($res1) ) {
+      
+     // Get infomation for each software title 
+     $query2 = "SELECT title 
+               FROM software 
+               WHERE software_id = $software_id";
+     $sth2 = $adb->prepare($query2);
+     $res2 = $sth2->execute()  or die( mysql_error().': '.$query );
+
+     list($title) = $sth2->fetchrow_array($res2);
+
+     // Setup value:title with software_id:($software_id) $title
+     $item = "$software_id:($software_id) $title";
+
+     // Build array
+      array_push($slist, $item);
+
+  } // End While
+
+  // If No Software Assigned display message only
+  if ( ! empty($slist) ) {
+
+     // Numder of Columns to Dislpay
+     $order = array();
+     $cols = 3;
+
+     $rows = ceil( count($slist) / $cols);
+
+     $slist = array_pad ($slist, $cols*$rows, '');
+
+     // Brake array into rows and pad
+     $newslist = array_chunk ($slist, $rows);  
+
+     // build output array
+     for ($i = 0; $i < count($newslist[0]); $i++) {
+        for ($j = 0; $j < count($newslist); $j++) {
+          array_push($order, $newslist[$j][$i]);
+        }
+     }
+
+     echo "<form method=POST action=\"software-assign.php\">";
+
+     echo "<p><table border=\"1\">";
+
+     echo "<tr><th colspan = $cols >$ID ($groupname)</th></tr>";
+
+     echo "<tr>";
+     foreach ($order as $value) {
+        list($sid, $text) = split(":", $value, 2);
+        echo "<td>";
+        if ( $sid ) { 
+           echo "<input type=\"checkbox\" 
+                        name=\"software_list[]\" 
+                        value=\"$sid\">$text &nbsp;&nbsp;";
+        } else { 
+           echo "&nbsp;";
+        }
+        echo "</td>";
+        $z++;
+        if ( ! ($z % $cols) ) echo "</tr><tr>";
+     }
+     echo "</tr>";
+
+
+     echo "<tr><td align = \"center\"><input type=submit name='submit' value=Unassign></td>";
+     echo "<td align = \"center\"><input type=submit name='submit' value=Move></td>";
+     echo "<td colspan = 2>NEMS #: <input type=text size=10 name=\"mID\"></td></tr>";
+
+     echo "<input type=hidden name=ID value=$ID>";
+
+     echo "</table></p>";
+
+      echo "</form>";
+
+   } else { 
+ 
+      echo "<h3>No Software assigned to $ID ($groupname)</h3>"; 
+
+   } // End if: No Software Assigned
+
+
+} // End function manageDisplaySoftware
+
+
+// --------------------------------------------------------------
+function addDisplaySoftware($ID) 
+{
+ 
+  // Global variable for DataBase Handle
+  global $adb;
+
+   // Get "groupname" From computer Table Based on computer_id
+   $query = "SELECT groupname FROM computer WHERE computer_id = $ID";
+   $sth = $adb->prepare($query) or die( mysql_error().': '.$query);
+   $res = $sth->execute();
+   list($groupname) = $sth->fetchrow_array($res);
+
+  // Get List of Branchs
+  $query = "SELECT DISTINCT groupname FROM software";
+  $sth   = $adb->prepare($query);
+  $res   = $sth->execute()  or die( mysql_error().': '.$query );
+
+  while ( list($group) = $sth->fetchrow_array($res) ) {
+    $groups[] = $group;
+  }
+
+   // Separate Group Owner From Other Groups
+   if (in_array($groupname, $groups)) {       
+      $index = array_search( $groupname, $groups);
+      array_splice($groups , $index, 1);
+   } 
+
+   // Separate TS_SITE Group
+   if (in_array('TS_SITE', $groups)) {
+      $index = array_search( 'TS_SITE', $groups);
+      array_splice($groups , $index, 1);
+   }
+
+   // Separate AMES Group
+   if (in_array('AMES', $groups)) {
+      $index = array_search( 'AMES', $groups);
+      array_splice($groups , $index, 1);
+   }
+
+  // Get Software List For Computer Owner Group
+      $query = <<<SQL
+        SELECT software_id, title,  license_num, license_used
+          FROM software
+         WHERE (license_num > license_used OR license_num > 1) AND
+                groupname ="$groupname" AND display = "yes"
+SQL;
+
+     $sth = $adb->prepare($query);
+     $res = $sth->execute()  or die( mysql_error().': '.$query );
+
+  while ( list($sid,$title,$license_num,$used) = $sth->fetchrow_array($res) ) {
+       $avail = $license_num - $used;
+       if ( $avail > 0 ) {
+          $avail = "($avail)";
+       } else {    
+          $avail = "<$avail>";  
+       }
+      $software_list["$groupname"][] = "$sid:($sid) ".ucfirst($title)." $avail";
+     } // end While
+
+
+  // Get Software List For Each Branch other than Computer Owner Group
+  foreach ($groups as $group) {
+
+      $query = <<<SQL
+        SELECT software_id, title,  license_num, license_used 
+          FROM software
+         WHERE (license_num > license_used AND license_num = 1) AND
+                groupname ="$group" AND display = "yes"
+SQL;
+
+     $sth = $adb->prepare($query);
+     $res = $sth->execute()  or die( mysql_error().': '.$query );
+
+  while ( list($sid,$title,$license_num,$used) = $sth->fetchrow_array($res) ) {
+       $avail = $license_num - $used;
+       if ( $avail > 0 ) {
+          $avail = "($avail)";
+       } else {
+          $avail = "<$avail>";
+       }
+       $software_list["$group"][] = "$sid:($sid) ".ucfirst($title)." $avail";
+     } // end While
+
+  } // End Foreach
+
+  // Get Software List For Each Branch other than Computer Owner Group
+  $extragroups = array('TS_SITE', 'AMES');
+  foreach ($extragroups as $group) {
+
+      $query = <<<SQL
+        SELECT software_id, title,  license_num, license_used
+          FROM software
+         WHERE groupname ="$group" AND display = "yes"
+SQL;
+
+     $sth = $adb->prepare($query);
+     $res = $sth->execute()  or die( mysql_error().': '.$query );
+
+  while ( list($sid,$title,$license_num,$used) = $sth->fetchrow_array($res) ) {
+       $avail = $license_num - $used;
+       if ( $avail > 0 ) {
+          $avail = "($avail)";
+       } else {
+          $avail = "<$avail>";
+       }
+       $software_list["$group"][] = "$sid:($sid) ".ucfirst($title)." $avail";
+     } // end While
+
+  } // End Foreach
+
+
+  $cols = 2;
+
+  ECHO "<form method=POST action=\"software-assign.php\">";
+
+  ECHO "<table border=1 noshade><tr>";
+    ECHO "<tr><th colspan = ", $cols*2, ">Available Software</th></tr>";
+
+   foreach ( array_keys($software_list) as $group ) {    
+      ECHO "<th>$group</th>";
+      ECHO "<td><select name=\"".$group."[]\" size=10 multiple>";
+      foreach ( $software_list[$group] as $software ) {
+         list($sid, $text) = split(":", $software, 2);
+         ECHO "<option value=\"$sid\" >$text</option>";
+      } // End foreach inner
+        ECHO "</select></td>";
+     $z++; if ( ! ($z % $cols) ) echo "</tr><tr>";
+
+  } // End foreach outer
+
+  ECHO "<td align = \"center\" colspan = ", $cols*2, "><input type=submit name='submit' value=Add></td>";
+  ECHO "<input type=hidden name=ID value=$ID>";
+  ECHO "</tr></table>";
+
+  ECHO "</form>";
+
+
+} // End function addDisplaySoftware
+
+// -----------------------------------------------------------------
+
+?>

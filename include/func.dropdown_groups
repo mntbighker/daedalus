@@ -1,0 +1,28 @@
+<?php
+
+function Dropdown_groups($table,$var_name)
+{
+  global $adb;
+
+  $query = "SELECT computer_id, groupname
+              FROM computer
+             WHERE mfg = \"GroupPlaceholder\"
+          ORDER BY groupname";
+
+  $sth = $adb->prepare($query);
+  $res = $sth->execute() or die( mysql_error().': '.$query );;
+
+  PRINT "<select name=\"$var_name\" size=1>";
+
+  while ( list($nems,$groupname) = $sth->fetchrow_array($res) ) {
+     echo "<option value=\"$nems\" >", ucfirst($groupname), "</option>";
+   }
+
+  $sth->finish();
+
+  PRINT "</select>\n";
+
+} // End Dropdown_groups
+
+
+?>

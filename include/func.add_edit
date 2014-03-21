@@ -1,0 +1,170 @@
+<?php
+
+function AddEdit($tablename, $id, $col1, $required, $model='') 
+{
+
+  include_once("../include/func.drop_filter_list");
+
+  // Declare Global Variable for DataBase Handle
+  global $adb;
+  
+  if (!isset($results)) $results = '';
+  if (!isset($type)) $type = '';
+
+  // If $required is Empty Make an Empty Array
+  $required || $required = array();
+
+   // Get list of Drop Tables
+   $query = "SHOW TABLES LIKE 'dropdown%'";
+   $sth   = $adb->prepare($query);
+   $res   = $sth->execute();
+   if ( mysql_errno() )  {
+      return mysql_error() . ": " . $query . "<br />"; 
+   }
+   while ( list($table) = $sth->fetchrow_array($res) ) {
+      $tables[] = array_pop(explode("_", $table, 2));
+   }
+
+  // If Edit ( ID past to Function )
+  if ( isset($id) ) {
+     $query_id = "SELECT * FROM $tablename WHERE $col1 = $id";
+     $notskip = 1;
+  } 
+  
+  if ( empty($query_id) ) {
+      $query_id = "SELECT * FROM $tablename LIMIT 1"; 
+      $notskip = 0;
+  }
+
+  $sth = $adb->prepare($query_id);
+  $res = $sth->execute() or die( mysql_error().': '.$query_id );
+  $info = $sth->fetchrow_hash();
+
+  if ( ! $notskip ) {
+       foreach ($info as $label=>$junk) { 
+          $info[$label] = '';
+          if ( in_array($label, $required) ) continue;
+          $info[$label] = $_POST[$label];
+       }
+  }
+
+
+  // Get $id 
+  $id = array_shift($info);
+
+  // ADD: Reset $id
+  $notskip || $id = NULL;
+
+  // Delete date_mod
+  array_pop($info);
+
+  // Handle Computer Type and Model 
+  if ( $model ) {     
+     $query = "SELECT type FROM computer_model WHERE model = \"$model\" ";
+     $sth = $adb->prepare($query);
+     $res = $sth->execute()  or die( mysql_error().': '.$query );
+     list($type) = $sth->fetchrow_array($res);                        
+  }
+
+  $type  or $type  = $info["type"];
+  $model or $model = $info["model"];
+  unset( $info["type"] );
+  unset( $info["model"] );
+
+  echo "<input type=hidden name=\"model\" value=\"$model\">";
+  echo "<input type=hidden name=\"type\" value=\"$type\">";
+
+  // Get Lastname list from customer table if needed
+  $lastname = array();
+  array_push($lastname, '');
+  if ( array_key_exists("owner", $info) ) {
+     $query_last = "SELECT lastname FROM customer ORDER BY lastname";
+
+     $sth = $adb->prepare($query_last);
+     $res = $sth->execute() or die( mysql_error().': '.$query_last );
+
+     while (list($lname) = $sth->fetchrow_array($results)) {
+        array_push($lastname, $lname);
+     } // end While
+  } // End If
+
+  // Allow comment fields to be last in list
+  if (array_key_exists("comments", $info)) {
+     $key_index = array_keys(array_keys($info ), "comments");
+     $comment = array_splice($info , $key_index[0], 1);
+  }
+
+  // Start Display of Table Fields
+  PRINT "<table border=1 noshade>";
+
+  if ( $notskip ) {
+     echo "<tr><th>", ucfirst("${tablename}_id"), "</th><td>$id</td></tr>";
+  }
+
+  // Computer type and model       
+  if ( $model ) {
+    echo "<tr><th>Type</th><td>$type</td></tr>";
+    echo "<tr><th>Model</th><td>$model</td></tr>";
+  }
+
+  foreach ($info as $label=>$value) {
+
+       // ADD: Set $value to '' Or Default 
+       isset($value) || $value = '';
+
+     // Create Dropdown of lastnames for owner and user fields
+     if ( $label == 'owner' or $label == 'user' ) {
+
+       $label1 = in_array ($label, $required) ?
+                 "<font color = 'red'>".ucfirst($label)."*</font>" :
+                  ucfirst($label);
+
+        echo "<tr><th>$label1</th>";
+        PRINT "<td><select name=\"$label\" size=1>";
+        foreach ($lastname as $item) {
+           $selected = ($item == $value) ? 'selected' : '';
+           echo "<option value=\"$item\" $selected >", ucfirst($item), "</option
+>";
+        }
+        PRINT "</select></td>";
+
+       // Create Dropdown if label is a drop table
+     } elseif ( in_array($label, $tables) ) {
+
+       $label1 = in_array ($label, $required) ? 
+                 "<font color = 'red'>".ucfirst($label)."*</font>" : 
+                  ucfirst($label);
+
+        echo "<tr><th>$label1</th>";
+        echo "<td>";
+        dropFilterList("dropdown_$label",$label,$label,1,$value);
+        echo "</td></tr>";
+
+       // Create Text fields for all the rest
+     } else {
+       $size = strlen($value) ? strlen($value)+3 : 35 ;
+
+       $label1 = in_array ($label, $required) ? 
+                 "<font color = 'red'>".ucfirst($label)."*</font>" : 
+                  ucfirst($label);
+
+       echo "<tr><th>$label1</th>";
+       echo "<td><input type=text size=\"$size\" name=\"$label\" 
+                        value=\"$value\"></td></tr>";
+     } // End If
+
+  } // End foreach
+
+  if ( isset($comment) ) {
+     if (! $notskip ) $comment[comments] = '';
+     echo "<tr><th>Comments</th>";
+     echo "<td><textarea rows=5 cols=35 
+                         name=comments>$comment[comments]</textarea>";
+     echo "</td></tr>";
+  }
+
+  PRINT "</table>";
+
+} // End AddEdit
+
+?>

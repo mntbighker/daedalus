@@ -1,0 +1,93 @@
+#-----------------------------------------------------
+# Subroutines 
+#-----------------------------------------------------
+
+# Subroutine Business_Hours
+#  Call  Business_Hours($year1, $month1, $day1, $hour1, $min1, $sec1,
+#                       $year2, $month2, $day2, $hour2, $min2, $sec2);
+
+# require "sub.business_hours";
+
+#-----------------------------------------------------
+sub Business_Hours  {
+
+  use Date::Calendar::Profiles qw( $Profiles &Previous_Friday &Next_Monday );
+  use Date::Calendar;
+  use Date::Calc qw(:all);
+
+  my ($year1, $month1, $day1, $hour1, $min1, $sec1, 
+      $year2, $month2, $day2, $hour2, $min2, $sec2) = @_;
+
+  my $days;
+
+  my $flag1 = 1;
+  my $flag2 = 0;
+
+  # Adjust Date1 for non-work hours
+  $hour1 < 8 and $hour1 = 8, $min1 = 00, $sec1 = 00;
+  if ($hour1 >= 17 ) {
+     ($year1, $month1, $day1) = Add_Delta_Days($year1,$month1,$day1, 1);
+     $hour1 = 8; $min1 = 00; $sec1 = 00;
+  }
+
+  # Adjust Date2 for non-work hours
+     $hour2 < 8 and $hour2 = 8, $min2 = 02, $sec2= 00;
+  if ($hour2 >= 17 ) {
+     ($year2, $month2, $day2) = Add_Delta_Days($year2,$month2,$day2, 1);
+     $hour2 = 8; $min2 = 02; $sec2 = 00;
+  }
+
+  # Adjust Date1 for Weekends
+  my ($wyear1,$wmonth1,$wday1) = Next_Monday($year1,$month1,$day1);
+  my @date1 = ($wyear1,$wmonth1,$wday1);
+
+  my $tDd = Delta_Days($year1,$month1,$day1,
+                       $wyear1,$wmonth1,$wday1);
+
+  $tDd and $hour1 = 8, $min1 = 00, $sec1 = 00;
+
+
+  # Adjust Date2 for Weekends
+  my ($wyear2,$wmonth2,$wday2) = Next_Monday($year2,$month2,$day2);
+  my @date2 = ($wyear2,$wmonth2,$wday2);
+
+  $tDd = Delta_Days($year2,$month2,$day2,
+                    $wyear2,$wmonth2,$wday2);
+
+  $tDd and $hour2 = 8, $min2 = 02, $sec2 = 00;
+
+  # Setup Calendar for US
+  my $Cal = Date::Calendar->new( $Profiles->{'US'} );
+
+  # Get number of full working days
+  {
+   local $^W = 0;
+   $days = $Cal->delta_workdays(@date1, @date2, $flag1, $flag2);
+  }
+
+  # Reset Date2 for Calculating Delta Time
+  ($year2,$month2,$day2) = Add_Delta_Days($wyear1,$wmonth1,$wday1, $days);
+
+  # Calculating Delta Time
+  my($Dd,$Dh,$Dm,$Ds) = Delta_DHMS($wyear1,$wmonth1,$wday1, $hour1,$min1,$sec1, 
+                             $year2,$month2,$day2, $hour2,$min2,$sec2);
+
+
+  # Change Days to Hours
+  $Dh = ($Dd * 24) + $Dh;
+
+  # Subtract Non Work Hours for each Full Day
+  $days && ($Dh -= (15 * $days) );
+
+  # Adjust Hours, Minutes, Seconds to 2 Places
+  $Dh = sprintf("%02d", $Dh);
+  $Dm = sprintf("%02d", $Dm);
+  $Ds = sprintf("%02d", $Ds);
+
+
+  return("$Dh:$Dm:$Ds");
+
+} # End Subroutine
+
+1;
+

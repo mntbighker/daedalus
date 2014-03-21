@@ -1,0 +1,33 @@
+IRM FAQ
+-------
+
+When things just don't go as they should.
+
+1.  When I log in, IRM gives me 'Undefined function mysql_connect in...'
+-------------------------------------------------------------------------
+
+Simple problem, simple solution.  When you compiled PHP (you did compile
+it from sources, right?), you omitted the --with-mysql flag.  Simply run
+./configure again, and make sure you use --with-mysql and
+--enable-track-vars.
+
+2. When I log in, I get 'failed to open ../irm.inc ...'
+-------------------------------------------------------
+
+You didn't follow the instructions.  You have to edit
+irm.inc and set the 'root path' variable after the copyright
+information
+
+
+3.  I'm new to running a webserver/database system, what software do you
+recommend?
+-------------------------------------------------------------------------
+
+Well, this is honestly Yann's opinion, but I recomend:
+
+FreeBSD 4.x (www.freebsd.org)
+Apache 1.3.x (www.apache.org)
+MySQL (www.mysql.com)
+PHP 4.1 or better (www.php.net)
+
+

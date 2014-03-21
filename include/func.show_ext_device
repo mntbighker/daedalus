@@ -1,0 +1,95 @@
+<?php
+
+function ShowExtDevice($customer_id) 
+{
+ 
+  // Global variable for DataBase Handle
+  global $adb;   
+
+  // Define array variable
+  $slist = array();
+
+  // Setup info for anchor
+  $form = "general-info.php";
+ $vars = "tablename=ext_device&col1=ext_device_id&col2=ext_model";
+
+  // Get computer list for customer
+  $query = "SELECT lastname
+            FROM   customer
+            WHERE customer_id = $customer_id";
+
+  $sth = $adb->prepare($query);
+  $res = $sth->execute()  or die( mysql_error().': '.$query );
+
+  // Get lastname for this customer
+  list($lastname) = $sth->fetchrow_array($res);
+
+  // Get Extnal Device list for customer
+  $query = "SELECT ext_device_id, ext_type
+            FROM   ext_device
+            WHERE owner = '$lastname' OR user = '$lastname' ";
+
+  $sth = $adb->prepare($query);
+  $res = $sth->execute()  or die( mysql_error().': '.$query );
+
+  while( list($ext_device_id,$type) = $sth->fetchrow_array($res) ) {   
+
+     // Setup type and ext_device_id as link
+     $item = "$type(<a href=\"$form?$vars&ID=$ext_device_id\">$ext_device_id</a>)";
+
+     // Build array
+      array_push($slist, $item);
+
+  } // End While                       
+
+
+  // If no Software Found, Print Message and Return
+  if ( ! $slist ) {
+     echo "<p>
+           <table width=100% border=1 noshade>
+           <tr><th>External Device(s)</th></tr>
+           <tr><td>No External Devices Assigned to this software.</td></tr>
+           </table>
+           </p>";
+     return(0);
+  }
+
+  // Numder of Columns to Dislpay
+  $order = array();
+  $cols = 4;
+
+  $rows = ceil( count($slist) / $cols);
+
+  $slist = array_pad ($slist, $cols*$rows, '');
+
+  // Brake array into rowsand pad
+  $newslist = array_chunk ($slist, $rows);
+
+  // build output array
+  for ($i = 0; $i < count($newslist[0]); $i++) {
+     for ($j = 0; $j < count($newslist); $j++) {
+       array_push($order, $newslist[$j][$i]);
+     }
+  }
+
+  // Display table
+  echo "<p>";
+  echo "<table width=100% border=1 noshade>";
+  echo "<tr><th colspan=$cols>External Device(s)</th></tr>";
+  echo "<tr>";
+
+  foreach ($order as $owner) {
+     if ( count($order) > 4 ) $owner || $owner = "&nbsp;";
+     echo "<td>$owner</td>";
+     $z++; if ( ! ($z % $cols) ) echo "</tr><tr>";
+  }
+
+  echo "</tr>";
+
+  echo "</table>";
+  echo "</p>";    
+
+  return(1);
+}
+
+?>     

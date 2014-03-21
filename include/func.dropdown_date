@@ -1,0 +1,17 @@
+<?php
+
+function dropdownDate($var_name, $start, $end, $select = 0 ) 
+{
+
+   echo "<select name='$var_name' size=1>";
+   foreach(range($start, $end) as $number) {
+      $selected = ($number == $select) ? 'selected' : '';
+      echo "<option value=\"$number\" $selected >$number</option>";
+   }
+
+   PRINT "</select>\n";
+
+
+} // End fieldList
+
+?>

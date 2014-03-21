@@ -1,0 +1,27 @@
+<%php
+
+// Input:  The table name and the enum field
+// Output: Array that stores all options of the enum field or   
+//         False if the input field is not an enum
+
+function getEnumOptions($table, $field) {
+  $finalResult = array();
+
+  if (strlen(trim($table)) < 1) return false;
+  $query  = "show columns from $table";
+  $result = mysql_query($query);
+  while ($row = mysql_fetch_array($result)){
+     if ($field != $row["Field"]) continue;
+       //check if enum type
+       if (ereg('enum.(.*).', $row['Type'], $match)) {
+           $opts = explode(',', $match[1]);
+           foreach ($opts as $item)
+               $finalResult[] = substr($item, 1, strlen($item)-2);
+       }
+       else
+               return false;
+  }
+  return $finalResult;
+}
+
+?>

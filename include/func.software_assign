@@ -1,0 +1,212 @@
+<?php
+
+// -------------------------------------------------------------
+function freeSoftware($ID) {
+
+   // Declare Global variables for database handle and login name
+   global $adb, $IRMName;
+
+   // Unassign Software in 'computer_software' Table
+   // Decrement 'license_used' in 'software' Table
+   if ( $_POST['software_list'] ) {
+      foreach ( $_POST['software_list'] as $sid) {
+         $sql1 = "DELETE FROM computer_software
+                  WHERE computer_id = $ID AND software_id = $sid";
+         $count += $adb->dbh->exec($sql1) or die(mysql_error().': '.$sql1);
+         // Decrement "license_used" Field in "software" Table
+         $sql2 = "UPDATE software
+                     SET license_used=license_used-1
+                   WHERE software_id = $sid ";
+         $count += $adb->dbh->exec($sql2) or die(mysql_error().': '.$sql2);
+      } // End Foreach
+   } // End If
+
+   // Return 0 for failed, greater than 0 for success
+   return($count);
+
+} // End function freeSoftware
+
+
+// -------------------------------------------------------------
+function moveSoftware($ID) {
+
+   // Declare Global variables for database handle and login name
+   global $adb, $IRMName;
+
+   // localize mID from $_POST
+   $mID = $_POST['mID'] ? $_POST['mID'] : 0;
+
+   // Get "groupname" From computer Table Based on Owner computer_id Number
+   $query = "SELECT groupname 
+               FROM computer 
+             WHERE computer_id = $ID";
+
+   $sth = $adb->prepare($query);
+   $res = $sth->execute() or die( mysql_error().': '.$query);
+   list($groupname) = $sth->fetchrow_array($res);
+
+   // Get 'groupname' From 'computer' Table Based on move computer_id Number
+   $query = "SELECT computer_id, groupname 
+               FROM computer 
+              WHERE NEMS = $mID";
+
+   $sth = $adb->prepare($query);
+   $res = $sth->execute() or die( mysql_error().': '.$query);
+   list($mcomputer_id, $move_group) = $sth->fetchrow_array($res);
+
+   // Returned failed if ID and mID are not in same group
+   if ( $groupname != $move_group ) {
+      return(0);
+   }
+
+   // Move licenses by changing ID part of ID/sID in 'computer_software' Table
+   if ( $_POST['software_list'] and $_POST['mID'] ) {
+      foreach ( $_POST['software_list'] as $sid) {
+         $sql1 = "UPDATE computer_software
+                     SET computer_id = $mcomputer_id
+                   WHERE computer_id = $ID AND software_id = $sid";
+         $count += $adb->dbh->exec($sql1) or die(mysql_error().': '.$sql1);
+      } // End Foreach
+   } // End If
+
+   // Return 0 for failed, greater than 0 for success
+   return($count);
+
+} // End function moveSoftware
+
+// -------------------------------------------------------------
+function addSoftware($ID) {
+
+   // Use '$_POST' to get form data
+
+   // Declare Global variables for database handle and login name
+   global $adb, $IRMName;
+
+   // Local variables
+   $count = 0;
+
+   // Get "groupname" From computer Table Based on computer_id Number
+   $query = "SELECT groupname FROM computer WHERE computer_id = $ID";
+   $sth = $adb->prepare($query);
+   $res = $sth->execute() or die( mysql_error().': '.$query);
+   list($groupname) = $sth->fetchrow_array($res);
+
+  // Get List of Branchs
+  $query = "SELECT DISTINCT groupname FROM software";
+  $sth   = $adb->prepare($query);
+  $res   = $sth->execute()  or die( mysql_error().': '.$query );
+
+  while ( list($group) = $sth->fetchrow_array($res) ) {
+    $groups[] = $group;
+  }
+
+   // Separate Group Owner From Other Groups
+   if (in_array($groupname, $groups)) {
+      $index = array_search( $groupname, $groups);
+      array_splice($groups , $index, 1);
+   }
+
+   // Separate TS_SITE Group 
+   if (in_array('TS_SITE', $groups)) {
+      $index = array_search( 'TS_SITE', $groups);
+      array_splice($groups , $index, 1);
+   }
+
+   // Separate AMES Group
+   if (in_array('AMES', $groups)) {
+      $index = array_search( 'AMES', $groups);
+      array_splice($groups , $index, 1);
+   }
+
+   // Tie Computer to Software (Computer and Software Owner by Same Group)
+   if ( $_POST[$groupname] ) {
+      foreach ( $_POST[$groupname] as $sid) {
+         $sql1 = "INSERT computer_software
+                     SET computer_id = \"$ID\", software_id = \"$sid\" ";
+         $count += $adb->dbh->exec($sql1);
+         if ( mysql_errno() and mysql_errno() != 1062 )  {
+            die(mysql_error().': '.$sql1);
+         }
+         // Increment "license_used" Field in "software" Table
+         if ( mysql_errno() != 1062 ) {
+            $sql3 = "UPDATE software
+                        SET license_used=license_used+1
+                      WHERE software_id = \"$sid\" ";
+            $count += $adb->dbh->exec($sql3) or die(mysql_error().': '.$sql3);
+         }
+      } // End Foreach
+   } // End If
+
+   // Tie Computer to Software for TS Site licenses 
+   if ( $_POST['TS_SITE'] ) {
+      foreach ( $_POST['TS_SITE'] as $sid) {
+         $sql1 = "INSERT computer_software
+                     SET computer_id = \"$ID\", software_id = \"$sid\" ";
+         $count += $adb->dbh->exec($sql1);
+         if ( mysql_errno() and mysql_errno() != 1062 )  {
+            die(mysql_error().': '.$sql1);
+         }
+         // Increment "license_used" Field in "software" Table
+         if ( mysql_errno() != 1062 ) {
+            $sql3 = "UPDATE software
+                        SET license_used=license_used+1
+                      WHERE software_id = \"$sid\" ";
+            $count += $adb->dbh->exec($sql3) or die(mysql_error().': '.$sql3);
+         }
+      } // End Foreach
+   } // End If
+
+   // Tie Computer to Software for Ames Software
+   if ( $_POST['AMES'] ) { 
+      foreach ( $_POST['AMES'] as $sid) { 
+         $sql1 = "INSERT computer_software
+                     SET computer_id = \"$ID\", software_id = \"$sid\" ";
+         $count += $adb->dbh->exec($sql1);
+         if ( mysql_errno() and mysql_errno() != 1062 )  {
+            die(mysql_error().': '.$sql1);
+         }
+         // Increment "license_used" Field in "software" Table
+         if ( mysql_errno() != 1062 ) {
+            $sql3 = "UPDATE software
+                        SET license_used=license_used+1
+                      WHERE software_id = \"$sid\" ";
+            $count += $adb->dbh->exec($sql3) or die(mysql_error().': '.$sql3);
+         }
+      } // End Foreach
+   } // End If
+
+   // Tie Computer to Software (Computer and Software Owner by Diff Group)
+   // Move Current Software Owner to "transfer_owner" and Set New Owner
+   foreach ( $groups as $gname) {
+      if ( empty($_POST[$gname]) )  { continue; };
+      foreach ( $_POST[$gname] as $sid) {
+         $sql1 = "INSERT computer_software
+                     SET computer_id = \"$ID\", software_id = \"$sid\" ";
+         $count += $adb->dbh->exec($sql1);
+         if ( mysql_errno() and mysql_errno() != 1062 )  {
+            die(mysql_error().': '.$sql1);
+         }
+         if ( mysql_errno() != 1062 ) {
+            $sql2 = "UPDATE software
+                        SET transfer_owner = \"$gname\", 
+                            groupname = \"$groupname\"
+                      WHERE software_id = \"$sid\" ";
+            $count += $adb->dbh->exec($sql2) or die( mysql_error().': '.$sql2);
+         }
+         // Increment "license_used" Field in "software" Table
+         if ( mysql_errno() != 1062 ) {
+            $sql3 = "UPDATE software
+                        SET license_used=license_used+1
+                      WHERE software_id = \"$sid\" ";
+            $count += $adb->dbh->exec($sql3) or die(mysql_error().': '.$sql3);
+         }
+      } // End Inner Foreach
+   } // End Outer Foreach
+
+   // Return 0 for failed, greater than 0 for success
+   return($count);
+
+} // End function addSoftware
+
+
+?>

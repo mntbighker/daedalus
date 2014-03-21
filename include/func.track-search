@@ -1,0 +1,275 @@
+<?php
+
+function TrackingSearchView($tablename, $logical, $value, 
+                            $test, $match, $field,
+                            $sort, $col1, $col2,
+                            $display, $page, $limit)
+{
+
+  include_once("../include/func.strings");
+    
+  // Declare Global variables for database handle 
+  global $adb, $PHP_SELF;
+  
+  // Change Input Arrays to String
+  if ( is_string($logical) ) $logical = explode("|", $logical);
+  if ( is_string($value) )   $value   = explode("|", $value);
+  if ( is_string($test) )    $test    = explode("|", $test);
+  if ( is_string($match) )   $match   = explode("|", $match);
+  if ( is_string($field) )   $field   = explode("|", $field);
+  if ( is_string($display) ) $display = explode("|", $display);
+
+  // Setup Labels
+
+  // Add to Display Array any Search Fields
+   $dpy_field[] = $field[0];
+
+   // Build $dpy_field array
+   while ( ++$count < count($value) ) {
+    ($value[$count] != '') && $dpy_field[] = $field[$count];
+   } // End While
+
+  // Build Display Array with Sort, Search and Display
+#  $labels_tmp = array_merge(array($col1,$col2,$sort), $dpy_field, $display);
+  $labels_tmp = array_merge($dpy_field, $display);
+
+  // Delete Duplicate Fields and Collapse Array
+  $labels = array_values(array_unique($labels_tmp));
+
+  // Remove col1 from array
+  if (in_array($col1, $labels)) {
+     $index = array_search( $col1, $labels);
+     array_splice($labels , $index, 1);
+  }
+
+  // Remove col2 from array
+  if (in_array($col2, $labels)) {
+     $index = array_search( $col2, $labels);
+     array_splice($labels , $index, 1);
+  }
+  // Remove sort from array
+  if (in_array($sort, $labels)) {
+     $index = array_search( $sort, $labels);
+     array_splice($labels , $index, 1);
+  }
+
+  // Move comments to end of list
+  if (in_array('comments', $labels)) {
+     $index = array_search( 'comments', $labels);
+     array_splice($labels , $index, 1);
+     array_push($labels, 'comments');
+  }
+
+  // Move summary to end of list
+  if (in_array('summary', $labels)) {
+     $index = array_search( 'summary', $labels);
+     array_splice($labels , $index, 1);
+     array_push($labels, 'summary');
+  }
+
+  // Move contents to end of list
+  if (in_array('contents', $labels)) {
+     $index = array_search( 'contents', $labels);
+     array_splice($labels , $index, 1);
+     array_push($labels, 'contents');
+  }
+
+  // Only Add Sort if not equal to Col1 or Col2
+  if ( $sort != $col1 && $sort != $col2 ) {
+     $labels = array_merge(array($sort), $labels); 
+  } 
+
+  //  Add Col1 and Col2 to Front of Array
+  $display_labels = array_merge(array($col1, $col2), $labels);
+
+  $logical_str = implode("|", $logical);
+  $value_str   = implode("|", $value);
+  $test_str    = implode("|", $test);
+  $match_str   = implode("|", $match);
+  $field_str   = implode("|", $field);
+  $display_str = implode("|", $display_labels);
+
+  if (!($limit)){
+  $limit = 10;} // Default results per-page.
+  if (!($page)){
+  $page = 0;} // Default page value.
+
+  $link = "$PHP_SELF?tablename=$tablename&logical=$logical_str&value=$value_str&test=$test_str&match=$match_str&field=$field_str&sort=$sort&col1=$col1&col2=$col2&display=$display_str";
+
+  $link1 = "$PHP_SELF?tablename=$tablename&logical=$logical_str&value=$value_str&test=$test_str&match=$match_str&field=$field_str&col1=$col1&col2=$col2&display=$display_str";
+
+
+  // Setup Where Clause
+  // -------------------------------------------
+
+  if ( $match[0] == 'contains' ) {
+    $value[0] = " '%$value[0]%' ";
+  } else {
+    $value[0] = " '$value[0]' ";
+  } 
+
+  $where = " $field[0] $test[0] $value[0] ";
+
+  array_unshift($logical, '');
+
+  foreach ( range(1, count($test)) as $i) {
+  
+    if ( $value[$i] == '' ) { continue; }
+
+    if ( $match[$i] == 'contains' ) {
+       $value[$i] = " '%$value[$i]%' ";
+    } else {
+       $value[$i] = " '$value[$i]' ";
+    } 
+    $where .= " $logical[$i] $field[$i] $test[$i] $value[$i] ";
+  }
+
+  // Setup Querys
+  // -------------------------------------------
+  $query_count = "SELECT COUNT(*) 
+                    FROM $tablename 
+                   WHERE $where";
+
+  $list = implode(",", $display_labels);
+
+  $query_data = "SELECT $list
+          FROM $tablename ";
+
+  $query_data .= " WHERE $where ";
+
+  $query_data .= " ORDER BY $sort ASC 
+               LIMIT $page, $limit";
+
+  // -------------------------------------------
+
+  $sth = $adb->prepare($query_count);
+  $res = $sth->execute() or die( mysql_error().': '.$query_count );
+
+  // Number of rows returned from above query.
+  list($numrows) = $sth->fetchrow_array();
+
+if ($numrows == 0){
+   return(1);
+}
+
+$pages = intval($numrows/$limit); // Number of results pages.
+
+// $pages now contains int of pages, unless there is a remainder from division.
+
+if ($numrows%$limit) {
+$pages++;} // has remainder so add one page
+
+$current = intval($page/$limit) + 1; // Current page number.
+
+if (!isset($page) || $page < 0) {
+$total = 1;} // If $pages is less than one or equal to 0, total pages is 1.
+
+else {
+$total = $pages;} // Else total pages is $pages value.
+
+$first = $page + 1; // The first result.
+
+if (!((($page + $limit) / $limit) >= $pages) && $pages != 1) {
+$last = $page + $limit;} //If not last results page, last result equals $page plus $limit.
+ 
+else{
+$last = $numrows;} // If last results page, last result equals total number of results.
+
+//escape from PHP mode.
+?>
+
+<table width="100%" border="0">
+ <tr>
+  <td class=white align="left">
+Results <b><?=$first?></b> - <b><?=$last?></b> of <b><?=$numrows?></b>
+  </td>
+  <td class=white align="center">
+
+Results per-page: <a href="<?=$link?>&page=<?=$page?>&limit=5">5</a> | 
+                  <a href="<?=$link?>&page=<?=$page?>&limit=10">10</a> | 
+                  <a href="<?=$link?>&page=<?=$page?>&limit=20">20</a> | 
+                  <a href="<?=$link?>&page=<?=$page?>&limit=50">50</a> |
+        <a href="<?=$link?>&page=<?=$page?>&limit=<?=$numrows?>">All</a>
+  </td>
+  <td class=white align="right">
+Page <b><?=$current?></b> of <b><?=$total?></b>
+  </td>
+ </tr>
+</table>
+
+<?
+  //Go back into PHP mode.
+
+  echo "<table width=100% border=1> <tr>";
+
+  $label1 = ( $col1 == "${tablename}_id" ) ? 'ID' : "$col1";
+  $label2 = ( $col2 == "${tablename}_id" ) ? 'ID' : "$col2";
+
+  echo "<th><a href=\"${link1}&sort=$col1\">", ucfirst("$label1"), "</a></th>";
+  echo "<th><a href=\"${link1}&sort=$col2\">", ucfirst("$label2"), "</a></th>";
+
+  foreach ($labels as $label) {
+     $label1 = ( $label == "${tablename}_id" ) ? 'ID' : "$label";
+     echo "<th><a href=\"${link1}&sort=$label\">",ucfirst($label1),"</a></th>";
+  }
+
+  echo "</tr>";
+
+// Now we can display results.
+
+  $sth = $adb->prepare($query_data);
+  $results = $sth->execute() or die( mysql_error().': '.$query_data );
+
+while ($data = $sth->fetchrow_array($results)) {
+
+  $data1 = array_shift($data);
+  $data2 = array_shift($data);
+
+  $form = 'tracking-info.php';
+  $anchor1 = "<a href=\"$form?tablename=$tablename&ID=$data1\">$data1</a>";
+ 
+  // Number of followups for ID
+  $query1 = "SELECT COUNT(*) FROM followups WHERE tracking = $data1";
+  $sth1 = $adb->prepare($query1);  
+  $res1 = $sth1->execute() or die( mysql_error().': '.$query1 );
+  list($followups) = $sth1->fetchrow_array();
+
+  echo "<tr>";
+
+  echo "<td>$anchor1</td>";
+
+  $value2 = $data2 ? "$data2 [$followups]" : "&nbsp;";
+  echo "<td>$value2</td>";
+
+   foreach ($data as $value) {     
+      $value = $value ? "$value" : "&nbsp;";
+      $value = snippet($value, 500);
+      echo "<td>$value</td>";
+   }    
+   echo "</tr>";
+}
+
+echo "</table>";
+
+echo "<p align=\"center\">";
+
+if ($page != 0) { // Don't show back link if current page is first page.
+$back_page = $page - $limit;
+echo("<a href=\"$link&page=$back_page&limit=$limit\">back</a>    \n");}
+
+for ($i=1; $i <= $pages; $i++) // loop through each page and give link to it.
+{
+ $ppage = $limit*($i - 1);
+ if ($ppage == $page){
+ echo("<b>$i</b> \n");} // If current page don't give link, just text.
+ else{
+ echo("<a href=\"$link&page=$ppage&limit=$limit\">$i</a> \n");}
+}
+
+if (!((($page+$limit) / $limit) >= $pages) && $pages != 1) { // If last page don't give next link.
+$next_page = $page + $limit;
+echo("    <a href=\"$link&page=$next_page&limit=$limit\">next</a>\n");}
+
+} // End ListView
+
+?>

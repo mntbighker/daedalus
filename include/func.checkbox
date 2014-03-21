@@ -1,0 +1,60 @@
+<?php
+
+function CheckBox( $table, $var_name, $defaults ) 
+{
+
+  include_once("../include/func.listcolumn");
+
+  global $USERPREFIX, $adb;
+
+  $z = 0;
+  
+  if ( ! isset($defaults) ) $defaults = array();
+
+  $labels = listtablecolumns($table);
+  
+  array_shift($labels);
+
+  // Numder of Columns to Dislpay
+  $cols = 5;
+  $order = array();
+
+  if ( count($labels) == 16 ) $cols = 4;
+
+  $rows = ceil( count($labels) / $cols);
+
+  $labels = array_pad ($labels, $cols*$rows, '');
+
+  $newlabels = array_chunk ($labels, $rows);
+
+  for ($i = 0; $i < count($newlabels[0]); $i++) {
+     for ($j = 0; $j < count($newlabels); $j++) {
+       array_push($order, $newlabels[$j][$i]);
+     }
+  }
+
+  echo "<p>";
+
+  echo "<table width=\"100%\" border=\"0\">";
+  echo "<caption>Select Columns to Be Displayed</caption>";
+
+  echo "<tr>";
+  foreach ($order as $label) {
+     if ($label != '') {
+     echo "<td>";
+        $checked = in_array ($label, $defaults) ? 'checked' : '';
+        echo "<input type=\"checkbox\" 
+                     name=\"${var_name}[]\" 
+                     value=\"$label\" $checked>$label";
+        echo "</td>";
+     }
+     $z++;
+     if ( ! ($z % $cols) ) echo "</tr><tr>";
+  }
+  echo "</tr>";
+  echo "</table>";
+  echo "</p>";
+
+} // End CheckBox
+
+?>

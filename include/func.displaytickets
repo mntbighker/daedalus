@@ -1,0 +1,123 @@
+<?php
+
+function displayTickets($field1,$value1, $field2 = '',$value2 = '', $not = '')
+{
+
+
+  include_once("../include/func.strings");
+
+  // Declare Global variables for database handle 
+  global $adb;
+  
+  initvar('data');
+  
+  $diff = '';
+
+
+  $list = 'ID, status, date, author, groupname, assign, priority, category, customer, summary';
+
+  $labels = explode(",", $list);
+
+  $query = "SELECT $list
+              FROM tracking
+             WHERE $field1 LIKE '%${value1}%' ";
+
+  if ( $field2 && $value2 ) {
+    $query .= " AND $field2 $not LIKE '%${value2}%'"; 
+  }
+
+  $sth = $adb->prepare($query);
+  $results = $sth->execute() or die( mysql_error().': '.$query );
+
+  echo "<p><div align='center'><h3>",ucfirst($value1)," Tickets</h3></div>";
+
+  echo "<table width=100% border=1>";
+
+  echo "<tr>";
+  foreach ($labels as $label) {
+     echo "<th>",ucfirst($label),"</th>";
+  }
+  echo "</tr>";
+
+  while ($data = $sth->fetchrow_array($results)) {
+
+    $ID = array_shift($data);
+
+    $form = 'tracking-info.php';
+    $anchor1 = "<a href=\"$form?tablename='tracking'&ID=$ID\">$ID</a>";
+
+    echo "<tr>"; 
+    echo "<td>$anchor1</td>";
+
+   foreach ($data as $value) {
+
+      $now = date("Y-m-d H:i:s");
+
+      if ( strcasecmp($value1, 'new') == 0 ) {
+         $diff = dateDiff('n',$data[1],$now);
+      }
+
+      $color = ( $diff > 180 ) ? 'red' : 'black';
+         
+      $value = $value ? "$value" : "&nbsp;";
+      $value = snippet($value);      
+      echo "<td><font color=\"$color\">$value</font></td>";
+   }
+   echo "</tr>";
+
+  } // End While Data From DataBase
+
+  echo "</table></p>";
+
+} // End displayTickets
+
+//dateDiff 
+       function dateDiff($interval,$dateTimeBegin,$dateTimeEnd) {
+         //Parse about any English textual datetime
+         //$dateTimeBegin, $dateTimeEnd
+
+         $dateTimeBegin=strtotime($dateTimeBegin);
+         if($dateTimeBegin === -1) {
+           return("..begin date Invalid");
+         }
+
+         $dateTimeEnd=strtotime($dateTimeEnd);
+         if($dateTimeEnd === -1) {
+           return("..end date Invalid");
+         }
+
+         $dif=$dateTimeEnd - $dateTimeBegin;
+
+         switch($interval) {
+           case "s"://seconds
+               return($dif);
+
+           case "n"://minutes
+               return(floor($dif/60)); //60s=1m
+
+           case "h"://hours
+               return(floor($dif/3600)); //3600s=1h
+
+           case "d"://days
+               return(floor($dif/86400)); //86400s=1d
+
+           case "ww"://Week
+               return(floor($dif/604800)); //604800s=1week=1semana
+
+           case "m": //similar result "m" dateDiff Microsoft
+               $monthBegin=(date("Y",$dateTimeBegin)*12)+
+                 date("n",$dateTimeBegin);
+               $monthEnd=(date("Y",$dateTimeEnd)*12)+
+                 date("n",$dateTimeEnd);
+               $monthDiff=$monthEnd-$monthBegin;
+               return($monthDiff);
+
+           case "yyyy": //similar result "yyyy" dateDiff Microsoft
+               return(date("Y",$dateTimeEnd) - date("Y",$dateTimeBegin));
+
+           default:
+               return(floor($dif/86400)); //86400s=1d
+         }
+
+       } // End Datadiff
+?>

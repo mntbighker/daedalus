@@ -1,0 +1,28 @@
+<?php
+
+/*  initvar()
+ *  Initialize variables
+ *  (C) Amit Arora <digitalamit dot com>
+ *  Permission give to use this code for Non-Commericial, Commericial use
+ *  It would be appreciated if you could provide a link to the site
+ *  http://www.digitalamit.com/article/initvar.phtml
+ */
+function initvar()
+{
+    foreach( func_get_args() as $v )
+    {
+        if( is_array( $v ) )
+        {
+            while( list( $key, $value ) = each( $v ) )
+            {
+                $GLOBALS[$key] = ( !isset($GLOBALS[$key]) ? $value : $GLOBALS[$key] );
+            }
+        }
+        else
+        {
+            $GLOBALS[$v] = ( !isset($GLOBALS[$v]) ? '' : $GLOBALS[$v] );
+        }
+    }
+}
+
+?>

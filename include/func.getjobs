@@ -1,0 +1,28 @@
+<?php
+
+function getJobs($field1, $value1, $field2 = '', $value2 = '', $not = '')
+{
+  global $adb;
+
+  $query = "SELECT count(*) 
+              FROM tracking
+             WHERE $field1 LIKE '%${value1}%' ";
+
+  if ( $field2 && $value2 ) {
+    $query .= " AND $field2 $not LIKE '%${value2}%'"; 
+  }
+
+  $sth = $adb->prepare($query);
+  $res = $sth->execute();
+
+  if ( mysql_errno() and mysql_errno() != 1065 )  {
+     die(mysql_error().': '.$query);
+  }
+
+  list($num_jobs) = $sth->fetchrow_array();
+
+  return($num_jobs);
+
+} // End getJobs
+
+?>

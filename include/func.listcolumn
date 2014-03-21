@@ -1,0 +1,20 @@
+<?php
+
+function listtablecolumns($tablename) 
+{
+  global $adb;
+
+  $query_col  = "SHOW COLUMNS FROM $tablename";
+  $sth = $adb->prepare($query_col);
+  $res = $sth->execute() or die( mysql_error().': '.$query_col);
+
+  $sth = $adb->prepare($query_col);
+  $sth->execute();
+  $rows = $sth->fetchAll();
+  foreach($rows as $row) $listField[] = $row['Field'];
+
+return($listField);
+
+} // End listtablecolumn
+
+?>

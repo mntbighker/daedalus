@@ -1,0 +1,107 @@
+<?php
+
+function showItem($ID, $tablename, $col1, $col2) 
+{
+ 
+  global $cfg_snmp, $cfg_snmp_ping, $adb;
+
+  if (!isset($z)) $z = '';
+
+  // Get infromation for 1 item based on table and ID.
+  $query = "SELECT * FROM $tablename WHERE ($col1 = $ID)";
+  $sth = $adb->prepare($query);
+  $res = $sth->execute()  or die( mysql_error().': '.$query );
+  $results = $sth->fetchrow_hash();
+
+  $keys = array_keys($results);
+
+  $labels_tmp = array_merge(array($col1, $col2), $keys);
+  $labels = array_values(array_unique($labels_tmp));
+
+  if (in_array($col1, $labels)) {
+     $index = array_search( $col1, $labels);
+     array_splice($labels , $index, 1);
+  }
+
+  if (in_array($col2, $labels)) {
+     $index = array_search( $col2, $labels);
+     array_splice($labels , $index, 1);
+  }
+
+  // Test for Owner
+  if (in_array("owner", $labels)) {
+    if (  $results[owner] ) {
+        // Get customer_id
+        $query = "SELECT customer_id
+                  FROM   customer
+                  WHERE lastname LIKE '$results[owner]'";
+        $sth = $adb->prepare($query);
+        $res = $sth->execute()  or die( mysql_error().': '.$query );
+        list($customer_id) = $sth->fetchrow_array($res);
+
+        $anchor1 = "<a href=\"general-info.php?tablename=customer&col1=customer_id&col2=lastname&ID=$customer_id\">$customer_id</a>";
+    $results[owner] = "$results[owner] ($anchor1)";
+    }  
+  }
+
+  // Test for User
+  if (in_array("user", $labels)) {
+    if (  $results[user] ) {
+        // Get customer_id
+        $query = "SELECT customer_id
+                  FROM   customer
+                  WHERE lastname LIKE '$results[user]'";
+        $sth = $adb->prepare($query);
+        $res = $sth->execute()  or die( mysql_error().': '.$query );
+        list($customer_id) = $sth->fetchrow_array($res);
+
+        $anchor1 = "<a href=\"general-info.php?tablename=customer&col1=customer_id&col2=lastname&ID=$customer_id\">$customer_id</a>";
+    $results[user] = "$results[user] ($anchor1)";
+    }  
+  }
+
+  // Numder of Columns to Dislpay
+  $cols = 4;
+  $order = array();
+
+  $rows = ceil( count($labels) / $cols);
+
+  $labels = array_pad ($labels, $cols*$rows, '');
+
+  $newlabels = array_chunk ($labels, $rows);  
+
+  for ($i = 0; $i < count($newlabels[0]); $i++) {
+     for ($j = 0; $j < count($newlabels); $j++) {
+       array_push($order, $newlabels[$j][$i]);
+     }
+  }
+
+  echo "<p>";
+  echo "<table width=100% border=1 noshade>";
+
+  $form = "general-add-form.php";
+
+  $anchor = " <a href=\"$form?tablename=$tablename&col1=$col1&ID=$ID\">
+              $results[$col1]</a>";
+
+  echo "<tr>
+            <th>$col1</th><td>$anchor</td>
+            <th>$col2</th><td>$results[$col2]</td>
+        </tr>";
+
+  echo "<tr>";
+
+  foreach ($order as $label) {
+     $results[$label] || $results[$label] = "&nbsp;";
+     echo "<th>", ucfirst($label), "</th>";
+     echo "<td>$results[$label]</td>";
+     $z++; if ( ! ($z % $cols) ) echo "</tr><tr>";
+  }
+  
+  echo "</tr>";
+  echo "</table>";
+  echo "</p>";
+    
+}
+
+?>

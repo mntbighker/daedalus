@@ -1,0 +1,112 @@
+<?php
+
+function showTicket($ID) 
+{
+ 
+ global $adb;
+
+  // Data posted by this function
+  // assign   - Person Assign to Trouble Ticket
+  // status   - Status of Trouble Ticket
+  // priority - Priority of Trouble Ticket 
+  // category - Category of Ticket
+  // summary  - Description summary
+
+  include_once("../include/func.dropdown_enum");
+  include_once("../include/func.drop_filter_list");
+
+  // Get information for 1 item based on table and ID.
+  $query = "SELECT * FROM tracking WHERE ID = $ID";
+  $sth = $adb->prepare($query);
+  $res = $sth->execute()  or die( mysql_error().': '.$query );
+  $results = $sth->fetchrow_hash();
+  extract($results);
+
+  // Check/Get NEMS From 'computer' Table
+  $tablename = 'computer';
+  $field     = 'computer_id';
+  $col1      = 'computer_id';
+  $col2      = 'hostname';
+
+  $query = "SELECT NEMS, weight 
+              FROM computer 
+             WHERE computer_id = $computer_id";
+
+  $sth = $adb->prepare($query) or die( mysql_error().': '.$query);
+  $res = $sth->execute();
+  list($NEMS,$weight) = $sth->fetchrow_array($res);
+
+  // Setup anchor for computer ID
+  $form = "../users/general-info.php";
+  $vars = "tablename=$tablename&field=$field&col1=$col1&col2=$col2";
+  $anchor = $NEMS ? " <a href=\"$form?$vars&ID=$computer_id\">$NEMS</a> " : $computer_id;
+
+  // Get customer email Based On 'lastname' From 'customer' Table
+  $query = "SELECT email, phone FROM customer WHERE lastname LIKE '$customer' ";
+  $sth = $adb->prepare($query) or die( mysql_error().': '.$query);
+  $res = $sth->execute();
+  list($email, $phone) = $sth->fetchrow_array($res);
+
+  $contents = nl2br($contents);
+
+  // Setup Close Date or Button to Close Ticket
+  if ( $closedate == '0000-00-00 00:00:00' ) {
+     $closedate = "Open";
+  }
+
+  if ( ! $weight > 0 && $status != 'complete' ) {
+   echo "<p><font color='red'>This is an unsupported User/Computer!</font></p>";
+  }
+
+  if ( $status != 'complete' ) {
+  echo "<p><a href=\"change_owner_ticket.php?ID=$ID&customer=$customer&NEMS=$NEMS\">Change Ticket Owner</a></p>";
+  }
+
+  // Start Table
+  echo "<table width=100% border=1 noshade>";
+
+  echo "<tr><th colspan=3>Summary</th></tr>";
+
+  echo "<tr>";
+  echo "<td colspan=3 align=center><textarea cols=60 Rows=1 name=summary>$summary</textarea></td>";
+  echo "</tr>";
+
+  echo "<tr><th colspan=3>Job Number $ID</th></tr>";
+
+  echo "<tr>";
+  echo "<td><b>Computer</b><br>$anchor</td>";
+  echo "<td><b>Mailto: Customer (Phone)</b><br><a href=\"mailto:$email\">$customer</a>($phone)</td>";
+  echo "<td><b>Category</b><br>";
+  $category || $category = 'application';
+  dropFilterList("dropdown_category","category","category",0,$category); 
+  echo "</td>";
+  echo "</tr>";
+
+  echo "<tr>";
+  echo "<td><b>Assigned To</b><br>";
+  dropFilterList('users','name','assign',1,$assign); 
+  echo "</td>";
+  echo "<td><b>Status</b><br>";
+  $suppress[] = ($status == 'new') ? '' : 'new';
+  dropFilterList("dropdown_status","status","status",0,$status); 
+  echo "</td>";
+  echo "<td><b>Priority</b><br>";
+  dropFilterList("dropdown_priority","priority","priority",0,$priority); 
+  echo "</td>";
+  echo "</tr>";
+  
+  echo "<tr>";
+  echo "<td><b>Open Date</b><br>$date</td>";
+  echo "<td><b>Close Date</b><br>$closedate</td>";
+  echo "<td><b>Group</b><br>$groupname</td>";
+  echo "</tr>";
+
+  echo "<tr>";
+  echo "<td colspan=3><b>Description</b><br>$contents</td>";
+  echo "</tr>";
+
+  echo "</table>";
+    
+}
+
+?>

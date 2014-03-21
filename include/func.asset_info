@@ -1,0 +1,19 @@
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+function getAssetInfo( $tablename )
+{
+  global $USERPREFIX, $adb;
+
+  $query = "SELECT * FROM asset_info WHERE table_name = '$tablename'";
+  $sth = $adb->prepare($query);
+  $res = $sth->execute() or die( mysql_error().': '.$query );
+  $info = $sth->fetchrow_hash();
+  $sth->finish();
+
+  return($info);
+
+} // End getAssetInfo
+
+?>

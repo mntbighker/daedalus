@@ -1,0 +1,43 @@
+<?php
+
+function trackDescription($ID)
+{
+
+ global $adb;
+                                                                                
+  // Get Tracking Description based on Tracking ID
+  $query = "SELECT contents FROM tracking WHERE ID = $ID";
+  $sth = $adb->prepare($query);
+  $res = $sth->execute()  or die( mysql_error().': '.$query );
+
+  list($description) = $sth->fetchrow_array($res); 
+
+  return $description;
+}
+
+function trackfollowups($ID)
+{
+
+ global $adb;
+
+  // Followup List Based On Tracking 'ID' From 'followups' Table
+  $query = "SELECT contents
+            FROM followups
+            WHERE  tracking = $ID";
+  $sth = $adb->prepare($query);
+  $res = $sth->execute()  or print( mysql_error().': '.$query );
+
+  // Get Followup List
+  while ( list($followlist) = $sth->fetchrow_array($res) ) {
+
+     // Build array
+     $followups[] = $followlist;
+
+  } // End While
+
+  $followups_str = implode("\n", $followups);
+   
+  return $followups_str;                                                                              
+}
+                                                                                
+?>

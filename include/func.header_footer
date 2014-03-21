@@ -1,0 +1,89 @@
+<?php
+
+
+function commonHeader($title) 
+{
+  global $cfg_dbdb, $adb, $IRMName, $cfg_knowledgebase, $USERPREFIX, $PREFIX, $LOGO;
+  global $cfg_sendexpire;
+  if ($cfg_sendexpire == 1) {
+    header("Expires: Fri, Jun 12 1981 08:20:00 GMT Pragma: no-cache");
+  }
+
+  PRINT <<<AUTHOR
+     <!-- Daedalus is (c) 2005  -->
+AUTHOR;
+
+  PRINT "<html>";
+
+  PRINT "<head>";
+  PRINT "<title>Daedalus: $title</title>";
+
+  PRINT <<<STYLE
+     <LINK href="../include/irm.css" rel="stylesheet" type="text/css">
+STYLE;
+
+  if ($cfg_sendexpire == 1) {
+   
+    PRINT <<<META
+       <meta http-equiv=\"Expires\" content=\"Fri, Jun 12 1981 08:20:00 GMT\">
+       <meta http-equiv=\"Pragma\" content=\"no-cache\">
+       <meta http-equiv=\"Cache-Control\" content=\"no-cache\">
+META;
+  }
+
+  PRINT "</head>";
+
+  PRINT "<!-- Main Information -->";
+
+  $user = new User($IRMName);
+  $usertype = $user->getAccess();
+
+//  PRINT "<br>";
+  PRINT "<table cellspacing=0 border=0 height=20 width=100%>";
+
+  print "<tr>";
+  print "<th align=left>$title</th>";
+  print "<td align=right>";
+  print "<a href=index.php><img src=$PREFIX/$LOGO border=0></a>";
+  print "</td>";
+  print "</tr>";
+
+  PRINT "<tr height=20>";
+  PRINT "<td>";
+
+    PRINT <<<ANCHOR
+  | <a href="$USERPREFIX/newticket.php">New Ticket</a>
+  | <a href="$USERPREFIX/tracking-index.php">Tracking</a> 
+  | <a href="$USERPREFIX/reports-index.php">Reports</a>
+  | <a href="$USERPREFIX/general-index.php?tablename=computer">Computer</a>
+  | <a href="$USERPREFIX/general-index.php?tablename=ext_device">Ext_Device</a>
+  | <a href="$USERPREFIX/general-index.php?tablename=software">Software</a>
+  | <a href="$USERPREFIX/general-index.php?tablename=customer">Customer</a>
+  | <a href="$USERPREFIX/knowledgebase-index.php">Knowledge Base</a>
+  | <a href="$USERPREFIX/faq-index.php">FAQ</a> 
+  | <a href="https://dactyl.arc.nasa.gov/wiki/index.php">WiKi</a> 
+  | <a href="$USERPREFIX/surplus-index.php">Surplus</a>
+  | <a href="$USERPREFIX/setup-index.php">Setup</a>
+  | <a href="$USERPREFIX/passwd.php">Change PW</a>
+  | <a href="$USERPREFIX/logout.php">Logout <font color='darkgreen'>$IRMName </font>from <font color='red'>$cfg_dbdb</font> database</a> 
+ANCHOR;
+
+
+  print "<td align=\"right\">".date("M d H:i")." </td>";
+  print "</tr>";
+
+  print "</table>";
+  print "<hr noshade>";
+}
+
+function commonFooter() 
+{
+
+   PRINT <<<END
+     </BODY>
+     </HTML>
+END;
+
+}
+
+?>

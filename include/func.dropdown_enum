@@ -1,0 +1,47 @@
+<?php
+
+function listEnumField($tablename, $field, $var_name, 
+                       $suppress = array(), $select = '', $blank = 0) 
+{
+  global $adb;
+
+  $enum = array();
+
+  $query_col  = "show columns from $tablename";
+  $sth = $adb->prepare($query_col);
+  $res = $sth->execute() or die( mysql_error().': '.$query_col);
+
+  while ( $row = $sth->fetchrow_hash() ) {
+     if ( $row['Field'] != $field ) { continue; }
+     preg_match("/enum.(.*)./i", $row['Type'], $match);
+     $opts = explode(',', $match[1]);
+     foreach ($opts as $item) {
+        $enumList[] = substr($item, 1, strlen($item)-2);
+      }
+  }
+
+  // Remove labels using array $suppress
+     if ( ! empty($suppress) ) {
+        foreach ($suppress as $delete) {
+           if (in_array($delete, $enumList)) {
+              $index = array_search($delete, $enumList);
+              array_splice($enumList , $index, 1);
+           }
+        }
+     } // End Remove IF
+
+  // Add blank is requested
+  $blank && array_unshift($enumList, '');
+
+   // Create Dropdown for ENUM field
+   echo "<select name='$var_name' size=1>";
+   foreach ($enumList as $item) {
+      $selected = ($item == $select) ? 'selected' : '';
+      echo "<option value='$item' $selected >", ucfirst($item), "</option>";
+   }
+   echo "</select>";
+
+
+} // End listEnumField
+
+?>

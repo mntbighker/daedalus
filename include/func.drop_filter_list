@@ -1,0 +1,42 @@
+<?php
+
+function dropFilterList
+    ($tablename,$field,$var_name,$blank=0,$select='',
+      $filter_col='',$filter_name='') 
+{
+  global $adb;
+  $where = '';
+
+  // Test for $filter_col,$filter_name
+  $filter_col && $filter_name && ($where = " WHERE $filter_col LIKE '$filter_name' ");
+
+  // Get Distinct List of field
+  $query = "SELECT DISTINCT $field FROM $tablename $where ORDER BY $field";
+  $sth   = $adb->prepare($query);
+  $res   = $sth->execute()  or die( mysql_error().': '.$query );
+
+  while ( list($list) = $sth->fetchrow_array($res) ) {
+    $lists[] = $list;
+  }
+  $sth->finish();
+
+  if ( ! count($lists) ) return(0);
+
+  $array = $lists;
+
+  $blank && array_unshift($lists, '');
+
+  PRINT "<select name=\"$var_name\" size=1>";
+        
+   foreach ($lists as $label) {
+        $selected = ($label == $select) ? 'selected' : '';
+        echo "<option value=\"$label\" $selected >", ucfirst($label), "</option>";
+   }
+
+   PRINT "</select>\n";
+
+   return($array);
+
+} // End fieldList
+
+?>

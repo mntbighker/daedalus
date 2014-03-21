@@ -1,0 +1,103 @@
+<?php
+
+function ShowSoftware($ID) 
+{
+ 
+  // Global variable for DataBase Handle
+  global $adb;
+
+  if (!isset($z)) $z = '';
+
+  // Define array variable 
+  $slist = array();
+
+  // Setup info for anchor
+  $softwareform = "general-info.php";
+  $vars = "tablename=software&field=software_id&merge1=software_id&merge2=title";
+
+  // Get software list for computer_id 
+  $query = "SELECT software_id 
+            FROM computer_software 
+            WHERE computer_id = $ID";
+
+  $sth1 = $adb->prepare($query);
+  $res1 = $sth1->execute()  or die( mysql_error().': '.$query );
+
+  // Get all software_ids for this computer
+  while ( list($software_id) = $sth1->fetchrow_array($res1) ) {
+      
+     // Get infomation for each software title 
+     $query2 = "SELECT title 
+               FROM software 
+               WHERE software_id = $software_id";
+     $sth2 = $adb->prepare($query2);
+     $res2 = $sth2->execute()  or die( mysql_error().': '.$query );
+
+     list($title) = $sth2->fetchrow_array($res2);
+
+     // Setup title and software_id as link
+     $item = "$title (<a href=\"$form?$vars&ID=$software_id\">$software_id</a>)";
+
+     // Build array
+      array_push($slist, $item);
+
+  } // End While
+
+  // Setup Form and GET variables
+  $addform = "software-manage.php?ID=$ID";
+
+  // If no Software Found, Print Message and Return
+  if ( ! $slist ) {
+     echo "<p>";
+     echo "<table width=100% border=1 noshade>
+           <tr><th COLSPAN=2>Software</th></tr>
+           <tr><td COLSPAN=2>No Software Assigned to this Computer.</td></tr>
+           <tr>
+             <td align=\"right\"><a href=\"$addform\">Manage Software</a></td>
+           </tr>
+           </table></p>";
+     return(0);
+  }
+    
+  // Numder of Columns to Dislpay
+  $order = array();
+  $cols = 4;
+
+  $rows = ceil( count($slist) / $cols);
+
+  $slist = array_pad ($slist, $cols*$rows, '');
+
+  // Brake array into rowsand pad
+  $newslist = array_chunk ($slist, $rows);  
+
+  // build output array
+  for ($i = 0; $i < count($newslist[0]); $i++) {
+     for ($j = 0; $j < count($newslist); $j++) {
+       array_push($order, $newslist[$j][$i]);
+     }
+  }
+
+  // Display table
+  echo "<p>";
+  echo "<table width=100% border=1 noshade>";
+  echo "<tr><th colspan=$cols>Software</th></tr>";
+  echo "<tr>";
+
+  foreach ($order as $title) {
+     $title || $title = "&nbsp;";
+     echo "<td>$title</td>";
+     $z++; if ( ! ($z % $cols) ) echo "</tr><tr>";
+  }
+
+  echo "</tr>";
+  echo "<tr><td colspan=$cols align=\"right\">
+        <a href=\"$addform\">Manage Software</a>";
+
+  echo "</table>";
+  echo "</p>";
+    
+  return(1);
+
+} // Function End
+
+?>

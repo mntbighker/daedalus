@@ -1,0 +1,22 @@
+
+
+
+<?php if (isset($_POST ['fahrenheit'])) $fahr = $_POST ['fahrenheit']; ?>
+
+<input type = "text" name = "fahrenheit"
+<?php if (isset($fahr)) {echo "value = ".$fahr;} ?> >
+
+
+
+
+
+$_POST['experiences'] = ( count($_POST['experiences']) >1 )? $_POST['experiences'] : array();
+
+foreach ( $experiences AS $value )
+{
+echo '<td width="33%" align="left">';
+echo '<input type="checkbox" name="experiences[]" value="' .$value. '"';
+echo ( in_array($value, $_POST['experiences'] ) )? ' CHECKED ' : '';
+echo ">$value</input>";
+echo '</td>';
+}

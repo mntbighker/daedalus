@@ -1,0 +1,64 @@
+<?php
+
+function commonSurplusHeader($title) 
+{
+  global $adb, $IRMName, $cfg_knowledgebase, $USERPREFIX, $PREFIX;
+
+  if ($cfg_sendexpire == 1) {
+    header("Expires: Fri, Jun 12 1981 08:20:00 GMT Pragma: no-cache");
+  }
+
+  PRINT <<<AUTHOR
+     <!-- IRM is (c) 2004-2005  -->
+AUTHOR;
+
+  PRINT "<html>";
+
+  PRINT "<head>";
+  PRINT "<title>IRM: $title</title>";
+
+  PRINT <<<STYLE
+     <LINK href="../include/irm.css" rel="stylesheet" type="text/css">
+STYLE;
+
+  if ($cfg_sendexpire == 1) {
+   
+    PRINT <<<META
+       <meta http-equiv=\"Expires\" content=\"Fri, Jun 12 1981 08:20:00 GMT\">
+       <meta http-equiv=\"Pragma\" content=\"no-cache\">
+       <meta http-equiv=\"Cache-Control\" content=\"no-cache\">
+META;
+  }
+
+  PRINT "</head>";
+
+  PRINT "<!-- Main Information -->";
+
+  $user = new User($IRMName);
+  $usertype = $user->getAccess();
+
+  PRINT "<br>";
+  PRINT "<table cellspacing=0 border=0 height=20 width=100%>";
+
+  PRINT "<tr height=20>";
+  PRINT "<td>";
+
+    PRINT <<<ANCHOR
+  | <a href="$USERPREFIX/general-index.php?tablename=surplus_computer">Surplus Computers</a>
+  | <a href="$USERPREFIX/general-index.php?tablename=surplus_ext_device">Surplus Ext Devices</a>
+  | <a href="$USERPREFIX/general-index.php?tablename=surplus_software">Surplus Software</a>
+  | <a href="$USERPREFIX/general-index.php?tablename=surplus_customer">Surplus Customer</a>
+  | <a href="$USERPREFIX/index.php">Home</a>
+  | <a href="$USERPREFIX/logout.php">Logout <font color='darkgreen'>$IRMName </font></a> 
+ANCHOR;
+
+  print "<td align=\"right\">".date("M d H:i")." </td>";
+  print "</tr>";
+  print "</table>";
+
+  print "<h3> $title</h3>";
+  print "<hr noshade>";
+}
+
+
+?>

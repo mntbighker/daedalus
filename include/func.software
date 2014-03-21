@@ -1,0 +1,332 @@
+<?php
+
+function find_license($ID) 
+{
+  # Added March 12th, 2001 (micajc)
+  # This function attempts to find an lID of an unassigned 
+  # license for the passwd software ID. Remember
+  # to lock the inst_software table if your going to use this
+  # to assign a license.
+  global $adb, $bgcl, $bgcd;
+
+  $query = "SELECT software_licenses.*,inst_software.lID,count(lID) AS cnt
+		FROM software_licenses
+		LEFT JOIN inst_software
+ 		ON software_licenses.ID=inst_software.lID
+		WHERE software_licenses.sID=$ID
+		GROUP BY software_licenses.ID
+		HAVING cnt<entitlement 
+		ORDER BY lID DESC";
+
+   $sth = $adb->prepare($query);
+   if ($sth) {
+		$res = $sth->execute();
+		if ($result = $sth->fetchrow_hash()) {
+
+			$sth->finish;
+			$lID = $result[ID];
+			return $lID;
+		}
+   } else {
+      print "Could not prepare $query Got $sth->errstr find_licenses<BR>";
+   }   
+	$sth->finish;
+   return 0;
+}
+
+function showSoftware($ID) 
+{
+  # Modifyed March 8th, 2001 to reflect removal of some data items.
+  # (micajc)
+  global $USERPREFIX, $adb, $bgcl, $bgcd;
+  $query = "SELECT * FROM software WHERE (ID = $ID)";
+	$sth = $adb->prepare($query);
+	if($sth)
+	{
+		$res = $sth->execute();
+		$result = $sth->fetchrow_hash();
+  	$name = $result["name"];
+  	$platform = $result["platform"];
+  	$comments = $result["comments"];
+	$class = $result["class"];
+		$sth->finish();
+	} else
+	{
+		PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+	}
+  $comments = stripslashes($comments);
+  PRINT "<table width=100% border=1 noshade><form method=post 
+		action=\"$USERPREFIX/software-update.php\">
+
+		<input type=hidden name=ID value=\"$ID\">
+		<input type=hidden name=class value=\"$class\">";
+
+  PRINT "<tr $bgcd><td colspan=2><FONT size=+1>";
+  PRINT "$class: $name ($ID)";
+  PRINT "</FONT></td></tr>";
+
+  PRINT "<tr $bgcl >
+         <td> Name:<br>
+         <input type=text name=name value=\"$name\" size=24>
+         </td>";
+
+  PRINT "<td>Platform:<br>";
+  Dropdown_value("dropdown_os", "name", "platform", $platform);
+  PRINT "</td></tr>";
+
+  PRINT "<tr $bgcl ><td valign=top>Licenses: ";
+  $licensed = Count_licenses($ID);
+  $installed = Count_installations($ID);
+  $remaining = $licensed - $installed;
+
+  if ($remaining <= 0) {
+		$remaining =  "<FONT COLOR=red>$remaining</FONT>";
+  } 
+
+	PRINT "<table>
+		<tr><td>Licenses</td><td><b>$licensed</b></td></tr>
+		<tr><td>Installed</td><td><b>$installed</b></td></tr>
+		<tr><td>Remaining:</td><td><b>$remaining</b></td></tr>
+		</table>";
+
+  PRINT "<td>Comments:<br><textarea cols=80 rows=5 
+		name=comments wrap=soft>$comments</textarea></td></tr>";
+
+  PRINT "<tr $bgcd><td>
+		<input type=submit value=Update></form></td><td>
+		<form method=post action=\"$USERPREFIX/software-del.php\">
+		<input type=submit value=Delete valign=top>
+		<input type=hidden name=ID value=$ID>
+		</form></td></tr></table>";
+  PRINT "<BR>";
+}
+
+function showBundled($ID) 
+{ 
+	global $adb, $bgcl, $bgcd;
+
+	print "<b>Software Bundle Information ($numRows) </b>
+              <table width=100% border=1>
+              <tr $bgcd><TD>Software ID</td><td>Name</td></tr>
+              <Form method=post  action=software-bundle-add-software.php>
+              <input type=hidden name=bID value=$ID>
+              <tr $bgcl><TD><input type=submit value=Add></td><tD>"; 
+        SoftwareDropdown("WHERE class!='Application Bundle'");
+        print "</td></tr></form>";
+
+	$query = "SELECT software_bundles.*,software.name FROM software_bundles
+                  LEFT JOIN software ON software.ID=sID
+                  WHERE software_bundles.bID=$ID ORDER by software.name";
+
+	$sth = $adb->prepare($query);
+	if ($sth) {
+		$res = $sth->execute();
+
+		while (	$result = $sth->fetchrow_hash()) {
+
+			$sID=$result[sID];
+			$name=$result[name];
+			print "<tr $bgcl><td>$sID</td><td>$name</td></tr>";
+		}
+		print "</table><br>";
+	}
+}
+
+function showLicenses($ID) 
+{
+   global $USERPREFIX, $adb, $bgcl, $bgcd;
+
+   $query = "SELECT * FROM software_licenses WHERE ( sID = $ID)";
+	$sth =  $adb->prepare($query);
+	if ($sth) {
+		$res = $sth->execute();
+
+
+		print "<table width=100% border=1>
+			<tr $bgcd><td><b>ID</b></td>
+				<td><b>License Key</b></td>
+				<td><b>Entitlement</b></td>
+				<td><b>Oem Sticker</b></td></tr>";
+		print "<tr $bgcl><Form method=post action=license-add.php>
+			<input type=hidden name=sID value=$ID>
+			<td><input type=submit value=Add></td>
+			<td><input type=text name=licensekey size=40></td>
+			<td><input type=text name=entitlement size=4></td>
+			<td><input type=checkbox name=oem_sticker></td></TR>
+			</form>
+			<Form method=post action=license-del.php>";
+
+	        while($result = $sth->fetchrow_hash()) {
+               
+                      $sID = $result[sID];
+                      $lID = $result[ID];
+                      $licensekey = $result[licensekey];
+                      $entitlement = $result[entitlement];
+                      $oem_sticker = $result[oem_sticker];
+
+                      print "<tr $bgcl ><td>
+                         <input type=radio name=lID value=$lID>$lID</TD>
+                         <td>$licensekey</td>
+                         <td>$entitlement</td>
+                         <td>$oem_sticker</td></tr>";
+                }
+
+		print "</table>
+		<input type=submit value=Del></form>";
+
+	}
+}
+
+
+function Count_Installations($sID)
+{
+	global $adb;
+
+	$query = "SELECT * FROM inst_software 
+		  WHERE (sID=$sID)";
+
+	$sth = $adb->prepare($query);
+	if($sth)
+	{
+		$res = $sth->execute();
+		return $sth->rows();
+	} else {
+		print "Failure to prepare query $query in Count_Installations";
+		return 0 ;
+	}
+}
+
+function Count_licenses($sID) 
+{
+	global $adb;	
+	$query = "SELECT * FROM software_licenses WHERE (sID = $sID)";
+	$sth = $adb->prepare($query);
+	if($sth)
+	{
+		$res = $sth->execute();
+
+		$total_entitlement=0;
+		while($record = $sth->fetchrow_hash()) {
+			
+			$total_entitlement+= $record[entitlement];		
+		}
+		$sth->finish();
+	} else
+	{
+		PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+	}
+	return $total_entitlement;
+}
+function templcompsoftShow($showID) 
+{
+	global $USERPREFIX, $adb, $bgcl, $bgcd;
+
+	$query = "SELECT * FROM templ_inst_software WHERE (cID = $showID)";
+	$sth = $adb->prepare($query);
+	if($sth)
+	{
+		$res = $sth->execute();
+		$numRows = $sth->rows();
+		PRINT "<TABLE BORDER=1 WIDTH=100%><TR $bgcd><th colspan=2>Installed Software</th></TR>";
+
+		for ($i =0; $i < $numRows; $i++) 
+  	{
+			$result = $sth->fetchrow_hash();
+			$sID = $result["sID"];
+			$ID = $result["ID"];
+			$query = "SELECT * FROM software WHERE (ID = $sID)";
+			$sth2 = $adb->prepare($query);
+			if($sth2)
+			{
+				$res2 = $sth2->execute();
+				$result2 = $sth2->fetchrow_hash();
+				$name = $result["name"];
+				$sth2->finish();
+			} else
+			{
+				PRINT "Could not prepare query: ".$sth2->errstr."<BR>\n";
+			}
+			PRINT "<tr $bgcl ><TD><i><A HREF=\"$USERPREFIX/software-info.php?ID=$sID\">$name</A></i></TD><td WIDTH=10%><A HREF=\"$USERPREFIX/setup-templates-software-del.php?ID=$ID\">[Delete]</A></TD></TR>";
+		}
+		$sth->finish();
+	} else
+	{
+		PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+	}
+	
+	PRINT "<tr $bgcd><TD><form method=post action=\"$USERPREFIX/setup-templates-software-add.php\"><input type=hidden name=cID value=$showID>Add software:";
+SoftwareDropdown();
+PRINT " to template.</TD><TD><input type=submit value=Add></form></TD></TR>";
+	PRINT "</TABLE>";
+}
+
+
+function compsoftShow($showID) 
+{
+	global $USERPREFIX, $adb, $bgcl, $bgcd;
+	$query = "SELECT * FROM inst_software WHERE (cID = $showID)";
+	$sth = $adb->prepare($query);
+	if($sth)
+	{
+		$res = $sth->execute();
+		$numRows = $sth->rows();
+		PRINT "<TABLE BORDER=1 WIDTH=100%><TR BGCOLOR=#BBBBB><th colspan=2>Installed Software</th></TR>";
+		
+		for ($i=0; $i < $numRows; $i++) 
+		{
+			$result = $sth->fetchrow_hash();
+			$sID = $result["sID"];
+			$ID = $result["ID"];
+			$query = "SELECT * FROM software WHERE (ID = $sID)";
+			$sth2 = $adb->prepare($query);
+			if($sth2)
+			{
+				$res2 = $sth2->execute();
+				$result2 = $sth2->fetchrow_hash();
+				$name = $result2["name"];
+			
+				$sth2->finish();
+			} else
+			{
+				PRINT "Could not prepare query: ".$sth2->errstr."<BR>\n";
+			}
+			PRINT "<tr $bgcl><TD><i><A HREF=\"$USERPREFIX/software-info.php?ID=$sID\">$name</A></i></TD><td WIDTH=10%><A HREF=\"$USERPREFIX/computers-software-del.php?ID=$ID\">[Delete]</A></TD></TR>";
+		}
+		$sth->finish();
+	} else
+	{
+		PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+	}
+	PRINT "<tr $bgcd><TD><form method=post action=\"$USERPREFIX/computers-software-add.php\"><input type=hidden name=cID value=$showID>Add software ";
+	SoftwareDropdown();
+	PRINT " to computer.</TD><TD><input type=submit value=Add></form></TD></TR>";
+	PRINT "</TABLE>";
+}
+
+function SoftwareDropdown($where = "")
+{
+	global $USERPREFIX, $adb;
+	$query = "SELECT name,ID FROM software $where ORDER BY name";
+	$sth = $adb->prepare($query);
+	if($sth)
+	{
+		$res = $sth->execute();
+		$numRows = $sth->rows();
+		PRINT "<SELECT NAME=sID SIZE=1>\n";
+		for($i = 0; $i < $numRows; $i++) 
+		{
+			$result = $sth->fetchrow_hash();
+			$version = $result["version"];
+			$name = $result["name"];
+			$sID = $result["ID"];
+			PRINT "<OPTION VALUE=$sID>$name</OPTION>\n";
+		}
+		PRINT "</SELECT>\n";
+		$sth->finish();
+	} else
+	{
+		PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+	}
+}
+
+?>

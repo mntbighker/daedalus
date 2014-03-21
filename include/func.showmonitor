@@ -1,0 +1,60 @@
+<?php
+
+function showComputer($ID, $table) 
+{
+ 
+ global $cfg_snmp, $cfg_snmp_ping, $adb;
+
+  // Numder of Columns to Dislpay
+  $cols = 4;
+
+  // Get infromation for 1 item based on table and ID.
+  $query = "SELECT * FROM monitor WHERE (monitor_id = $ID)";
+  $sth = $adb->prepare($query);
+  $res = $sth->execute()  or die( mysql_error() );
+  $results = $sth->fetchrow_hash();
+
+  $keys = array_keys ($results);
+  $rows = ceil( count($keys) / $cols);
+
+  $keys = array_pad ($keys, $cols*$rows, '');
+
+  $split = array_chunk ($keys, $cols);  
+
+  echo "X:$split[0][2]";
+
+
+$str="hello who are you ?
+what is your name ? Look !!!
+I see a yellow monster here !!!";
+
+preg_match_all("/([^ \r\n\t\f]+)/i",$str,$arr,PREG_SET_ORDER);
+
+for ($i=0;$i<count($arr);$i++) print $arr[$i][0]."<br>"; 
+
+
+
+  foreach ( range(0, count($keys)) as $count ) {
+    //$order = slice($keys,      
+
+  }
+ 
+  echo "<p>";
+  echo "<table width=100% border=1 noshade>";
+  echo "<tr>";
+
+  foreach ($results as $label=>$value) {
+     $value || $value = "&nbsp;";
+     echo "<th>", ucfirst($label), "</th>";
+     echo "<td>$value</td>";
+     $i++; if ( ! ($i % $cols) ) echo "</tr><tr>";
+  }
+
+  echo "</tr>";
+  echo "</table>";
+  echo "</p>";
+    
+}
+
+?>
+

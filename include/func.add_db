@@ -1,0 +1,114 @@
+<?php
+
+function AddDB($tablename, $required)
+{
+
+  // Required inputs: $tablename - name of table in batabase
+  //                  $required  - Array of required fields
+
+  include_once("../include/func.listcolumn");
+  
+  $tablename = $_REQUEST['tablename'];
+  $required = $_REQUEST['required'];
+
+  // Declare Global variables for database handle and login name
+  global $adb;
+
+  // Extract POST variables as named hashes
+  extract($_POST);
+
+$tn_id = "${tablename}_id";
+$ID = $$tn_id;
+
+// Cleanup "surplus_" part of tablename
+$normal = strpos($tn_id, 'surplus_'); 
+if ( $normal === false ) {
+   $where =  $tn_id;
+} else {
+   $where = substr($tn_id, 8);
+   ${$where} = $ID;
+}
+
+// Check if Software assigned to computer
+if ( $tablename == 'software' && $ID ) {
+  $query = "SELECT COUNT(*) 
+              FROM computer_software 
+             WHERE software_id = $ID";  
+
+  $sth = $adb->prepare($query);
+  $res = $sth->execute();
+  list($count) = $sth->fetchrow_hash();
+
+  if ( mysql_errno() ) { print( mysql_error().':<br />'.$query ).'<br />'; }
+  if ( $count ) {
+    $error = "<hr4><font color=\"red\">Software is currently assigned.</font>
+              </h4><hr noshade>";
+    return array($error, $ID);
+  }
+}
+
+// Create labels from table column names
+  $labels = listtablecolumns($tablename);
+
+// Throwaway Last Column: mod_date
+array_pop($labels);
+
+// Create List of "column = value" for UPDATE/INSERT
+$var = '';
+foreach ($labels as $label) {
+   $var .=  "$label = " . '"' . ${$label} . '"' . ",";
+}
+
+// delete last ','
+$var = rtrim($var, ",");
+
+// Setup SQL UPDATE/INSERT statement 
+$sql =  ($ID != '') ? "UPDATE" : "INSERT";
+$sql .= " $tablename SET ";
+
+// Asmebly SQL 
+$sql .= $var;
+
+$sql .= ( $ID != '') ? " WHERE $where = {$ID} " : ''; 
+
+// Check Required fields exists
+$test = 1;
+if ( $required ) {
+   foreach ($required as $value) {
+      if ( empty($$value) ) { $test = 0; break; }
+   }
+}
+
+if ( $test == 0 ) {
+  $msg = "<hr4><font color=\"red\">Required Field(s) Missing!</font></h4><hr noshade>";
+}
+
+// Execute SQL if No Required Fields or Required Fields Exists
+if ( $test ) {
+   $count = $adb->dbh->exec($query);
+   if ( mysql_errno() and mysql_errno() != 1062 ) { 
+      echo( mysql_error().' Add DB: '.$sql ); 
+   }
+   $nID = $adb->insert_id();
+}
+
+if ( $count == 1 ) {
+  $msg = "<hr4><font color=\"blue\">Database Change Successfully</font></h4><hr noshade>";
+}
+
+if ( mysql_errno() and mysql_errno() == 1062 )  {  
+   $msg = "<hr4><font color=\"red\">Duplicate Record!</font></h4><hr noshade>";
+} 
+
+if ( isset($count) && $count == 0 ) {
+  $msg = "<hr4><font color=\"darkgreen\">All Fields Matched Existing Data!</font></h4><hr noshade>";
+}
+
+$ID || $ID = $nID;
+
+// Return ID and Messages
+return array($msg, $ID);
+
+} // End Function
+
+?>

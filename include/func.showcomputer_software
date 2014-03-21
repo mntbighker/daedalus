@@ -1,0 +1,78 @@
+<?php
+
+function ShowComputer_Software($customer_id) 
+{
+ 
+   include_once("../include/func.showsoftware"); 
+
+  // Global variable for DataBase Handle
+  global $adb;   
+
+  // Init Surplus Variable
+  $surplus = 0;
+
+  // Get computer list for customer
+  $query = "SELECT lastname
+            FROM   customer
+            WHERE customer_id = $customer_id";
+
+  $sth = $adb->prepare($query);
+  $res = $sth->execute()  or die( mysql_error().': '.$query );
+
+  // Get lastname for this customer
+  list($lastname) = $sth->fetchrow_array($res);
+
+  // Get computer list for customer
+  $query = "SELECT *
+            FROM   computer
+            WHERE owner = '$lastname' OR user = '$lastname' ";
+
+  $sth = $adb->prepare($query);
+  $res = $sth->execute()  or die( mysql_error().': '.$query );
+
+  $rows = $sth->fetch();
+  if ($rows) {
+     foreach($rows as $row){
+        $surplus++;
+     }
+   }
+
+
+  // Get all computer_ids for this customer
+   while ( $row = $sth->fetchrow_hash() ) {
+      extract($row);
+     // Setup info for anchor
+     $form = "general-info.php";
+     $vars = "tablename=computer&field=computer_id&merge1=computer_id&merge2=owner";
+
+     echo "<p>
+        <table width=30% border=1 noshade>
+        <tr>
+          <th>Computer</th>
+          <th>Owner</th>
+          <th>User</th>
+          <th>Building</th>
+          <th>Room</th>
+          <th>IP</th>
+          <th>NetMask</th>
+          <th>Gateway</th>
+        </tr>
+        <tr>
+           <td><a href=\"$form?$vars&ID=$computer_id\">$computer_id</a></td>
+           <td>$owner</td>
+           <td>$user</td>
+           <td>$building</td>
+           <td>$room</td>
+           <td>$ip</td>
+           <td>$netmask</td>
+           <td>$gateway</td>
+        </tr>
+        </table>
+        </p>";
+
+         ShowSoftware($computer_id);
+   }
+   return($surplus);
+}
+
+?>     

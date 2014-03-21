@@ -1,0 +1,14 @@
+<?php
+
+function Checked($field)
+{
+  if (($field == "yes") || ($field == 1))
+  {
+    return("checked");
+  } else
+  {
+    return("");
+  }
+}
+
+?>

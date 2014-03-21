@@ -1,0 +1,46 @@
+<?php
+
+function addFollowupForm($ID) {
+
+  // Data posted by this function
+  // newfollowup - Text of New Followup
+  // date        - Date followup submitted
+  // time        - Time followup submitted
+
+  // NOTE: This Function creates 1 row in a table
+
+   global $IRMName;
+
+   include_once("../include/func.dropdown_date");
+
+   echo "<tr>";
+
+   echo "<td align = \"center\" width = 250>
+         <p><font color=\"purple\">Add Followup</FONT></p>";
+
+   echo "Date: ";
+   dropdownDate('month', 1, 12, date("m"));
+   echo " / ";
+   dropdownDate('day', 1, 31, date("d"));
+   echo " / ";
+   $now = date("Y");
+   dropdownDate('year', $now-2, $now+2, $now);
+   echo "<br /> ";
+
+   echo "Time: ";
+   dropdownDate('hour', 1, 24, date("H"));
+   echo " : ";
+   dropdownDate('minute', 1, 60, date("i"));
+
+   echo "</td>";
+
+   echo "<td>$IRMName</td>";
+
+   echo "<td valign=top>
+        <textarea cols=60 Rows=7 name=newfollowup WRAP=soft></textarea></td>";
+
+   echo "</tr>";
+
+} // End Function addFollowupForm
+
+?>

@@ -1,0 +1,24 @@
+<?php
+
+   function formKnowledgebase() {
+
+   // Data Posted by This Function
+   // addtoknowledgebase - Add something to knowledgebase 
+   //                      for a Complete Trouble Call.
+
+   // Note" function Displays a Complete Table
+
+   echo "<table border=1 width=100%>";
+
+   echo "<tr><th>Knowledge Base System</th></tr>
+         <tr><td>
+         <input type=checkbox name=addtoknowledgebase value=yes> 
+         If tracking is marked as complete, should it be used to add 
+         something to the knowledgebase?
+         </td></tr>";
+
+   echo "</table>";
+
+} // End Function formKnowledgebase
+
+?>

@@ -1,0 +1,62 @@
+<?php
+
+function listFollowups($ID)
+{
+
+  // Global variable for DataBase Handle
+  global $adb;
+
+  include_once("../include/func.addfollowupform");
+
+  // Query: Followup List Based On Tracking 'ID' From 'followups' Table
+  $query = "SELECT date, author, contents 
+            FROM followups 
+            WHERE  tracking = $ID";
+  $sth = $adb->prepare($query);
+  $res = $sth->execute()  or die( mysql_error().': '.$query );
+
+  // Get Followup List
+  while ( $followlist = $sth->fetchrow_array($res) ) {
+      
+     // Build array
+     $followups[] = $followlist;
+
+  } // End While
+
+  $count = count($followups);
+
+  // Return if no followups
+  if ( ! $count ) {
+      echo "<h3>No Followups assigned to this call.</h3>";
+      echo "<table width=100% border=1>";
+         addFollowupForm($ID);
+      echo "</table>";
+      return(0);
+  } // End If
+
+  echo "<table width=100% border=1>";
+
+  echo "<tr><th colspan=3>Job $ID Has $count followups</th></tr>";
+
+  echo "<tr>";
+  echo "<td><b>Date</b></td>";
+  echo "<td><b>Author</b></td>";
+  echo "<td><b>Description</b></td>";
+  echo "</tr>";
+
+  foreach ($followups as $item) {
+     $content = wordwrap( $item[2], 80, "<br>");
+     echo "<tr>";
+     echo "<td>$item[0]</td>";
+     echo "<td>$item[1]</td>";
+     echo "<td>$content</td>";
+     echo "</tr>";
+  }
+
+  addFollowupForm($ID);
+
+  echo "</table>";
+
+  return($count);
+
+} // End function listFollowups

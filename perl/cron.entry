@@ -1,0 +1,4 @@
+# Format of lines:
+#min  hour daymo month daywk cmd
+#
+0       1      16       *       *      /var/www/html/irm/perl/cron.script

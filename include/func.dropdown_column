@@ -1,0 +1,24 @@
+<?php
+
+function DropColumn($table, $var_name, $select = '') 
+{
+
+  include_once("../include/func.listcolumn");
+
+  global $adb;
+
+  $labels = listtablecolumns($table);
+
+  PRINT "<select name=\"$var_name\" size=1>";
+        
+   foreach ($labels as $label) {
+        $selected = ($label == $select) ? 'selected' : '';
+        echo "<option value=\"$label\" $selected >", ucfirst($label), "</option>";
+   }
+
+   PRINT "</select>\n";
+
+
+} // End Dropdown1
+
+?>

@@ -1,0 +1,47 @@
+<?php
+
+function moveSurplus($tablename,$ID)
+{
+
+  include_once("../include/func.listcolumn");
+
+  global $adb;
+
+  $colList = listtablecolumns($tablename);
+  array_pop($colList);
+
+  $col_list = implode(",", $colList);
+
+
+  // Do insert into Table: "surplus_$tablename" "${talbename}_id = $ID"
+  // Update timestamp
+  // Delete from Original Table
+
+  $query  = "INSERT INTO surplus_$tablename ($col_list)
+                  SELECT  $col_list
+                    FROM $tablename
+                   WHERE ${tablename}_id = '$ID'";
+
+   $count =  $adb->dbh->exec($query);
+   if ( mysql_errno() ) { die( mysql_error().': '.$sql ); }
+
+   if ( ! $count ) { exit(1); }
+
+   $query  = "UPDATE surplus_$tablename 
+                   SET surplus_date = NOW(), date_mod = NULL
+                   WHERE ${tablename}_id  = '$ID'";
+
+   $count =  $adb->dbh->exec($query);
+   if ( mysql_errno() ) { die( mysql_error().': '.$sql ); }
+
+   $query  = "DELETE FROM $tablename 
+                   WHERE ${tablename}_id = '$ID'"; 
+
+   $count =  $adb->dbh->exec($query);
+   if ( mysql_errno() ) { die( mysql_error().': '.$sql ); }
+
+   if ( ! $count ) { exit(2); }
+
+} // End moveSurplus
+
+?>

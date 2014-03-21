@@ -1,0 +1,148 @@
+<?php
+
+function Tech_list($value, $myname) 
+{
+  global $USERPREFIX, $adb;
+  $query = "SELECT * FROM users WHERE (type = 'admin' || type = 'tech') ORDER BY name";
+	$sth = $adb->prepare($query);
+	if($sth)
+	{
+		$res = $sth->execute();
+  	$numRows = $sth->rows();
+  	PRINT "<SELECT NAME=\"$myname\" SIZE=1>";
+  	if ($numRows > 0)
+  	{
+    	PRINT "<OPTION VALUE=\"\">[ Nobody ]</OPTION>\n";
+    	for($i = 0; $i < $numRows; $i++)
+    	{
+				$result = $sth->fetchrow_hash();
+      	$output = $result["name"];
+				$fullname = $result["fullname"];
+      	if ($output == $value)
+      	{
+        	PRINT "<OPTION VALUE=\"$output\" SELECTED>$fullname</OPTION>\n";
+      	} else
+      	{
+        	PRINT "<OPTION VALUE=\"$output\">$fullname</OPTION>\n";
+      	}
+    	}
+  	}
+  	PRINT "</SELECT>";
+		$sth->finish();
+	} else
+	{
+		PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+	}
+}
+
+
+function show_events($sth) 
+{
+	if($sth)
+	{
+		$res = $sth->execute();
+		$numRows = $sth->rows();
+		if ($numRows < 1) 
+		{
+			PRINT "<p>No events<BR>";
+			return;
+		}
+		PRINT "<TABLE WIDTH=100% BORDER=1>";
+		PRINT "<TR><th>Item</th><th>Date</th><th>Service</th><th WIDTH=5%>Level</th><th WIDTH=70%>Message</th></TR>";
+		for($i = 0; $i < $numRows; $i++) 
+		{
+			$result = $sth->fetchrow_hash();
+			$ID = $result["ID"];
+			$item = $result["item"];
+			$itemtype = $result["itemtype"];
+			$date = $result["date"];
+			$service = $result["service"];
+			$level = $result["level"];
+			$message = $result["message"];
+			PRINT "<TR><TD>$itemtype: $item</TD><TD>$date</TD><TD>$service</TD><TD>$level</TD><TD>$message</TD></TR>";
+		}
+		PRINT "</TABLE>";
+		$sth->finish();
+	} else
+	{
+		PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+	}
+}
+
+function setup_db($tablearray) 
+{
+	global $adb;
+	if(is_array($tablearray) == false)
+	{
+		PRINT "Error: non-array variable was passed to create_table function\n";
+		return(0);
+	}
+	
+	$array_size = sizeof($tablearray);
+
+	if($array_size > 0)
+	{
+		$sth = $adb->prepare($tablearray[0]);
+		if($sth)
+		{
+			$res = $sth->execute();
+		} else
+		{
+			PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+			return(0);
+		}
+		if($res == 0)
+		{
+			PRINT "<FONT COLOR=red> Could not create table - </FONT>\n";
+			return(0);
+		}
+		if($array_size > 1)
+		{
+			for($i = 1; $i < $array_size; $i++)
+			{
+				$sth2 = $adb->prepare($tablearray[$i]);
+				if($sth2)
+				{
+					$res = $sth2->execute();
+				} else
+				{
+					PRINT "Could not prepare query: ".$sth2->errstr."<BR>\n";
+					return(0);
+				}
+				if($res == 0)
+				{
+					PRINT "Error adding data to table\n";
+					return(0);
+				}
+			}
+		}
+	} else
+	{
+		PRINT "function create_table received an empty array\n";
+		return(0);
+	}
+	return(1);
+}
+
+
+function namepriority($priority)
+{
+	if($priority == 5)
+	{
+		return("<FONT COLOR=\"red\">Very High</FONT>");
+	} else if ($priority == 4)
+	{
+		return("<FONT COLOR=\"purple\">High</FONT>");
+	} else if ($priority == 3)
+	{
+		return("Normal");
+	} else if ($priority == 2)
+	{
+		return("<FONT COLOR=\"blue\">Low</FONT>");
+	} else if ($priority == 1)
+	{
+		return("<FONT COLOR=\"green\">Very Low</FONT>");
+	}
+}
+
+?>
