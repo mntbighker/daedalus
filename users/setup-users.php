@@ -9,7 +9,6 @@ include_once("../include/irm_conf.php");
 include_once("../include/class.user");
 include_once("../include/func.header_footer");
 
-
 AuthCheck("admin");
 
 commonHeader("Daedalus User Setup");

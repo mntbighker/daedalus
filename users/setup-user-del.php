@@ -8,12 +8,13 @@
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
 include_once("../include/func.header_footer");
-
 include_once("../include/func.irm");
 
 AuthCheck("admin");
 
 commonHeader("Daedalus User Setup - User Deleted");
+
+$username = $_REQUEST['username'];
 
 $user = new User($username);
 

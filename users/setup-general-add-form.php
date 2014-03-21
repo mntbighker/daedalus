@@ -8,7 +8,6 @@
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
 include_once("../include/func.header_footer");
-
 include_once("../include/func.add_edit");
 
 // Required inputs: 
@@ -18,6 +17,9 @@ include_once("../include/func.add_edit");
 //   $required  - Can be Blank
 
 $required  = '';
+if (!isset($add)) $add = '';
+if (!isset($submit)) $submit = '0';
+if (!isset($template_id)) $template_id = '0';
 
 // Do Authorization
 AuthCheck("tech");

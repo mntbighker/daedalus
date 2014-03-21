@@ -8,10 +8,19 @@
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
 include_once("../include/func.header_footer");
-
 include_once("../include/func.irm");
 
 AuthCheck("admin");
+
+$username = $_REQUEST['username'];
+$password = $_REQUEST['password'];
+$fullname = $_REQUEST['fullname'];
+$email = $_REQUEST['email'];
+$building = $_REQUEST['building'];
+$phone = $_REQUEST['phone'];
+$type = $_REQUEST['type'];
+
+if (!isset($comments)) $comments = '';
 
 $user = new User();
 $user->setName($username);

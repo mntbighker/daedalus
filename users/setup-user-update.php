@@ -11,6 +11,16 @@ include_once("../include/func.header_footer");
 
 AuthCheck("admin");
 
+$update = $_REQUEST['update'];
+$username = $_REQUEST['username'];
+
+if (!isset($fullname)) $fullname = '';
+if (!isset($email)) $email = '';
+if (!isset($building)) $building = '';
+if (!isset($phone)) $phone = '';
+if (!isset($type)) $type = '';
+if (!isset($comments)) $comments = '';
+
 commonHeader("Daedalus User Setup - User Update");
 
 if($update == "act")

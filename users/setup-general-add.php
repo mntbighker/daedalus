@@ -20,6 +20,20 @@ global $adb, $IRMName;
 
 $tablename = $_REQUEST['tablename'];
 
+if (!isset($asset_info)) $asset_info = '';
+if (!isset($table_name)) $table_name = '';
+if (!isset($col1)) $col1 = '';
+if (!isset($col2)) $col2 = '';
+if (!isset($template)) $template = '';
+if (!isset($required)) $required = '';
+if (!isset($defaults)) $defaults = '';
+if (!isset($log_max)) $log_max = '';
+if (!isset($asset_info_id)) $asset_info_id = '';
+if (!isset($dropfield)) $dropfield = '';
+if (!isset($sort_default)) $sort_default = '';
+if (!isset($protect)) $protect = '';
+if (!isset($cID)) $cID = '';
+
 // Create labels from table column names
 $labels = listtablecolumns($tablename);
 
