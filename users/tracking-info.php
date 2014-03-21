@@ -21,6 +21,9 @@ AuthCheck("post-only");
 $tablename = $_REQUEST['tablename'];
 $ID = $_REQUEST['ID'];
 
+if (!isset($changed)) $changed = '';
+if (!isset($message)) $message = '';
+
 if ( $changed == 'yes' ) {
 
 // Update Customer and computer_id in Tracking Table

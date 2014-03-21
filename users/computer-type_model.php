@@ -16,6 +16,10 @@ include_once("../include/func.drop_filter_list");
 // Do Authorization
 AuthCheck("normal");
 
+$tablename = $_REQUEST['tablename'];
+
+if (!isset($error)) $error = '';
+
 $name  = ucfirst($tablename);
 
   // Get Distinct List of field

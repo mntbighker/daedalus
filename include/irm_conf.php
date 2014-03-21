@@ -24,7 +24,6 @@
 # is needed to find the configuration files. 
 # Default: $root_path = "/full/path/to/irm";
 
-# $root_path = "/var/www/html/irm";
 $root_path = __DIR__ . '/..';
 
 global $IRMName, $IRMPass, $cfg_dbdb;
