@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
 
 include_once("./include/irm_conf.php");
 include_once("./include/class.user");
