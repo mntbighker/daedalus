@@ -2,11 +2,8 @@
 ################################################################################
 #                                  CHANGELOG                                   #
 ################################################################################
-#  11/2002 - G. hartlieb: Created                                              #
+#                                                                              #
 ################################################################################
-
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
 
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
@@ -31,8 +28,6 @@ include_once("../include/func.asset_info");
 // Start of Generic code
 
 initvar('test','logical','value','match','field','sort','fail','count','display');
-
-// $count = 0;
 
 // Do Authorization
 AuthCheck("normal");

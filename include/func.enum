@@ -1,4 +1,4 @@
-<%php
+<?php
 
 // Input:  The table name and the enum field
 // Output: Array that stores all options of the enum field or   

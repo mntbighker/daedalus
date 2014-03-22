@@ -1,14 +1,9 @@
+<?php
 
-
-
-<?php if (isset($_POST ['fahrenheit'])) $fahr = $_POST ['fahrenheit']; ?>
+if (isset($_POST ['fahrenheit'])) $fahr = $_POST ['fahrenheit']; ?>
 
 <input type = "text" name = "fahrenheit"
 <?php if (isset($fahr)) {echo "value = ".$fahr;} ?> >
-
-
-
-
 
 $_POST['experiences'] = ( count($_POST['experiences']) >1 )? $_POST['experiences'] : array();
 
@@ -20,3 +15,5 @@ echo ( in_array($value, $_POST['experiences'] ) )? ' CHECKED ' : '';
 echo ">$value</input>";
 echo '</td>';
 }
+
+?>

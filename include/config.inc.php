@@ -1,5 +1,6 @@
 <?php
-# Welcome to the IRM Configuration File.
+
+# Welcome to the Daedalus Configuration File.
 # Configuration options follow this syntax:
 # 	$variable = "<value>";
 # It is important that you put the double-quotes around the value.
@@ -10,13 +11,6 @@
 #
 # Enjoy!
 #
-# $Id: config.inc.php,v 1.11 2002/08/19 21:44:49 racer Exp $
-#
-#	irm_build: The build date of this version (or patch revision of IRM).
-#	this variable will be commented out for release versions, but used for
-#	patch revisions.  You should never have to modify this variable
-# Syntax: $irm_build = "buildstamp"
-# Default: $irm_build = "2001081002";
 
 $irm_build = "05-01-2005";
 

@@ -2,15 +2,12 @@
 ################################################################################
 #                                  CHANGELOG                                   #
 ################################################################################
-#  11/2002 - G. hartlieb: Created                                              #
+#                                                                              #
 ################################################################################
-
-error_reporting(E_ALL);
 
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
 include_once("../include/func.header_footer");
-
 include_once("../include/func.getjobs");
 include_once("../include/func.displaytickets");
 
@@ -26,9 +23,7 @@ $logical_str = '';
 $test_str    = 'LIKE';
 $match_str   = 'contains';
 $field_str   = 'status';
-//$display_str = 'computer_id|contents|assign';
 $display_str = 'status|date|assign|priority|category|customer|summary';
-
 $sort        = 'date';
 $col1        = 'ID';
 $col2        = 'status';

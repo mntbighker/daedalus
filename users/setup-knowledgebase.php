@@ -2,16 +2,13 @@
 ################################################################################
 #                                  CHANGELOG                                   #
 ################################################################################
-#  8/16/99 - Keith Schoenefeld:	Added file so we could add categories to the   #
-#							Knowledge Base.                                                  #
+#                                                                              #
 ################################################################################
 
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
 include_once("../include/func.header_footer");
-
 include_once("../include/func.knowledgebase");
-
 
 AuthCheck("tech");
 

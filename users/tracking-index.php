@@ -2,7 +2,7 @@
 ################################################################################
 #                                  CHANGELOG                                   #
 ################################################################################
-#  11/2002 - G. hartlieb: Created                                              #
+#                                                                              #
 ################################################################################
 
 include_once("../include/irm_conf.php");
@@ -16,7 +16,6 @@ initvar('sort','sort_default','fail','count');
 
 // Do Authorization
 AuthCheck("normal");
-
 
 // Values Required for Later Pages
 //    $tablename - This Page Table name 

@@ -2,14 +2,13 @@
 ################################################################################
 #                                  CHANGELOG                                   #
 ################################################################################
-#  11/2002 - G. hartlieb: Created                                              #
+#                                                                              #
 ################################################################################
 
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
 include_once("../include/func.header_footer");
 include_once("../include/func.surplus_header");
-
 include_once("../include/func.asset_info");
 include_once("../include/func.add_edit");
 include_once("../include/func.add_db");

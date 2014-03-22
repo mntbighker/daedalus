@@ -1,6 +1,5 @@
 <?php
 
-
 function dropInsert ($tablename,$field1,$item1,$field2='',$item2='')
 {                                      
    global $adb;      

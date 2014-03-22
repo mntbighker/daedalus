@@ -2,14 +2,13 @@
 ################################################################################
 #                                  CHANGELOG                                   #
 ################################################################################
-#  11/2002 - G. hartlieb: Created                                              #
+#                                                                              #
 ################################################################################
 
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
 include_once("../include/func.header_footer");
 include_once("../include/func.surplus_header");
-
 include_once("../include/func.asset_info");
 include_once("../include/func.csv");
 
@@ -21,7 +20,6 @@ include_once("../include/func.csv");
 // $test[]    - Test type (LIKE/NOT LIKE)
 // $match[]   - Exact or Wild Card Search
 // $field[]   - Table Field to Search On
-
 // $sort      - table field to sort on
 
 // Optional Inputs: 
@@ -31,7 +29,6 @@ include_once("../include/func.csv");
 
 // Do Authorization
 AuthCheck("normal");
-
 
 // Config: Database lookup using 'tablename'
 $info_hash = getAssetInfo($tablename);

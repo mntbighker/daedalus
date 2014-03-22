@@ -2,17 +2,8 @@
 ################################################################################
 #                                  CHANGELOG                                   #
 ################################################################################
-#  7/22/99 - Keith Schoenefeld:	Cleaned up code, converted all IF(): to if(){. #
-#  8/20/99 - Yann Ramin: Preview features, nicer text, et al                   #
-#  9/11/99 - Keith Schoenefeld:	Added stuff for group stuff.                   #
-#  9/17/99 - Yann Ramin: ID error checking code                                #
-# 11/03/99 - Keith Schoenefeld:	If a normal user or admin enters new tracking  #
-#				it will automatically enter their name and     #
-#				email address into the help request form.      #
-# 11/03/99 - Keith Schoenefeld:	Added the ability for someone to request       #
-#				updates to tracking they enter via email.      #
+#                                                                              #
 ################################################################################
-
 
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");

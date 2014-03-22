@@ -1,4 +1,9 @@
 <?php
+################################################################################
+#                                  CHANGELOG                                   #
+################################################################################
+#                                                                              #
+################################################################################
 
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
@@ -9,7 +14,6 @@ AuthCheck("normal");
 $resetpw = 'daedalus-ts';
 
 $user = new User($username);
-
 $user->setPassword($resetpw);
 $user->commit();
 

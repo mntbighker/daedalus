@@ -2,14 +2,13 @@
 ################################################################################
 #                                  CHANGELOG                                   #
 ################################################################################
-#  7/22/99 - Keith Schoenefeld:	Cleaned up code, converted all IF(): to if(){. #
+#                                                                              #
 ################################################################################
 
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
 include_once("../include/func.irm");
 include_once("../include/func.header_footer");
-
 include_once("../include/func.showitem");
 
 AuthCheck("tech");

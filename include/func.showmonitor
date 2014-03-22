@@ -23,7 +23,6 @@ function showComputer($ID, $table)
 
   echo "X:$split[0][2]";
 
-
 $str="hello who are you ?
 what is your name ? Look !!!
 I see a yellow monster here !!!";

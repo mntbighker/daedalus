@@ -1,4 +1,9 @@
 <?php
+################################################################################
+#                                  CHANGELOG                                   #
+################################################################################
+#                                                                              #
+################################################################################
 
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
@@ -8,7 +13,6 @@ AuthCheck("normal");
 
 $user = new User($IRMName);
         $currentpass  = $user->getPassword();
-
 
 if($currentpass != $oldpassword)
 {
