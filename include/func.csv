@@ -12,6 +12,8 @@ function SearchCVS($tablename, $logical, $value,
 
   // Declare Global variables for database handle 
   global $cfg_dbdb, $adb, $PHP_SELF;
+  
+  $PHP_SELF = $_SERVER['SCRIPT_NAME'];
 
   // Change Input Arrays to String
   if ( is_string($logical) ) $logical = explode("|", $logical);

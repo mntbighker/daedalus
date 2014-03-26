@@ -10,10 +10,12 @@ include_once("../include/class.user");
 include_once("../include/func.header_footer");
 include_once("../include/func.drop_edit");
 
-initvar('submit');
+initvar('submit', 'SCRIPT_NAME');
 
 // Do Authorization
 AuthCheck("normal");
+
+$tablename = $_REQUEST['tablename'];
 
 $tablename && $field1 = array_pop(explode("_", $tablename, 2));
 
@@ -53,7 +55,7 @@ commonHeader("Daedalus - Computer Templates");
 echo "Select Table Type";
 echo "<p>";
 foreach ($tables as $table) {   
-   echo "<a href=\"$PHP_SELF?tablename=$table\">$table</a><br />"; 
+   echo "<a href=\"$SCRIPT_NAME?tablename=$table\">$table</a><br />"; 
 }
 echo "</p>";
    

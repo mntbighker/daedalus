@@ -66,6 +66,8 @@ function dropShowTable($tablename, $field)
 
 include_once("../include/func.drop_filter_list");
 
+$PHP_SELF = $_SERVER['SCRIPT_NAME'];
+
 // Add 
 echo "<form method=POST action=\"$PHP_SELF\">";
 echo "<p><table border=1 noshade>";
@@ -105,6 +107,8 @@ function dropShowModel($tablename, $field)
 {
 
 include_once("../include/func.drop_filter_list");
+
+$PHP_SELF = $_SERVER['SCRIPT_NAME'];
 
 // Add 
 echo "<form method=POST action=\"$PHP_SELF\">";

@@ -10,7 +10,7 @@ function AddEdit($tablename, $id, $col1, $required, $model='')
   
   if (!isset($results)) $results = '';
   if (!isset($type)) $type = '';
-
+  
   // If $required is Empty Make an Empty Array
   $required || $required = array();
 

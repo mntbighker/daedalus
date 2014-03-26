@@ -27,12 +27,25 @@ include_once("../include/func.asset_info");
 
 // Start of Generic code
 
-initvar('test','logical','value','match','field','sort','fail','count','display');
+// initvar('test','logical','value','match','field','sort','fail','count','display');
+initvar('count');
 
 // Do Authorization
 AuthCheck("normal");
 
 $tablename = $_REQUEST['tablename'];
+$logical = (isset($_REQUEST['logical'])) ? $_REQUEST['logical'] : $logical = array('','','','');
+$value = (isset($_REQUEST['value'])) ? $_REQUEST['value'] : $value = array('','','','');
+$test = (isset($_REQUEST['test'])) ? $_REQUEST['test'] : $test = array('','','','');
+$match = (isset($_REQUEST['match'])) ? $_REQUEST['match'] : $match = array('','','','');
+$field = (isset($_REQUEST['field'])) ? $_REQUEST['field'] : $field = array('','','','');
+$sort = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : "";
+$fail = (isset($_REQUEST['fail'])) ? $_REQUEST['fail'] : "";
+if(isset($_REQUEST['display'])){
+    $display = $_REQUEST['display'];
+    if ( is_string($display) ) $display = explode("|", $display);
+} else $display = "";
+
 
 $name  = ucfirst($tablename);
 $normal = strpos($tablename, 'surplus');
@@ -43,10 +56,8 @@ $info_hash = getAssetInfo($tablename);
 // Auto Set Variable Names Based on Column Names
 extract($info_hash);
 
-// trigger_error($display, E_USER_ERROR);
-
 // DEFAULTS: Change Strings to Arrays 
-if ( is_string($required) )  $required  = explode(",", $required);
+// if ( is_string($required) )  $required  = explode(",", $required);
 if ( is_string($defaults) )  $defaults  = explode(",", $defaults);
 if ( is_string($dropfield) ) $dropfield = explode(",", $dropfield);
 
@@ -58,7 +69,7 @@ if ( is_string($match) )   $match   = explode("|", $match);
 if ( is_string($field) )   $field   = explode("|", $field);
 if ( is_string($display) ) $display = explode("|", $display);
 
-if ( ! $display ) $defaults = $display;
+if ( $display[0] != '' ) $defaults = $display;
 
 if ( $normal === false ) {
    commonHeader("$name");
@@ -152,7 +163,7 @@ PRINT "<table border=1 width=100%><th>$name Search</th>";
 
       // Loop Over 2- 4 Search Input
 
-      while ( $count++ < $log_max ) { 
+      while ( $count++ < $log_max ) {
 
         // Logical Dropdown
         $and = ($logical[$count - 1] == 'AND') ? 'selected' : NULL;

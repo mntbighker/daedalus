@@ -37,7 +37,7 @@ commonHeader("Daedalus $name  - Add/Edit Form");
 // Test is UPDATE/INSERT was done: Success or Fail
 if ($add == 1) 
 {
-  PRINT "<hr4><font color=\"blue\">Database Change Successfully</font></h4>";
+  PRINT "<hr4><font color=\"blue\">Database Changed Successfully</font></h4>";
   PRINT "<hr noshade>";
 } elseif ( isset($add) && $add != 1 ) {
   PRINT "<hr4><font color=\"darkgreen\">All Fields Matched Existing Data!</font>

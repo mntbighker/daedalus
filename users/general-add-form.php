@@ -20,13 +20,14 @@ include_once("../include/func.add_db");
 // Do Authorization
 AuthCheck("tech");
 
+$PHP_SELF = $_SERVER['SCRIPT_NAME'];
+
 $tablename = $_REQUEST['tablename'];
-$required = $_REQUEST['required'];
 $col1 = $_REQUEST['col1'];
 $ID = $_REQUEST['ID'];
 
-if (!isset($submit)) $submit = '';
-if (!isset($model)) $model = '';
+// if (!isset($submit)) $submit = '';
+// if (!isset($model)) $model = '';
 
 // Setup for Computer Type Model
 if ( isset($selected) ) {

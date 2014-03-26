@@ -4,14 +4,16 @@ function ShowExtDevice($customer_id)
 {
  
   // Global variable for DataBase Handle
-  global $adb;   
+  global $adb;
+  
+  if (!isset($z)) $z = '';
 
   // Define array variable
   $slist = array();
 
   // Setup info for anchor
   $form = "general-info.php";
- $vars = "tablename=ext_device&col1=ext_device_id&col2=ext_model";
+  $vars = "tablename=ext_device&col1=ext_device_id&col2=ext_model";
 
   // Get computer list for customer
   $query = "SELECT lastname

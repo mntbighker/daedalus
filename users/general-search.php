@@ -16,14 +16,19 @@ include_once("../include/func.search");
 
 initvar('limit','page');
 
-$value = $_REQUEST['value'];
-$test = $_REQUEST['test'];
-$match = $_REQUEST['match'];
-$field = $_REQUEST['field'];
-$sort = $_REQUEST['sort'];
-$logical = $_REQUEST['logical'];
-$display = $_REQUEST['display'];
+$PHP_SELF = $_SERVER['QUERY_STRING'];
+$SERVER_NAME = $_SERVER['SERVER_NAME'];
+
 $tablename = $_REQUEST['tablename'];
+$display = $_REQUEST['display'];
+$logical = (isset($_REQUEST['logical'])) ? $_REQUEST['logical'] : $logical = array('','','','');
+$value = (isset($_REQUEST['value'])) ? $_REQUEST['value'] : $value = array('','','','');
+$test = (isset($_REQUEST['test'])) ? $_REQUEST['test'] : $test = array('','','','');
+$match = (isset($_REQUEST['match'])) ? $_REQUEST['match'] : $match = array('','','','');
+$field = (isset($_REQUEST['field'])) ? $_REQUEST['field'] : $field = array('','','','');
+$page = (isset($_REQUEST['page'])) ? $_REQUEST['page'] : "";
+$sort = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : "";
+$limit = (isset($_REQUEST['limit'])) ? $_REQUEST['limit'] : "";
 
 // Required Inputs: 
 // $tablename - name of table in batabase
@@ -61,9 +66,9 @@ if ( $normal === false ) {
 }         
 
 // Broken without reg_globals
-// echo "<p><a href=\"general-index.php?$_SERVER\[\'QUERY_STRING\'\]\">Restart Search</a>";
-// echo " | <a href=\"general-csv.php?$_SERVER\[\'QUERY_STRING\'\]\">Display CSV</a>";
-// echo " | <a href=\"general-csv.php?dump=1&$_SERVER\]\'QUERY_STRING\'\]\">Download CSV</a></p>";
+echo "<p><a href=\"general-index.php?$PHP_SELF\">Restart Search</a>";
+echo " | <a href=\"general-csv.php?$PHP_SELF\">Display CSV</a>";
+echo " | <a href=\"general-csv.php?dump=1&$PHP_SELF\">Download CSV</a></p>";
 
 // Call Function to Create Paged Information HTML Table //
 $return = SearchView($tablename, $logical, $value, $test, $match, $field,
@@ -73,7 +78,7 @@ commonFooter();
 
 if ( $return ) {
  $query = $QUERY_STRING . "&fail=yes";
- header("Location: https://$SERVER_NAME/irm/users/general-index.php?$query");
+ header("Location: https://$SERVER_NAME/daedalus/users/general-index.php?$query");
 };
 
 ob_flush();

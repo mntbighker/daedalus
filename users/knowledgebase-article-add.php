@@ -12,6 +12,9 @@ include_once("../include/func.tracking_info");
 include_once("../include/func.knowledgebase");
 
 if (!isset($commit)) $commit = '';
+if (!isset($categorylist)) $categorylist = '';
+if (!isset($question)) $question = '';
+if (!isset($answer)) $answer = '';
 
 AuthCheck("tech");
 if($commit != 1)

@@ -11,6 +11,10 @@ function TrackingSearchView($tablename, $logical, $value,
   // Declare Global variables for database handle 
   global $adb, $PHP_SELF;
   
+  $PHP_SELF = $_SERVER['SCRIPT_NAME'];
+  
+  if (!isset($count)) $count = '';
+  
   // Change Input Arrays to String
   if ( is_string($logical) ) $logical = explode("|", $logical);
   if ( is_string($value) )   $value   = explode("|", $value);

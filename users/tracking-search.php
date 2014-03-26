@@ -33,14 +33,17 @@ initvar('page','limit');
 // Do Authorization
 AuthCheck("normal");
 
+
 $tablename = $_REQUEST['tablename'];
-$sort = $_REQUEST['sort'];
 $display = $_REQUEST['display'];
-$logical = $_REQUEST['logical'];
-$value = $_REQUEST['value'];
-$test = $_REQUEST['test'];
-$match = $_REQUEST['match'];
-$field = $_REQUEST['field'];
+$logical = (isset($_REQUEST['logical'])) ? $_REQUEST['logical'] : $logical = array('','','','');
+$value = (isset($_REQUEST['value'])) ? $_REQUEST['value'] : $value = array('','','','');
+$test = (isset($_REQUEST['test'])) ? $_REQUEST['test'] : $test = array('','','','');
+$match = (isset($_REQUEST['match'])) ? $_REQUEST['match'] : $match = array('','','','');
+$field = (isset($_REQUEST['field'])) ? $_REQUEST['field'] : $field = array('','','','');
+$page = (isset($_REQUEST['page'])) ? $_REQUEST['page'] : "";
+$sort = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : "";
+$limit = (isset($_REQUEST['limit'])) ? $_REQUEST['limit'] : "";
 // $col1 = $_REQUEST['col1'];
 // $col2 = $_REQUEST['col2'];
 // $page = $_REQUEST['page'];

@@ -71,6 +71,8 @@ $sql .= $var;
 
 $sql .= ( $ID != '') ? " WHERE $where = {$ID} " : ''; 
 
+var_dump($sql);
+
 // Check Required fields exists
 $test = 1;
 if ( $required ) {

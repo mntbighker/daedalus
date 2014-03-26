@@ -165,29 +165,23 @@ function kbisfaq($ID)
 function kbcategoryListSelect($current, $parentID=0, $categoryname="")
 {
 	global $adb;
-	$query = "select * from kbcategories where (parentID = $parentID) order by name desc";
-	$sth = $adb->prepare($query);
-	if($sth)
+	$query = "SELECT * FROM kbcategories WHERE (parentID = :parentID) ORDER BY name DESC";
+    $sth = $adb->prepare($query);
+	$sth->execute(array('parentID' => $parentID));
+	$rows = $sth->fetchAll();
+	foreach($rows as $result)
 	{
-		$res = $sth->execute();
-		$numRows = $sth->rows();
-		for($i = 0; $i < $numRows; $i++)
+		$result = $sth->fetchrow_hash();
+		$ID = $result["ID"];
+		$name = $categoryname . $result["name"];
+		PRINT "<OPTION VALUE=$ID";
+		if($current == $ID)
 		{
-			$result = $sth->fetchrow_hash();
-			$ID = $result["ID"];
-			$name = $categoryname . $result["name"];
-			PRINT "<OPTION VALUE=$ID";
-			if($current == $ID)
-			{
-				PRINT " SELECTED";
-			}
-			PRINT ">$name</OPTION>\n";
-			$name = $name . "\\";
-			kbcategoryListSelect($current, $ID, $name);
+			PRINT " SELECTED";
 		}
-	} else
-	{
-		PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+		PRINT ">$name</OPTION>\n";
+		$name = $name . "\\";
+		kbcategoryListSelect($current, $ID, $name);
 	}
 }
 
