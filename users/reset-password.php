@@ -11,6 +11,8 @@ include_once("../include/func.header_footer");
 
 AuthCheck("normal");
 
+$username = $_REQUEST['username'];
+
 $resetpw = 'daedalus-ts';
 
 $user = new User($username);

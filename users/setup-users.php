@@ -18,7 +18,6 @@ PRINT "Welcome to the Daedalus User Setup utility.  Here you can ";
 if($AUTHSOURCE == "DB")
 {
 	PRINT "change, view, delete, and add users to the Daedalus database. \n";
-	PRINT "<a href=\"#add\">Click here to add users.</a>\n";
 } else
 {
 	PRINT "view and update users in the Daedalus database. \n";

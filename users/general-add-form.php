@@ -23,8 +23,9 @@ AuthCheck("tech");
 $PHP_SELF = $_SERVER['PHP_SELF'];
 
 $tablename = $_REQUEST['tablename'];
+$submit = (isset($_REQUEST['submit'])) ? $_REQUEST['submit'] : $submit = '';
 
-if (!isset($ID)) {
+if (isset($_REQUEST['ID'])) {
   $ID = $_REQUEST['ID'];
 }
 

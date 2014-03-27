@@ -36,8 +36,13 @@ $day = $_REQUEST['day'];
 $hour = $_REQUEST['hour'];
 $minute = $_REQUEST['minute'];
 $fcount = $_REQUEST['fcount'];
-$addtoknowledgebase = $_REQUEST['addtoknowledgebase'];
 $summary = $_REQUEST['summary'];
+$category = $_REQUEST['category'];
+$close = $_REQUEST['close'];
+
+if(isset($_REQUEST['addtoknowledgebase'])){
+    $display = $_REQUEST['addtoknowledgebase'];
+}
 
 // Declare Global variables for database handle and login name
 global $adb, $IRMName, $tID;

@@ -21,9 +21,10 @@ AuthCheck("post-only");
 $tablename = 'tracking';
 
 $ID = $_REQUEST['ID'];
-$changed = $_REQUEST['changed'];
-$customer = $_REQUEST['customer'];
-$computer_id = $_REQUEST['computer_id'];
+$changed = (isset($_REQUEST['changed'])) ? $_REQUEST['changed'] : "";
+$customer = (isset($_REQUEST['customer'])) ? $_REQUEST['customer'] : "";
+$computer_id = (isset($_REQUEST['computer_id'])) ? $_REQUEST['computer_id'] : "";
+$message = (isset($_REQUEST['message'])) ? $_REQUEST['message'] : "";
 
 if ( $changed == 'yes' ) {
 
@@ -33,8 +34,6 @@ $sql .= " SET ";
 $sql .= " customer    = '$customer',";
 $sql .= " computer_id = '$computer_id'";
 $sql .= " WHERE ID = '$ID'";
-
-var_dump($sql);
 
 // Execute SQL 
 //   Mysql: Value Matches Current Value 0 Rows Returned

@@ -13,7 +13,7 @@ initvar('error');
 
 AuthCheck("normal");
 
-commonHeader("IRM - Change Password");
+commonHeader("Daedalus - Change Password");
 
 ?>
 To change your password, please fill in the form below.<br />

@@ -16,18 +16,16 @@ include_once("../include/func.add_edit");
 //   $col1      - Column to check ID against
 //   $required  - Can be Blank
 
-$required  = '';
-if (!isset($add)) $add = '';
-if (!isset($submit)) $submit = '0';
-if (!isset($template_id)) $template_id = '0';
-
 // Do Authorization
 AuthCheck("tech");
 
 $tablename = $_REQUEST['tablename'];
 $ID = $_REQUEST['ID'];
 $col1 = $_REQUEST['col1'];
-$required = $_REQUEST['required'];
+if (!isset($add)) $add = '';
+if (!isset($submit)) $submit = '0';
+if (!isset($template_id)) $template_id = '0';
+$required = (isset($_REQUEST['required'])) ? $_REQUEST['required'] : $required = '';
 
 // Create Page title
 $name = ucfirst($tablename);

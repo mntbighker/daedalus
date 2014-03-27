@@ -153,19 +153,19 @@ class User
     function add($isLDAP = false)
     {
         global $adb;
-        if($this->udata[Name] == "")
+        if($this->udata["Name"] == "")
         {
             PRINT "Error adding user: username not set<BR>\n";
         }
-        if($this->udata[Password] == "" && ($isLDAP == false))
+        if($this->udata["Password"] == "" && ($isLDAP == false))
         {
             PRINT "Error adding user: password not set<BR>\n";
         }
-        if($this->udata[Fullname] == "")
+        if($this->udata["Fullname"] == "")
         {
             PRINT "Error adding user: password not set<BR>\n";
         }
-        if($this->udata[Access] == "")
+        if($this->udata["Access"] == "")
         {
             PRINT "Error adding user: type not set<BR>\n";
         }
@@ -177,7 +177,7 @@ class User
     function delete()
     {
         global $adb;
-        if($this->udata[Name] == "")
+        if($this->udata["Name"] == "")
         {
             PRINT "Error deleting user: name not set<BR>\n";
         }
@@ -189,7 +189,7 @@ class User
     function commit()
     {
         global $adb;
-        if($this->udata[Name] == "")
+        if($this->udata["Name"] == "")
         {
             PRINT "Error updating user: name not set<BR>\n";
             return (0);
@@ -306,33 +306,31 @@ class User
 		PRINT "[edit]</A>";
                 PRINT "<A HREF=\"$USERPREFIX/setup-user-update.php?update=delete&username=$username_enc\">";
                PRINT " [delete]</A>";
-               PRINT "<A HREF=\"$USERPREFIX/reset-password.php?username=$username_enc\">";
-               PRINT " [reset-pw]</A>";
                PRINT "</TD>\n";
                PRINT "</TR>\n";
 	}
 
 	function displayLong()
 	{
-		$uExists = $this->exists($this->udata[Name]);
+		$uExists = $this->exists($this->udata["Name"]);
 		if(!$uExists)
 		{
-			PRINT "User \"".$this->udata[Name]."\" is no longer a registered user on this system<BR>\n";
+			PRINT "User \"".$this->udata['Name']."\" is no longer a registered user on this system<BR>\n";
 			return(0);
 		}
 		PRINT "<table width=100% border=1 noshade bordercolor=#000000>\n";
-		PRINT "<tr bgcolor=#CCCCCC><td colspan=2><strong>".$this->udata[Name]."</strong>\n";
+		PRINT "<tr bgcolor=#CCCCCC><td colspan=2><strong>".$this->udata['Name']."</strong>\n";
 		PRINT "</td></tr>\n";
 		PRINT "<tr bgcolor=#DDDDDD><td><font face=\"arial, helvetica\">Name:\n";
-		PRINT "<br> ".$this->udata[Fullname]." </font></td><td><font face=\"arial,\n";
+		PRINT "<br> ".$this->udata['Fullname']." </font></td><td><font face=\"arial,\n";
 		PRINT "helvetica\">&nbsp;</td></tr>";
 		PRINT "<tr bgcolor=#DDDDDD><td><font face=\"arial, helvetica\">E-mail:\n";
-		PRINT "<br>".$this->udata[Email]." </font></td><td><font face=\"arial, helvetica\">Phone:<br>\n";
-		PRINT "".$this->udata[Phone]." </td></tr>";
+		PRINT "<br>".$this->udata['Email']." </font></td><td><font face=\"arial, helvetica\">Phone:<br>\n";
+		PRINT "".$this->udata['Phone']." </td></tr>";
 		PRINT "<tr bgcolor=#DDDDDD><td><font face=\"arial, helvetica\">Location:\n";
-		PRINT "<br> ".$this->udata[Location]."</font></td><td><font face=\"arial,\n";
+		PRINT "<br> ".$this->udata['Location']."</font></td><td><font face=\"arial,\n";
 		PRINT "helvetica\">User Access:<br>\n";
-		PRINT "".$this->udata[Access]."</td></tr>";
+		PRINT "".$this->udata['Access']."</td></tr>";
 		PRINT "</table><br>";
 	}
 
@@ -389,7 +387,7 @@ class User
 
 		if($priv == "admin")
 		{
-			if($this->udata[Access] == "admin")
+			if($this->udata["Access"] == "admin")
 			{
 				return(TRUE);
 			} else
@@ -398,7 +396,7 @@ class User
 			}
 		} else if($priv == "tech")
 		{
-			if(($this->udata[Access] == "admin") || ($this->udata[Access] == "tech"))
+			if(($this->udata["Access"] == "admin") || ($this->udata["Access"] == "tech"))
 			{
 
 				return(TRUE);
@@ -409,7 +407,7 @@ class User
 			}
 		} else if($priv == "normal")
 		{
-			if(($this->udata[Access] == "admin") || ($this->udata[Access] == "tech") || ($this->udata[Access] == "normal"))
+			if(($this->udata["Access"] == "admin") || ($this->udata["Access"] == "tech") || ($this->udata["Access"] == "normal"))
 			{
 				return(TRUE);
 			} else
@@ -418,7 +416,7 @@ class User
 			}
 		} else if($priv == "post-only")
 		{
-			if(($this->udata[Access] == "admin") || ($this->udata[Access] == "tech") || ($this->udata[Access] == "normal") || ($this->udata[Access] == "post-only"))
+			if(($this->udata["Access"] == "admin") || ($this->udata["Access"] == "tech") || ($this->udata["Access"] == "normal") || ($this->udata["Access"] == "post-only"))
 			{
 				return(TRUE);
 			} else

@@ -9,7 +9,7 @@ function AddEdit($tablename, $id, $col1, $required, $model='')
   global $adb;
   
   if (!isset($results)) $results = '';
-  if (!isset($type)) $type = '';
+  if (!isset($type)) $type = array('');
   
   // If $required is Empty Make an Empty Array
   $required || $required = array();
