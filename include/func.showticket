@@ -21,7 +21,7 @@ function showTicket($ID)
   $res = $sth->execute()  or die( mysql_error().': '.$query );
   $results = $sth->fetchrow_hash();
   extract($results);
-
+  
   // Check/Get NEMS From 'computer' Table
   $tablename = 'computer';
   $field     = 'computer_id';
@@ -78,13 +78,13 @@ function showTicket($ID)
   echo "<td><b>Mailto: Customer (Phone)</b><br><a href=\"mailto:$email\">$customer</a>($phone)</td>";
   echo "<td><b>Category</b><br>";
   $category || $category = 'application';
-  dropFilterList("dropdown_category","category","category",0,$category); 
+  dropFilterList("dropdown_category","category","category",1,$category); 
   echo "</td>";
   echo "</tr>";
 
   echo "<tr>";
   echo "<td><b>Assigned To</b><br>";
-  dropFilterList('users','name','assign',1,$assign); 
+  dropFilterList("users","name","assign",0,$assign);
   echo "</td>";
   echo "<td><b>Status</b><br>";
   $suppress[] = ($status == 'new') ? '' : 'new';

@@ -25,7 +25,7 @@ function AddEdit($tablename, $id, $col1, $required, $model='')
       $tables[] = array_pop(explode("_", $table, 2));
    }
 
-  // If Edit ( ID past to Function )
+  // If Edit ( ID passed to Function )
   if ( isset($id) ) {
      $query_id = "SELECT * FROM $tablename WHERE $col1 = $id";
      $notskip = 1;
@@ -48,7 +48,6 @@ function AddEdit($tablename, $id, $col1, $required, $model='')
        }
   }
 
-
   // Get $id 
   $id = array_shift($info);
 
@@ -70,7 +69,7 @@ function AddEdit($tablename, $id, $col1, $required, $model='')
   $model or $model = $info["model"];
   unset( $info["type"] );
   unset( $info["model"] );
-
+  
   echo "<input type=hidden name=\"model\" value=\"$model\">";
   echo "<input type=hidden name=\"type\" value=\"$type\">";
 

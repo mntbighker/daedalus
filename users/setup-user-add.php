@@ -12,6 +12,8 @@ include_once("../include/func.irm");
 
 AuthCheck("admin");
 
+// $HTTP_REFERER = $_SERVER['HTTP_REFERER"};
+
 $username = $_REQUEST['username'];
 $password = $_REQUEST['password'];
 $fullname = $_REQUEST['fullname'];

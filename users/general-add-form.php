@@ -20,14 +20,16 @@ include_once("../include/func.add_db");
 // Do Authorization
 AuthCheck("tech");
 
-$PHP_SELF = $_SERVER['SCRIPT_NAME'];
+$PHP_SELF = $_SERVER['PHP_SELF'];
 
 $tablename = $_REQUEST['tablename'];
-$col1 = $_REQUEST['col1'];
-$ID = $_REQUEST['ID'];
 
-// if (!isset($submit)) $submit = '';
-// if (!isset($model)) $model = '';
+if (!isset($ID)) {
+  $ID = $_REQUEST['ID'];
+}
+
+$col1 = (isset($_REQUEST['col1'])) ? $_REQUEST['col1'] : "";
+$model = (isset($_REQUEST['model'])) ? $_REQUEST['model'] : "";
 
 // Setup for Computer Type Model
 if ( isset($selected) ) {
@@ -60,7 +62,6 @@ if ( strtoupper($submit) == 'UPDATE' ) {
    list($dbmsg, $ID) = addDB($tablename, $required); 
 }
 
-
 // Create Page title
 $name = ucfirst($tablename);
 $normal = strpos($tablename, 'surplus');
@@ -71,8 +72,7 @@ if ( $normal === false ) {
    commonSurplusHeader("Daedalus $name  - Add/Edit Form");
 }
 
-
-// Test is UPDATE/INSERT was done: Success or Fail
+// Test if UPDATE/INSERT was done: Success or Fail
 if ( isset($dbmsg) ) {
    echo "$dbmsg";
 }

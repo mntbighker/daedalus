@@ -3,30 +3,7 @@
 class User
 {
 
-    var $driver; # the user driver - not used, didn't work, thrown away, see XIRM :)
     var $udata; # user data
-
-    # Preferences Variables
-    var $DisplayComputerType;
-    var $DisplayOperatingSystem;
-    var $DisplayOperatingSystemVersion;
-    var $DisplayProcessor;
-    var $DisplayProcessorSpeed;
-    var $DisplayLocation;
-    var $DisplaySerial;
-    var $DisplayOtherSerial;
-    var $DisplayRamType;
-    var $DisplayRam;
-    var $DisplayNetwork;
-    var $DisplayIP;
-    var $DisplayMachineAddress;
-    var $DisplayHardDriveSize;
-    var $DisplayContact;
-    var $DisplayContactNumber;
-    var $DisplayComments;
-    var $DisplayDateMod;
-    var $AdvancedTracking;
-    var $TrackingOrder;
 
 # maybe move the above to a hash?
 
@@ -171,40 +148,6 @@ class User
         $this->udata["Phone"] = $result["phone"];
         $this->udata["Access"] = $result["access"];
         $this->udata["Comments"] = $result["comments"];
-
-                // ***5 Had to add quotes around Name
-        $query = "SELECT * FROM prefs WHERE (user = '".$this->udata["Name"]."')";
-        $sth = $adb->prepare($query);
-        if($sth)
-        {
-            $res = $sth->execute();
-            $result = $sth->fetchrow_hash();
-            $this->setDisplayComputerType($result["type"]);
-            $this->setDisplayOperatingSystem($result["os"]);
-            $this->setDisplayOperatingSystemVersion($result["osver"]);
-            $this->setDisplayProcessor($result["processor"]);
-            $this->setDisplayProcessorSpeed($result["processor_speed"]);
-            $this->setDisplayLocation($result["building"]);
-            $this->setDisplaySerial($result["serial"]);
-            $this->setDisplayOtherSerial($result["model"]);
-            $this->setDisplayOtherSerial($result["aorder"]);
-            $this->setDisplayOtherSerial($result["purchdate"]);
-            $this->setDisplayRamType($result["ramtype"]);
-            $this->setDisplayRam($result["ram"]);
-            $this->setDisplayNetwork($result["network"]);
-            $this->setDisplayIP($result["ip"]);
-            $this->setDisplayMachineAddress($result["mac"]);
-            $this->setDisplayHardDriveSize($result["hdspace"]);
-            $this->setDisplayContact($result["owner"]);
-            $this->setDisplayContactNumber($result["room"]);
-            $this->setDisplayComments($result["comments"]);
-            $this->setDisplayDateMod($result["date_mod"]);
-            $this->setAdvancedTracking($result["advanced_tracking"]);
-            $this->setTrackingOrder($result["tracking_order"]);
-        } else
-        {
-            PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
-        }
     }
 
     function add($isLDAP = false)
@@ -229,32 +172,8 @@ class User
 
         $query = "INSERT INTO users VALUES ('".$this->udata["Name"]."', '".$this->udata["Password"]."', '".$this->udata["Fullname"]."', '".$this->udata["Email"]."', '".$this->udata["Location"]."', '".$this->udata["Phone"]."', '".$this->udata["Access"]."', '".$this->udata["Comments"]."')";
         $adb->dbh->exec($query);
-        $this->initPrefs();
     }
-
-    function initPrefs()
-    {
-        global $adb;
-        $query = "SELECT user FROM prefs WHERE (user = '".$this->udata["Name"]."')";
-        $sth = $adb->prepare($query);
-        if($sth)
-        {
-            $res = $sth->execute();
-            $numRows = $sth->rows();
-
-            if ($numRows == 0)
-            {
-                $query = "INSERT INTO prefs VALUES('".$this->udata["Name"]."', 'yes', 'no', 'no', 'no',
-                'yes', 'no', 'yes', 'yes', 'yes', 'yes', 'no', 'no', 'no', 'no',
-                'no', 'no', 'yes', 'yes', 'no', 'no', 'yes', 'no')";
-                 $adb->dbh->exec($query);
-            }
-        } else
-        {
-            PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
-        }
-    }
-
+    
     function delete()
     {
         global $adb;
@@ -265,8 +184,6 @@ class User
 
         $query = "DELETE FROM users WHERE (name = \"".$this->udata["Name"]."\")";
         $adb->dbh->exec($query);
-
-        $query = "DELETE FROM prefs WHERE (user = \"".$this->udata["Name"]."\")";
     }
 
     function commit()
@@ -279,18 +196,6 @@ class User
         }
         $query = "REPLACE users VALUES('".$this->udata["Name"]."', '".$this->udata["Password"]."', '".$this->udata["Fullname"]."', '".$this->udata["Email"]."', '".$this->udata["Location"]."', '".$this->udata["Phone"]."','".$this->udata["Access"]."', '".$this->udata["Comments"]."')";
         $adb->dbh->exec($query);
-
-        $query = "REPLACE prefs VALUES('".$this->udata["Name"]."', '$this->DisplayComputerType',
-            '$this->DisplayOperatingSystem', '$this->DisplayOperatingSystemVersion',
-            '$this->DisplayProcessor', '$this->DisplayProcessorSpeed',
-            '$this->DisplayLocation', '$this->DisplaySerial',
-            '$this->DisplayOtherSerial', '$this->DisplayRamType',
-            '$this->Ram', '$this->DisplayNetwork', '$this->DisplayIP',
-            '$this->DisplayMachineAddress', '$this->DisplayHardDriveSize',
-            '$this->DisplayContact', '$this->DisplayContactNumber',
-            '$this->DisplayComments', '$this->DisplayDateMod', 
-            '$this->AdvancedTracking', '$this->TrackingOrder')";
-    	$adb->dbh->exec($query);
 	}
 
 	function getName()
@@ -525,207 +430,6 @@ class User
 			return(FALSE);
 		}
 	}
-
-	function getDisplayComputerType()
-	{
-		return($this->DisplayComputerType);
-	}
-
-	function setDisplayComputerType($dct)
-	{
-		$this->DisplayComputerType = $dct;
-	}
-
-	function getDisplayOperatingSystem()
-	{
-		return($this->DisplayOperatingSystem);
-	}
-
-	function setDisplayOperatingSystem($dos)
-	{
-		$this->DisplayOperatingSystem = $dos;
-	}
-
-	function getDisplayOperatingSystemVersion()
-	{
-		return($this->DisplayOperatingSystemVersion);
-	}
-
-	function setDisplayOperatingSystemVersion($dosv)
-	{
-		$this->DisplayOperatingSystemVersion = $dosv;
-	}
-
-	function getDisplayProcessor()
-	{
-		return($this->DisplayProcessor);
-	}
-
-	function setDisplayProcessor($dp)
-	{
-		$this->DisplayProcessor = $dp;
-	}
-
-	function getDisplayProcessorSpeed()
-	{
-		return($this->DisplayProcessorSpeed);
-	}
-
-	function setDisplayProcessorSpeed($dps)
-	{
-		$this->DisplayProcessorSpeed = $dps;
-	}
-
-	function getDisplayLocation()
-	{
-		return($this->DisplayLocation);
-	}
-
-	function setDisplayLocation($dl)
-	{
-		$this->DisplayLocation = $dl;
-	}
-
-	function getDisplaySerial()
-	{
-		return($this->DisplaySerial);
-	}
-
-	function setDisplaySerial($ds)
-	{
-		$this->DisplaySerial = $ds;
-	}
-
-	function getDisplayOtherSerial()
-	{
-		return($this->DisplayOtherSerial);
-	}
-
-	function setDisplayOtherSerial($dos)
-	{
-		$this->DisplayOtherSerial = $dos;
-	}
-
-	function getDisplayRamType()
-	{
-		return($this->DisplayRamType);
-	}
-
-	function setDisplayRamType($drt)
-	{
-		$this->DisplayRamType = $drt;
-	}
-
-	function getDisplayRam()
-	{
-		return($this->DisplayRam);
-	}
-
-	function setDisplayRam($dr)
-	{
-		$this->DisplayRam = $dr;
-	}
-
-	function getDisplayNetwork()
-	{
-		return($this->DisplayNetwork);
-	}
-
-	function setDisplayNetwork($dn)
-	{
-		$this->DisplayNetwork = $dn;
-	}
-
-	function getDisplayIP()
-	{
-		return($this->DisplayIP);
-	}
-
-	function setDisplayIP($dip)
-	{
-		$this->DisplayIP = $dip;
-	}
-
-	function getDisplayMachineAddress()
-	{
-		return($this->DisplayMachineAddress);
-	}
-
-	function setDisplayMachineAddress($dma)
-	{
-		$this->DisplayMachineAddress = $dma;
-	}
-
-	function getDisplayHardDriveSize()
-	{
-		return($this->DisplayHardDriveSize);
-	}
-
-	function setDisplayHardDriveSize($hds)
-	{
-		$this->DisplayHardDriveSize = $hds;
-	}
-
-	function getDisplayContact()
-	{
-		return($this->DisplayContact);
-	}
-
-	function setDisplayContact($dc)
-	{
-		$this->DisplayContact = $dc;
-	}
-
-	function getDisplayContactNumber()
-	{
-		return($this->DisplayContactNumber);
-	}
-
-	function setDisplayContactNumber($dcn)
-	{
-		$this->DisplayContactNumber = $dcn;
-	}
-
-	function getDisplayComments()
-	{
-		return($this->DisplayComments);
-	}
-
-	function setDisplayComments($dc)
-	{
-		$this->DisplayComments = $dc;
-	}
-
-	function getDisplayDateMod()
-	{
-		return($this->DisplayDateMod);
-	}
-
-	function setDisplayDateMod($dm)
-	{
-		$this->DisplayDateMod = $dm;
-	}
-
-	function getAdvancedTracking()
-	{
-		return($this->AdvancedTracking);
-	}
-
-	function setAdvancedTracking($at)
-	{
-		$this->AdvancedTracking = $at;
-	}
-
-	function getTrackingOrder()
-	{
-		return($this->TrackingOrder);
-	}
-
-	function setTrackingOrder($to)
-	{
-		$this->TrackingOrder = $to;
-	}
-
 }
 
 ?>

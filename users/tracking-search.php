@@ -13,7 +13,7 @@ include_once("../include/func.header_footer");
 include_once("../include/func.track-search");
 include_once("../include/func.asset_info");
 
-initvar('page','limit');
+// initvar('page','limit');
 
 // Required Inputs: 
 // $tablename - name of table in database
@@ -33,9 +33,8 @@ initvar('page','limit');
 // Do Authorization
 AuthCheck("normal");
 
-
 $tablename = $_REQUEST['tablename'];
-$display = $_REQUEST['display'];
+$display = (isset($_REQUEST['display'])) ? $_REQUEST['display'] : "ID";
 $logical = (isset($_REQUEST['logical'])) ? $_REQUEST['logical'] : $logical = array('','','','');
 $value = (isset($_REQUEST['value'])) ? $_REQUEST['value'] : $value = array('','','','');
 $test = (isset($_REQUEST['test'])) ? $_REQUEST['test'] : $test = array('','','','');
@@ -43,11 +42,9 @@ $match = (isset($_REQUEST['match'])) ? $_REQUEST['match'] : $match = array('',''
 $field = (isset($_REQUEST['field'])) ? $_REQUEST['field'] : $field = array('','','','');
 $page = (isset($_REQUEST['page'])) ? $_REQUEST['page'] : "";
 $sort = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : "";
+$col1 = (isset($_REQUEST['col1'])) ? $_REQUEST['col1'] : "";
+$col2 = (isset($_REQUEST['col2'])) ? $_REQUEST['col2'] : "";
 $limit = (isset($_REQUEST['limit'])) ? $_REQUEST['limit'] : "";
-// $col1 = $_REQUEST['col1'];
-// $col2 = $_REQUEST['col2'];
-// $page = $_REQUEST['page'];
-// $limit = $_REQUEST['limit'];
 
 // Config: Database lookup using 'tablename'
 $info_hash = getAssetInfo($tablename);

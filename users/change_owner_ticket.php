@@ -11,6 +11,11 @@ include_once("../include/class.user");
 
 AuthCheck("post-only");
 
+$ID = $_REQUEST['ID'];
+$customer = $_REQUEST['customer'];
+$ID = $_REQUEST['ID'];
+$NEMS = $_REQUEST['NEMS'];
+
 commonHeader("Daedalus Change Ticket Owner");
 
 echo "<p>Original Ticket Owner: <b>$customer</b> NEMS:<b>$NEMS</b></p>";

@@ -11,6 +11,20 @@ include_once("../include/class.user");
 
 AuthCheck("post-only");
 
+$name = $_REQUEST['name'];
+$ID = $_REQUEST['ID'];
+$customer = $_REQUEST['customer'];
+$NEMS = $_REQUEST['NEMS'];
+
+// $logical = (isset($_REQUEST['logical'])) ? $_REQUEST['logical'] : $logical = array('','','','');
+// $value = (isset($_REQUEST['value'])) ? $_REQUEST['value'] : $value = array('','','','');
+// $test = (isset($_REQUEST['test'])) ? $_REQUEST['test'] : $test = array('','','','');
+// $match = (isset($_REQUEST['match'])) ? $_REQUEST['match'] : $match = array('','','','');
+// $field = (isset($_REQUEST['field'])) ? $_REQUEST['field'] : $field = array('','','','');
+// $sort = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : "";
+// $fail = (isset($_REQUEST['fail'])) ? $_REQUEST['fail'] : "";
+
+
 commonHeader("Daedalus - Select New Ticket Owner");
 
 echo "<p>Original Ticket Owner: <b>$customer</b> NEMS:<b>$NEMS</b></p>"; 
@@ -27,9 +41,9 @@ $sth = $adb->prepare($query);
 $res = $sth->execute() or print( mysql_error().': '.$query );
 
 // Number of rows returned from above query.
-list($numrows) = $sth->fetchrow_array();
+list($numRows) = $sth->fetchrow_array();
 
-if ( $numrows < 1 ) {
+if ( $numRows < 1 ) {
    print "Bad Daedalus ID or search terms";
 
 } elseif ($numRows > 10) {

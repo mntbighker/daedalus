@@ -16,7 +16,7 @@ commonHeader("Daedalus System Setup");
 
 if($submit == "update")
 {
-	$query = "REPLACE config VALUES (0, '$notifyassignedbyemail', '$notifynewtrackingbyemail', '$newtrackingemail', '$groups', '$usenamesearch', '$userupdates', '$sendexpire', '$showjobsonlogin', '$minloglevel', '$newlogo', '$snmp', '$snmp_rcommunity', '$snmp_ping', '$irm_version', '$irm_build', '$knowledgebase', '$fasttrack', '$anonymous', '$anon_faq', '$anon_req')";
+	$query = "REPLACE config VALUES (0, '$notifyassignedbyemail', '$notifynewtrackingbyemail', '$newtrackingemail', '$groups', '$usenamesearch', '$userupdates', '$sendexpire', '$showjobsonlogin', '$minloglevel', '$newlogo', '$snmp', '$snmp_rcommunity', '$snmp_ping', '$irm_version', '$irm_build', '$knowledgebase', '$anonymous', '$anon_faq', '$anon_req')";
 	$adb->dbh->exec($query);
 	PRINT "Daedalus System Setup updated, click <A HREF=\"$USERPREFIX/setup-irm.php\">here</A> to view or modify the new settings.\n";
 } else
@@ -40,7 +40,6 @@ $showjobsonlogin = Checked($cfg_showjobsonlogin);
 $snmp = Checked($cfg_snmp);
 $snmp_ping = Checked($cfg_snmp_ping);
 $knowledgebase = Checked($cfg_knowledgebase);
-$fasttrack = Checked($cfg_fasttrack);
 $anonymous = Checked($cfg_anonymous);
 $anon_faq = Checked($cfg_anon_faq);
 $anon_req = Checked($cfg_anon_req);
@@ -92,7 +91,6 @@ PRINT "<form method=get action=\"$USERPREFIX/setup-irm.php\">";
 	PRINT "</SELECT> Select the Minimum Log Level.</td></tr>\n";
 	PRINT "<tr><td><input type=text size=20 name=newlogo value=\"$LOGO\"> The name of the image file you would like used for the Daedalus logo. Note: $PREFIX is prepended to any value you enter here.</td></tr>\n";
 	PRINT "<tr><td><input type=checkbox name=knowledgebase value=\"1\" $knowledgebase>Would you like to use the Knowledge Base system that is now built in to Daedalus?</td></tr>\n";
-	PRINT "<tr><td><input type=checkbox name=fasttrack value=\"1\" $fasttrack>Would you like to use the the FastTrack capability?</td></tr>\n";
 	?>
 	</table>
 	<table border=0 width=100%>

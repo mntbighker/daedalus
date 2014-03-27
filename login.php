@@ -10,31 +10,19 @@ $user = new User($_SESSION['IRMName']);
 
 if($user->authenticate($_SESSION['IRMName'], ($_SESSION['IRMPass'])))
 {
-     header("Location: index.php");
-     print "Bad username or password.";
-     logevent(-1, "IRM", 1, "login", "Failed login: $IRMName");
-} else
+  header("Location: index.php");
+  print "Bad username or password.";
+  logevent(-1, "IRM", 1, "login", "Failed login: $IRMName");
+}
+else 
 {
-        $password = $user->getPassword();
+  $password = $user->getPassword();
 
-        if ($IRMPass == 'daedalus-ts') {
-           exit(header("Location: users/passwd.php"));
-         }
+  if ($IRMPass == 'daedalus-ts') {
+    exit(header("Location: users/passwd.php"));
+  }
 
-    // if ($f_req=='yes')
-    // {
-    //     header("Location: users/faq-index.php");
-        // Can we pull this out yet?!?!  I guess we need to modify the update
-        // script to search through all users and set up these prefs before we
-        // do.
-    //     $user->initPrefs();
-    // } else 
-    // {
-        header("Location: users/");
-        // Can we pull this out yet?!?!  I guess we need to modify the update
-        // script to search through all users and set up these prefs before we
-        // do.
-        $user->initPrefs();
-    // }
+  header("Location: users/");
+
 }
 ?>

@@ -12,17 +12,18 @@ include_once("../include/func.showticket");
 include_once("../include/func.listfollowups");
 
 // Required inputs: 
-//    $tablename - name of table in batabase
+//    $tablename - name of table in database
 //    $ID        -  item unique ID
 
 // Do Authorization
 AuthCheck("post-only");
 
-$tablename = $_REQUEST['tablename'];
-$ID = $_REQUEST['ID'];
+$tablename = 'tracking';
 
-if (!isset($changed)) $changed = '';
-if (!isset($message)) $message = '';
+$ID = $_REQUEST['ID'];
+$changed = $_REQUEST['changed'];
+$customer = $_REQUEST['customer'];
+$computer_id = $_REQUEST['computer_id'];
 
 if ( $changed == 'yes' ) {
 
@@ -32,6 +33,8 @@ $sql .= " SET ";
 $sql .= " customer    = '$customer',";
 $sql .= " computer_id = '$computer_id'";
 $sql .= " WHERE ID = '$ID'";
+
+var_dump($sql);
 
 // Execute SQL 
 //   Mysql: Value Matches Current Value 0 Rows Returned

@@ -8,9 +8,6 @@ function AddDB($tablename, $required)
 
   include_once("../include/func.listcolumn");
   
-  $tablename = $_REQUEST['tablename'];
-  $required = $_REQUEST['required'];
-
   // Declare Global variables for database handle and login name
   global $adb;
 
@@ -70,8 +67,6 @@ $sql .= " $tablename SET ";
 $sql .= $var;
 
 $sql .= ( $ID != '') ? " WHERE $where = {$ID} " : ''; 
-
-var_dump($sql);
 
 // Check Required fields exists
 $test = 1;

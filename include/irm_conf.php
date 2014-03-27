@@ -75,7 +75,6 @@ if($sth)
     $cfg_snmp_rcommunity = $result["snmp_rcommunity"];
     $cfg_snmp_ping = $result["snmp_ping"];
     $cfg_knowledgebase = $result["knowledgebase"];
-    $cfg_fasttrack = $result["fasttrack"];
         $cfg_anonymous = $result["anonymous"];
         $cfg_anon_faq = $result["anon_faq"];
          $cfg_anon_req = $result["anon_req"];
