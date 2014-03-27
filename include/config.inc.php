@@ -76,9 +76,7 @@ $cfg_dbuser = "root";
 # cfg_dbpasswd: The dbuser's password.
 # Syntax: $cfg_dbpasswd = "<password>";
 # Default: $cfg_dbpasswd = "";
-#$cfg_dbpasswd = "el0ret_kts";
-#$cfg_dbpasswd = "el0ret_kts";
-$cfg_dbpasswd = "-/:Januar7-/:";
+$cfg_dbpasswd = "el0ret_kts";
 
 # cfg_dbtype: Database type
 # Syntax: $cfg_dbtype = "<database type>";
