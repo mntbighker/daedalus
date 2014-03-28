@@ -28,6 +28,17 @@ AuthCheck("normal");
 //    $dropfield - Array of default Fields (Should match log_max in length)
 
 $tablename = 'tracking';
+$value = (isset($_REQUEST['value'])) ? $_REQUEST['value'] : $value = array('','','','');
+$test = (isset($_REQUEST['test'])) ? $_REQUEST['test'] : $test = array('','','','');
+$match = (isset($_REQUEST['match'])) ? $_REQUEST['match'] : $match = array('','','','');
+$field = (isset($_REQUEST['field'])) ? $_REQUEST['field'] : $field = array('','','','');
+$sort = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : "";
+$logical = (isset($_REQUEST['logical'])) ? $_REQUEST['logical'] : "";
+$fail = (isset($_REQUEST['fail'])) ? $_REQUEST['fail'] : "no";
+if(isset($_REQUEST['display'])){
+    $display = $_REQUEST['display'];
+    if ( is_string($display) ) $display = explode("|", $display);
+} else $display = "";
 
 // Start of Generic code
 

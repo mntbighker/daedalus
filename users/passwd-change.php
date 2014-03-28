@@ -11,9 +11,13 @@ include_once("../include/func.header_footer");
 
 AuthCheck("normal");
 
+$oldpassword = $_REQUEST['oldpassword'];
+$newpassword = $_REQUEST['newpassword'];
+$confirm = $_REQUEST['confirm'];
+
 $user = new User($IRMName);
         $currentpass  = $user->getPassword();
-
+        
 if($currentpass != $oldpassword)
 {
      $error = "You have incorrectly entered your old password!";

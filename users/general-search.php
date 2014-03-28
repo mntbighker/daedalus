@@ -77,7 +77,7 @@ $return = SearchView($tablename, $logical, $value, $test, $match, $field,
 commonFooter();
 
 if ( $return ) {
- $query = $QUERY_STRING . "&fail=yes";
+ $query = $_SERVER['QUERY_STRING'] . "&fail=yes";
  header("Location: https://$SERVER_NAME/daedalus/users/general-index.php?$query");
 };
 

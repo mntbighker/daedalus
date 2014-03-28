@@ -7,12 +7,14 @@ function TrackingSearchView($tablename, $logical, $value,
 {
 
   include_once("../include/func.strings");
-    
+
   // Declare Global variables for database handle 
   global $adb, $PHP_SELF;
   
   $PHP_SELF = $_SERVER['SCRIPT_NAME'];
   
+  if (!isset($count)) $count = 0;
+
   // Change Input Arrays to String
   if ( is_string($logical) ) $logical = explode("|", $logical);
   if ( is_string($value) )   $value   = explode("|", $value);
@@ -32,7 +34,7 @@ function TrackingSearchView($tablename, $logical, $value,
    } // End While
 
   // Build Display Array with Sort, Search and Display
-#  $labels_tmp = array_merge(array($col1,$col2,$sort), $dpy_field, $display);
+  // $labels_tmp = array_merge(array($col1,$col2,$sort), $dpy_field, $display);
   $labels_tmp = array_merge($dpy_field, $display);
 
   // Delete Duplicate Fields and Collapse Array
@@ -113,7 +115,7 @@ function TrackingSearchView($tablename, $logical, $value,
   $where = " $field[0] $test[0] $value[0] ";
 
   array_unshift($logical, '');
-
+  
   foreach ( range(1, count($test)) as $i) {
   
     if ( $value[$i] == '' ) { continue; }
@@ -187,10 +189,11 @@ Results <b><?=$first?></b> - <b><?=$last?></b> of <b><?=$numrows?></b>
   </td>
   <td class=white align="center">
 
-Results per-page: <a href="<?=$link?>&page=<?=$page?>&limit=5">5</a> | 
-                  <a href="<?=$link?>&page=<?=$page?>&limit=10">10</a> | 
-                  <a href="<?=$link?>&page=<?=$page?>&limit=20">20</a> | 
-                  <a href="<?=$link?>&page=<?=$page?>&limit=50">50</a> |
+Results per-page: 
+        <a href="<?=$link?>&page=<?=$page?>&limit=5">5</a> | 
+        <a href="<?=$link?>&page=<?=$page?>&limit=10">10</a> | 
+        <a href="<?=$link?>&page=<?=$page?>&limit=20">20</a> | 
+        <a href="<?=$link?>&page=<?=$page?>&limit=50">50</a> |
         <a href="<?=$link?>&page=<?=$page?>&limit=<?=$numrows?>">All</a>
   </td>
   <td class=white align="right">
@@ -239,15 +242,14 @@ while ($data = $sth->fetchrow_array($results)) {
   echo "<tr>";
 
   echo "<td>$anchor1</td>";
-
   $value2 = $data2 ? "$data2 [$followups]" : "&nbsp;";
   echo "<td>$value2</td>";
 
-   foreach ($data as $value) {     
+   foreach ($data as $value) {
       $value = $value ? "$value" : "&nbsp;";
       $value = snippet($value, 500);
       echo "<td>$value</td>";
-   }    
+   }
    echo "</tr>";
 }
 

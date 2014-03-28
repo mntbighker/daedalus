@@ -13,6 +13,10 @@ initvar('error');
 
 AuthCheck("normal");
 
+if(isset($_REQUEST['error'])){
+    $error = $_REQUEST['error'];
+    };
+
 commonHeader("Daedalus - Change Password");
 
 ?>

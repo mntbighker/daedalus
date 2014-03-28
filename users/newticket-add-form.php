@@ -22,7 +22,7 @@ $ID = $_REQUEST['ID'];
 $NEMS = $_REQUEST['NEMS'];
 
 if (!isset($error)) $error = '';
-if (!isset($category)) $category = '';
+if (!isset($category)) $category = 'application';
 if (!isset($assign)) $assign = '';
 if (!isset($status)) $status = '';
 if (!isset($priority)) $priority = '';

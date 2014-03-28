@@ -13,7 +13,7 @@ function SearchView($tablename, $logical, $value,
   
   $PHP_SELF = $_SERVER['SCRIPT_NAME'];
   
-  if (!isset($count)) $count = '';
+  if (!isset($count)) $count = 0;
 
   // Change Input Arrays to String
   if ( is_string($logical) ) $logical = explode("|", $logical);
@@ -28,8 +28,9 @@ function SearchView($tablename, $logical, $value,
   // Add to Display Array any Search Fields
    $dpy_field[] = $field[0];
 
-   while ( ++$count < count($value) ) { 
-    ($value[$count] != '') && $dpy_field[] = $field[$count];  
+   // Build $dpy_field array
+   while ( ++$count < count($value) ) {
+    ($value[$count] != '') && $dpy_field[] = $field[$count];
    } // End While
 
   // Build Display Array with Sort, Search and Display
@@ -70,7 +71,6 @@ function SearchView($tablename, $logical, $value,
      array_push($labels, 'contents');
   }
 
-
   // Only Add Sort if not equal to Col1 or Col2
   if ( $sort != $col1 && $sort != $col2 ) {
      $labels = array_merge(array($sort), $labels); 
@@ -85,7 +85,7 @@ function SearchView($tablename, $logical, $value,
   $match_str   = implode("|", $match);
   $field_str   = implode("|", $field);
   $display_str = implode("|", $display_labels);
-  
+
   if (!($limit)){
   $limit = 10;} // Default results per-page.
   if (!($page)){
@@ -108,7 +108,7 @@ function SearchView($tablename, $logical, $value,
   $where = " $field[0] $test[0] $value[0] ";
 
   array_unshift($logical, '');
-
+  
   foreach ( range(1, count($test)) as $i) {
   
     if ( $value[$i] == '' ) { continue; }
@@ -234,7 +234,7 @@ while ($data = $sth->fetchrow_array($results)) {
 
    foreach ($data as $value) {
       $value = $value ? "$value" : "&nbsp;";
-      $value = snippet($value, 500);      
+      $value = snippet($value, 500);
       echo "<td>$value</td>";
    }
    echo "</tr>";

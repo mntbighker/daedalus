@@ -46,6 +46,8 @@ $col1 = (isset($_REQUEST['col1'])) ? $_REQUEST['col1'] : "";
 $col2 = (isset($_REQUEST['col2'])) ? $_REQUEST['col2'] : "";
 $limit = (isset($_REQUEST['limit'])) ? $_REQUEST['limit'] : "";
 
+$SERVER_NAME = $_SERVER['SERVER_NAME'];
+
 // Config: Database lookup using 'tablename'
 $info_hash = getAssetInfo($tablename);
 
@@ -67,7 +69,7 @@ commonFooter();
 
 if ( $return ) {
  $query = $_SERVER['QUERY_STRING'] . "&fail=yes";
- header("Location: https://$SERVER_NAME/irm/users/tracking-index.php?$query");
+ header("Location: https://$SERVER_NAME/daedalus/users/tracking-index.php?$query");
 };
 
 ob_flush();

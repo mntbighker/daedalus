@@ -40,12 +40,11 @@ $test = (isset($_REQUEST['test'])) ? $_REQUEST['test'] : $test = array('','','',
 $match = (isset($_REQUEST['match'])) ? $_REQUEST['match'] : $match = array('','','','');
 $field = (isset($_REQUEST['field'])) ? $_REQUEST['field'] : $field = array('','','','');
 $sort = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : "";
-$fail = (isset($_REQUEST['fail'])) ? $_REQUEST['fail'] : "";
+$fail = (isset($_REQUEST['fail'])) ? $_REQUEST['fail'] : "no";
 if(isset($_REQUEST['display'])){
     $display = $_REQUEST['display'];
     if ( is_string($display) ) $display = explode("|", $display);
 } else $display = "";
-
 
 $name  = ucfirst($tablename);
 $normal = strpos($tablename, 'surplus');
