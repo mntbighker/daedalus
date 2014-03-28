@@ -39,6 +39,10 @@ class DBI
         $dbh->setAttribute(\PDO::ATTR_STATEMENT_CLASS,array('DBIStatement'));
         $dbh->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 1);
     }
+    public function insert_id()
+    {
+    	return $this->dbh->lastInsertId();
+    }
     public function prepare($sql)
     {
         return $this->dbh->prepare($sql);

@@ -25,6 +25,8 @@ include_once("../include/func.listcolumn");
    // summary            - Add or modify summary
    //                      for a Complete Trouble Call.
 
+$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
+
 $tID = $_REQUEST['tID'];
 $assign = $_REQUEST['assign'];
 $status = $_REQUEST['status'];
@@ -38,7 +40,7 @@ $minute = $_REQUEST['minute'];
 $fcount = $_REQUEST['fcount'];
 $summary = $_REQUEST['summary'];
 $category = $_REQUEST['category'];
-$close = $_REQUEST['close'];
+$close = '';
 
 if(isset($_REQUEST['addtoknowledgebase'])){
     $display = $_REQUEST['addtoknowledgebase'];
@@ -155,10 +157,10 @@ $sql .= " WHERE ID = $tID";
 
 // Execute SQL 
 //   Mysql: Value Matches Current Value 0 Rows Returned
-$count1 = $adb->dbh->exec($query);
+$count1 = $adb->dbh->exec($sql);
 if ( mysql_errno() )  {
    print(mysql_error().': '.$sql);
-} 
+}
 
 // Trim Pre and Post White Spaces
 $trimmedFollowup = trim($newfollowup);
@@ -178,7 +180,7 @@ if ( $trimmedFollowup and $oldstatus != 'complete' ) {
    $count2 = $adb->dbh_do($sql) or print( mysql_error().': '.$sql);
 */
     // **5 Use prepared statements for inserts
-        
+
     $followupsSql = <<<EOT
 INSERT INTO followups 
 SET tracking = :tID, 

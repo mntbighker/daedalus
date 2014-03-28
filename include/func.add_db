@@ -82,7 +82,7 @@ if ( $test == 0 ) {
 
 // Execute SQL if No Required Fields or Required Fields Exists
 if ( $test ) {
-   $count = $adb->dbh->exec($query);
+   $count = $adb->dbh->exec($sql);
    if ( mysql_errno() and mysql_errno() != 1062 ) { 
       echo( mysql_error().' Add DB: '.$sql ); 
    }

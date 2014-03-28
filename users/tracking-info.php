@@ -21,7 +21,7 @@ AuthCheck("post-only");
 $tablename = 'tracking';
 
 $ID = $_REQUEST['ID'];
-$changed = (isset($_REQUEST['changed'])) ? $_REQUEST['changed'] : "";
+$changed = (isset($_REQUEST['changed'])) ? $_REQUEST['changed'] : "no";
 $customer = (isset($_REQUEST['customer'])) ? $_REQUEST['customer'] : "";
 $computer_id = (isset($_REQUEST['computer_id'])) ? $_REQUEST['computer_id'] : "";
 $message = (isset($_REQUEST['message'])) ? $_REQUEST['message'] : "";
@@ -37,7 +37,7 @@ $sql .= " WHERE ID = '$ID'";
 
 // Execute SQL 
 //   Mysql: Value Matches Current Value 0 Rows Returned
-$count = $adb->dbh->exec($query);
+$count = $adb->dbh->exec($sql);
 if ( mysql_errno() )  {
   print(mysql_error().': '.$sql);
 }
@@ -60,6 +60,7 @@ showTicket($ID);
 $num_followups = listFollowups($ID);
 
 echo "<input type=hidden name=tID value=$ID>";
+// echo "<input type=hidden name=assign value=$assign>";
 echo "<input type=hidden name=fcount value=$num_followups>";
 echo "<input type=submit value=\"Update Tracking\"><br>";
 echo "</form>";
