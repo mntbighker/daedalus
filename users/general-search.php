@@ -65,7 +65,6 @@ if ( $normal === false ) {
    commonSurplusHeader("Daedalus $name - Search Results");
 }         
 
-// Broken without reg_globals
 echo "<p><a href=\"general-index.php?$PHP_SELF\">Restart Search</a>";
 echo " | <a href=\"general-csv.php?$PHP_SELF\">Display CSV</a>";
 echo " | <a href=\"general-csv.php?dump=1&$PHP_SELF\">Download CSV</a></p>";

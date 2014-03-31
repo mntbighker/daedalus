@@ -67,7 +67,7 @@ META;
   | <a href="$USERPREFIX/surplus-index.php">Surplus</a>
   | <a href="$USERPREFIX/setup-index.php">Setup</a>
   | <a href="$USERPREFIX/passwd.php">Change PW</a>
-  | <a href="$USERPREFIX/logout.php">Logout <font color='darkgreen'>$IRMName </font>from <font color='red'>$cfg_dbdb</font> database</a> 
+  | <a href="$USERPREFIX/logout.php">Logout <font color='darkgreen'>$IRMName </font></a> 
 ANCHOR;
 
 

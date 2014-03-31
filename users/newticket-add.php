@@ -19,29 +19,50 @@ include_once("../include/func.listcolumn");
 //   $computer
 //   $priority
 //   $customer
+//   $category
 //   $groupname
+//   $summary
 //   $contents
 //   $newfollowup
 
-// Declare Global Variables: "Database Handle "
-global $adb;
+$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
 
 // Declare Local Variables: 
 $tablename = 'tracking';
+$year = '';
+$month = '';
+$day = '';
+$hour = '';
+$minute = '';
 $date = "$year-$month-$day $hour:$minute:00";
 $now = date("Y-m-d H:i");
+
+$status = $_REQUEST['status'];
+$author = $_REQUEST['author'];
+$assign = $_REQUEST['assign'];
+$computer_id = $_REQUEST['computer_id'];
+$priority = $_REQUEST['priority'];
+$category = $_REQUEST['category'];
+$customer = $_REQUEST['customer'];
+$groupname = $_REQUEST['groupname'];
+$summary = $_REQUEST['summary'];
+$contents = $_REQUEST['contents'];
+$newfollowup = $_REQUEST['newfollowup'];
 
 // Trim $contents, $newfollowup
 $contents    = trim($contents);
 $newfollowup = trim($newfollowup);
 
-$vars = "assign=$assign&status=$status&priority=$priority&contents=$contents&newfollowup=$newfollowup";
+// $vars = "assign=$assign&status=$status&priority=$priority&contents=$contents&newfollowup=$newfollowup";
 
 // Setup Error Messages
 $error1 = 'A Problem Description is Required';
 $error2 = 'All Tickets Must Have a Followup';
 $error3 = 'Tracking Table Entry Failed';
 $error4 = 'Followups Table Entry Failed';
+
+// Declare Global Variables: "Database Handle "
+global $adb;
 
 // Check for Discription
 if ( empty($contents) ) {
@@ -64,8 +85,8 @@ if ( empty($newfollowup) ) {
 }
 
 // Escape $contents, newfollowup
-$contents    = mysql_escape_string($contents);
-$newfollowup = mysql_escape_string($newfollowup);
+// $contents    = mysql_real_escape_string($contents);
+// $newfollowup = mysql_real_escape_string($newfollowup);
 
 // Set Closdate to NOW if Ticket is Complete
 if ( $status == 'complete' ) {
@@ -94,8 +115,8 @@ $sql .= " tracking SET ";
 // Asmebly SQL 
 $sql .= $var;
 
-// Execute SQL 
-   $count = $adb->dbh->exec($query) or print( mysql_error().': '.$sql);
+// Execute SQL
+   $count = $adb->dbh->exec($sql) or print( mysql_error().': '.$sql);
 
 // Check for Error: Tracking
 if ( ! $count ) {
@@ -104,7 +125,7 @@ if ( ! $count ) {
 }
 
 // Get the Tracking ID of New Call
-$tID = mysql_insert_id();
+$tID = $adb->insert_id();
 
 // Log activity
 logevent($tID, "tracking", 4, "database", "$IRMName added record");
@@ -113,7 +134,7 @@ if ( $newfollowup ) {
    $sql = "INSERT followups
              SET tracking = '$tID', date = '$now', 
                  author='$author', contents='$newfollowup'";
-   $count = $adb->dbh->exec($query) or print( mysql_error().': '.$sql);
+   $count = $adb->dbh->exec($sql) or print( mysql_error().': '.$sql);
 }
 
 // Check for Error: Followups
@@ -123,7 +144,7 @@ if ( ! $count ) {
 }
 
 // Get the Followup ID 
-$fID = mysql_insert_id();
+$fID = $adb->insert_id();
 
 // Log activity
 logevent($fID, "followups", 4, "database", "$IRMName added record");

@@ -121,7 +121,6 @@ $dateFollowup = "$year-$month-$day $hour:$minute:00";
 
 $timediff = "SEC_TO_TIME( (TO_DAYS('$dateFollowup')*24*3600+TIME_TO_SEC('$dateFollowup')) - (TO_DAYS(date)*24*3600+TIME_TO_SEC(date)) )";
 
-//   query = "SELECT $timediff as diff FROM tracking WHERE ID = $tID";
 $diffQuery = "SELECT $timediff as diff FROM tracking WHERE ID = $tID";
 $diffStmt = $adb->prepare($diffQuery);
 $diffStmt->execute(array('tID' => $tID));

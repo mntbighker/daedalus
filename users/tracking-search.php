@@ -47,6 +47,7 @@ $col2 = (isset($_REQUEST['col2'])) ? $_REQUEST['col2'] : "";
 $limit = (isset($_REQUEST['limit'])) ? $_REQUEST['limit'] : "";
 
 $SERVER_NAME = $_SERVER['SERVER_NAME'];
+$PHP_SELF = $_SERVER['PHP_SELF'];
 
 // Config: Database lookup using 'tablename'
 $info_hash = getAssetInfo($tablename);

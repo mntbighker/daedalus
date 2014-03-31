@@ -14,6 +14,8 @@ function SearchCVS($tablename, $logical, $value,
   global $cfg_dbdb, $adb, $PHP_SELF;
   
   $PHP_SELF = $_SERVER['SCRIPT_NAME'];
+  
+  if (!isset($count)) $count = 0;
 
   // Change Input Arrays to String
   if ( is_string($logical) ) $logical = explode("|", $logical);
@@ -137,10 +139,10 @@ function SearchCVS($tablename, $logical, $value,
 
   if ( isset( $_GET["dump"] ) ) {
      $dumpfile->dump("$query_data", $tablename, "csv", "$cfg_dbdb", 
-                     "admin", "el0ret_kts", "localhost" );
+                     "root", "el0ret_kts", "localhost" );
   } else {
      $dumpfile->dump("$query_data", "", "", "$cfg_dbdb", 
-                     "admin", "el0ret_kts", "localhost" );
+                     "root", "el0ret_kts", "localhost" );
   }
 
 

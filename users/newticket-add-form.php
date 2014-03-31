@@ -77,7 +77,7 @@ echo "<td><b>Computer</b><br>$anchor</td>";
 echo "<td><b>Mailto: Customer (Phone)</b><br><a href=\"mailto:$email\">$user</a>($phone)</td>";
 echo "<td><b>Category</b><br>";
 $category || $category = 'application';
-dropFilterList('dropdown_category',category,category,0,$category);            
+dropFilterList('dropdown_category','category','category',0,$category);            
 echo "</tr>";
 
 echo "<tr>";
@@ -87,11 +87,11 @@ dropFilterList('users','name','assign',$blank=0,$assign);
 echo "</td>";
 echo "<td><b>Status</b><br>";
 $status || $status = 'assign';
-dropFilterList('dropdown_status',status,status,0,$status);
+dropFilterList('dropdown_status','status','status',0,$status);
 echo "</td>";
 echo "<td><b>Priority</b><br>";
 $priority || $priority = 'normal';
-dropFilterList('dropdown_priority',priority,priority,0,$priority); 
+dropFilterList('dropdown_priority','priority','priority',0,$priority); 
 echo "</td>";
 echo "</tr>";
   
@@ -116,16 +116,16 @@ print "</td></tr>";
 
 echo "<tr><td>";
 echo "<strong>Date: </strong>";
-dropdownDate('month', 1, 12, date(m));
+dropdownDate('month', 1, 12, date('m'));
 echo " / ";
-dropdownDate('day', 1, 31, date(d));
+dropdownDate('day', 1, 31, date('d'));
 echo " / ";
-dropdownDate('year', 2012, 2016, date(Y));
+dropdownDate('year', 2012, 2016, date('Y'));
 
 echo "&nbsp;&nbsp;<strong>Time: </strong>";
-dropdownDate('hour', 1, 24, date(H));
+dropdownDate('hour', 1, 23, date('H'));
 echo " : ";
-dropdownDate('minute', 1, 60, date(i));
+dropdownDate('minute', 1, 60, date('i'));
 
 echo "</td></tr>";
 
