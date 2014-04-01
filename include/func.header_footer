@@ -28,14 +28,14 @@ STYLE;
   PRINT "<table cellspacing=0 border=0 height=20 width=100%>";
 
   print "<tr>";
-  print "<th align=left>$title</th>";
-  print "<td align=right>";
+  print "<th id=\"banner\" align=left>$title</th>";
+  print "<td id=\"banner_lower\" align=right>";
   print "<a href=index.php><img src=$PREFIX/$LOGO border=0></a>";
   print "</td>";
   print "</tr>";
 
   PRINT "<tr height=20>";
-  PRINT "<td>";
+  PRINT "<td id=\"banner_lower\">";
 
     PRINT <<<ANCHOR
   | <a href="$USERPREFIX/newticket.php">New Ticket</a>
@@ -55,7 +55,7 @@ STYLE;
 ANCHOR;
 
 
-  print "<td align=\"right\">".date("M d H:i")." </td>";
+  print "<td id=\"banner_lower\" align=\"right\">".date("M d H:i")." </td>";
   print "</tr>";
 
   print "</table>";

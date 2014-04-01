@@ -27,6 +27,15 @@ a:hover
    }
 
 /* Table */
+
+#banner
+   {
+      background-color: #D3DCE3;
+   }
+#banner_lower
+   {
+      background-color: #EEEEEE;
+   }
 table
    {
       font-family: Arial, Helvetica, sans-serif;
