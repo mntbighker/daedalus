@@ -13,6 +13,8 @@ include_once("../include/func.surplus_header");
 // Declare Global variables for database handle and login name
 global $adb, $IRMName;
 
+
+
 commonSurplusHeader("Daedalus Surplus System"); 
 
 echo "<p>

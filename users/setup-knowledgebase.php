@@ -25,7 +25,7 @@ $sth = $adb->prepare($query);
 if($sth)
 {
 	$res = $sth->execute();
-	$numRows = $sth->rows();
+	$numRows = $sth->rowCount();
 	for($i = 0; $i < $numRows; $i++)
 	{
 		$result = $sth->fetchrow_hash();

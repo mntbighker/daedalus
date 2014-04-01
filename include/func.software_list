@@ -4,7 +4,7 @@ function manageDisplaySoftware($ID)
 {
   // Global variable for DataBase Handle
   global $adb;
-
+  
   // Define array variable 
   $slist = array();
 
@@ -70,7 +70,7 @@ function manageDisplaySoftware($ID)
 
      echo "<tr>";
      foreach ($order as $value) {
-        list($sid, $text) = split(":", $value, 2);
+        list($sid, $text) = preg_split("/:/", $value, 2);
         echo "<td>";
         if ( $sid ) { 
            echo "<input type=\"checkbox\" 
@@ -80,6 +80,7 @@ function manageDisplaySoftware($ID)
            echo "&nbsp;";
         }
         echo "</td>";
+		if (!isset($z)) $z = 0;
         $z++;
         if ( ! ($z % $cols) ) echo "</tr><tr>";
      }
@@ -219,6 +220,7 @@ SQL;
   } // End Foreach
 
 
+  if (!isset($z)) $z = 0;
   $cols = 2;
 
   ECHO "<form method=POST action=\"software-assign.php\">";
@@ -230,7 +232,7 @@ SQL;
       ECHO "<th>$group</th>";
       ECHO "<td><select name=\"".$group."[]\" size=10 multiple>";
       foreach ( $software_list[$group] as $software ) {
-         list($sid, $text) = split(":", $software, 2);
+         list($sid, $text) = preg_split("/:/", "$software", 2);
          ECHO "<option value=\"$sid\" >$text</option>";
       } // End foreach inner
         ECHO "</select></td>";

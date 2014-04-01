@@ -8,11 +8,9 @@
 include_once("../include/irm_conf.php");
 include_once("../include/class.user");
 include_once("../include/func.header_footer");
-include_once("../include/func.irm");
 include_once("../include/func.listcolumn");
 
 // Required Inputs: 
-//   $date      - Created from "$year-$month-$day $hour:$minute:00"
 //   $status
 //   $author
 //   $assign
@@ -24,18 +22,17 @@ include_once("../include/func.listcolumn");
 //   $summary
 //   $contents
 //   $newfollowup
+//   $year
+//   $month
+//   $day
+//   $hour
+//   $minute
+//   $date      - Created from "$year-$month-$day $hour:$minute:00"
 
 $HTTP_REFERER = $_SERVER['HTTP_REFERER'];
 
 // Declare Local Variables: 
 $tablename = 'tracking';
-$year = '';
-$month = '';
-$day = '';
-$hour = '';
-$minute = '';
-$date = "$year-$month-$day $hour:$minute:00";
-$now = date("Y-m-d H:i");
 
 $status = $_REQUEST['status'];
 $author = $_REQUEST['author'];
@@ -48,6 +45,13 @@ $groupname = $_REQUEST['groupname'];
 $summary = $_REQUEST['summary'];
 $contents = $_REQUEST['contents'];
 $newfollowup = $_REQUEST['newfollowup'];
+$year = $_REQUEST['year'];
+$month = $_REQUEST['month'];
+$day = $_REQUEST['day'];
+$hour = $_REQUEST['hour'];
+$minute = $_REQUEST['minute'];
+$date = "$year-$month-$day $hour:$minute:00";
+$now = date("Y-m-d H:i");
 
 // Trim $contents, $newfollowup
 $contents    = trim($contents);

@@ -23,56 +23,54 @@ function getKBCategories()
 
 function kbdisplaycategories($parentID=0)
 {
-    global $adb;
-    $catNumbers = getKBCategories();
-    $query = "SELECT * FROM kbcategories WHERE (parentID = $parentID) order by name asc";
-    $sth = $adb->prepare($query);
-    if($sth)
-    {
-        $res = $sth->execute();
-        $rows = $sth->fetchAll();
-        if(count($rows) > 0)
+        global $adb;
+        $query = "select * from kbcategories where (parentID = $parentID) order by name asc";
+        $sth = $adb->prepare($query);
+        if($sth)
         {
-            PRINT "<ul>\n";
-            foreach($rows as $result)
-            {
-                $name = $result["name"];
-                $ID = $result["ID"];
-                if(in_array($ID, $catNumbers))
+                $res = $sth->execute();
+                $numRows = $sth->rowCount();
+                if($numRows > 0)
                 {
-                    PRINT "<li><B>$name</B>\n";
-					kbdisplayarticles($ID);
-					kbdisplaycategories($ID);
+                        PRINT "<ul>\n";
+                        for($i=0; $i < $numRows; $i++)
+                        {
+                                $result = $sth->fetchrow_hash();
+                                $name = $result["name"];
+                                PRINT "<li><B>$name</B>\n";
+                                $ID = $result["ID"];
+                                kbdisplayarticles($ID);
+                                kbdisplaycategories($ID);
+                        }
+                        PRINT "</ul>\n";
                 }
-            }
-            PRINT "</ul>\n";
-        } 
-    } else
-    {
-        PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
-    }
+        } else
+        {
+                PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+        }
 }
 
 function kbdisplayarticles($parentID)
 {
-    global $adb;
-    $query = "SELECT * FROM kbarticles WHERE (categoryID = $parentID) order by question asc";
-    $sth = $adb->prepare($query);
-    if($sth)
-    {
-        $res = $sth->execute();
-        $rows = $sth->fetchAll();
-        PRINT "<ul>\n";
-        foreach($rows as $result)
+        global $adb;
+        $query = "select * from kbarticles where (categoryID = $parentID) order by question asc";
+        $sth = $adb->prepare($query);
+        if($sth)
         {
-            $ID = $result["ID"];
-            kbdisplayarticle($ID);
+                $res = $sth->execute();
+                $numRows = $sth->rowCount();
+                PRINT "<ul>\n";
+                for($i=0; $i < $numRows; $i++)
+                {
+                        $result = $sth->fetchrow_hash();
+                        $ID = $result["ID"];
+                        kbdisplayarticle($ID);
+                }
+                PRINT "</ul>\n";
+        } else
+        {
+                PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
         }
-        PRINT "</ul>\n";
-    } else
-    {
-        PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
-    }
 }
 
 function kbdisplayarticle($ID)
@@ -164,164 +162,174 @@ function kbisfaq($ID)
 
 function kbcategoryListSelect($current, $parentID=0, $categoryname="")
 {
-	global $adb;
-	$query = "SELECT * FROM kbcategories WHERE (parentID = :parentID) ORDER BY name DESC";
-    $sth = $adb->prepare($query);
-	$sth->execute(array('parentID' => $parentID));
-	$rows = $sth->fetchAll();
-	foreach($rows as $result)
-	{
-		$result = $sth->fetchrow_hash();
-		$ID = $result["ID"];
-		$name = $categoryname . $result["name"];
-		PRINT "<OPTION VALUE=$ID";
-		if($current == $ID)
-		{
-			PRINT " SELECTED";
-		}
-		PRINT ">$name</OPTION>\n";
-		$name = $name . "\\";
-		kbcategoryListSelect($current, $ID, $name);
-	}
+        global $adb;
+        $query = "SELECT * FROM kbcategories WHERE (parentID = $parentID) ORDER BY name DESC";
+        $sth = $adb->prepare($query);
+        if($sth)
+        {
+                $res = $sth->execute();
+                $numRows = $sth->rowCount();
+                for($i = 0; $i < $numRows; $i++)
+                {
+                        $result = $sth->fetchrow_hash();
+                        $ID = $result["ID"];
+                        $name = $categoryname . $result["name"];
+                        PRINT "<OPTION VALUE=$ID";
+                        if($current == $ID)
+                        {
+                                PRINT " SELECTED";
+                        }
+                        PRINT ">$name</OPTION>\n";
+                        $name = $name . "\\";
+                        kbcategoryListSelect($current, $ID, $name);
+                }
+        } else
+        {
+                PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+        }
 }
 
 function kbcategoryname($ID, $wholename="")
 {
-    global $adb;
-    $name = null;
-    $query = "select * from kbcategories where (ID = $ID)";
-    $sth = $adb->prepare($query);
-    if($sth)
-    {
-        $sth->execute();
-        $rows = $sth->fetchAll();
-        if(count($rows) > 0)
+        global $adb;
+        $query = "SELECT * FROM kbcategories WHERE (ID = $ID)";
+        $sth = $adb->prepare($query);
+        if($sth)
         {
-            $result = $rows[0];
-            $parentID = $result["parentID"];
-            if($wholename == "")
-            {
-                $name = $result["name"];
-            } else
-            {
-                $name = $result["name"] . "\\";
-            }
-            $name = kbcategoryname($parentID, $name) . $name;
-            if($parentID == 0)
-            {
-                $name = "Main\\" . $name;
-            }
+                $res = $sth->execute();
+                $numRows = $sth->rowCount();
+                if($numRows > 0)
+                {
+                        $result = $sth->fetchrow_hash();
+                        $parentID = $result["parentID"];
+                        if($wholename == "")
+                        {
+                                $name = $result["name"];
+                        } else
+                        {
+                                $name = $result["name"] . "\\";
+                        }
+                        $name = kbcategoryname($parentID, $name) . $name;
+                        if($parentID == 0)
+                        {
+                                $name = "Main\\" . $name;
+                        }
+                }
+        } else
+        {
+                PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
         }
-    } else
-    {
-        PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
-    }
-    return ($name);
+        return ($name);
 }
 
 function getFAQCategories()
 {
-    global $adb;
-    $query = "select * from kbarticles where (faq = 'yes')";
-    $sth = $adb->prepare($query);
-    if($sth)
-    {
-        $res = $sth->execute();
-        $rows = $sth->fetchAll();
-        $catNumbers = array();
-        foreach($rows as $row)
+        global $adb;
+        $query = "select * from kbarticles where (faq = 'yes')";
+        $sth = $adb->prepare($query);
+        if($sth)
         {
-            getParentCategories($row["categoryID"], $catNumbers);
+                $res = $sth->execute();
+                $numRows = $sth->rowCount();
+                $catNumbers = array();
+                for($i=0; $i < $numRows; $i++)
+                {
+                        $result = $sth->fetchrow_hash();
+                        getFAQParentCategories($result["categoryID"], $catNumbers);
+                #       $catNumbers[$i] = $result["categoryID"];
+                }
+        } else
+        {
+                PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
         }
-    } else
-    {
-        PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
-    }
-    return($catNumbers);
-}    
+        return($catNumbers);
+}
 
-function getParentCategories($ID, &$catNumbers)
+function getFAQParentCategories($ID, &$catNumbers)
 {
-    global $adb;
-    $query = "select * from kbcategories where (ID = '$ID')";
-    $sth = $adb->prepare($query);
-    if($sth)
-    {
-        $sth->execute();
-        $rows = $sth->fetchAll();
-        if(count($rows) > 0)
+        global $adb;
+        $query = "select * from kbcategories where (ID = '$ID')";
+        $sth = $adb->prepare($query);
+        if($sth)
         {
-            $result = $rows[0];
-            $parentID = $result["parentID"];
-            if(!in_array($parentID, $catNumbers))
-            {
-                getParentCategories($parentID, $catNumbers);
-            }
-            if(!in_array($ID, $catNumbers))
-            {
-                $sizecatNumbers = sizeof($catNumbers);
-                $catNumbers[$sizecatNumbers] = $ID;
-            }
+                $res = $sth->execute();
+                $numRows = $sth->rowCount();
+                if($numRows > 0)
+                {
+                        $result = $sth->fetchrow_hash();
+                        $parentID = $result["parentID"];
+                        if(!in_array($parentID, $catNumbers))
+                        {
+                                getFAQParentCategories($parentID, $catNumbers);
+                        }
+                        if(!in_array($ID, $catNumbers))
+                        {
+                                $szecatNumbers = sizeof($catNumbers);
+                                $catNumbers[$szecatNumbers] = $ID;
+                        }
+                }
+        } else
+        {
+                PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
         }
-    } else
-    {
-        PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
-    }
 }
 
 function faqdisplaycategories($parentID=0)
 {
-    global $adb;
-    $catNumbers = array();
-    $catNumbers = getFAQCategories();
-    $query = "select * from kbcategories where (parentID = $parentID) order by name asc";
-    $sth = $adb->prepare($query);
-    if($sth)
-    {
-        $sth->execute();
-        $rows = $sth->fetchAll();
-        if(count($rows) > 0)
-        {    
-            PRINT "<ul>\n";
-            foreach($rows as $result)
-            {
-                $name = $result["name"];
-                $ID = $result["ID"];
-                if(in_array($ID, $catNumbers))
+        global $adb;
+        $catNumbers = array();
+        $catNumbers = getFAQCategories();
+        $query = "select * from kbcategories where (parentID = $parentID) order by name asc";
+        $sth = $adb->prepare($query);
+        if($sth)
+        {
+                $res = $sth->execute();
+                $numRows = $sth->rowCount();
+                if($numRows > 0)
                 {
-                    PRINT "<li><B>$name</B>\n";
-                    faqdisplayarticles($ID);
-                    faqdisplaycategories($ID);
+                        PRINT "<ul>\n";
+                        for($i=0; $i < $numRows; $i++)
+                        {
+                                $result = $sth->fetchrow_hash();
+                                $name = $result["name"];
+                                $ID = $result["ID"];
+                                if(in_array($ID, $catNumbers))
+                                {
+                                        PRINT "<li><B>$name</B>\n";
+                                        faqdisplayarticles($ID);
+                                        faqdisplaycategories($ID);
+                                }
+                        }
+                        PRINT "</ul>\n";
                 }
-            }
-            PRINT "</ul>\n";
-        } 
-    } else
-    {
-        PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
-    }
+        } else
+        {
+                PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+        }
 }
 
 function faqdisplayarticles($parentID)
 {
-    global $adb;
-    $query = "select * from kbarticles where (categoryID = $parentID) and (faq = 'yes') order by question asc";
-    $sth = $adb->prepare($query);
-    if($sth)
-    {
-        $res = $sth->execute();
-        $rows = $sth->fetchAll();
-        PRINT "<ul>\n";
-        foreach($rows as $result)
+        global $adb;
+        $query = "select * from kbarticles where (categoryID = $parentID) and (faq = 'yes') order by
+ question asc";
+        $sth = $adb->prepare($query);
+        if($sth)
         {
-            $ID = $result["ID"];
-            faqdisplayarticle($ID);
+                $res = $sth->execute();
+                $numRows = $sth->rowCount();
+                PRINT "<ul>\n";
+                for($i=0; $i < $numRows; $i++)
+                {
+                        $result = $sth->fetchrow_hash();
+                        $ID = $result["ID"];
+                        faqdisplayarticle($ID);
+                }
+                PRINT "</ul>\n";
+        } else
+        {
+                PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
         }
-        PRINT "</ul>\n";
-    } else
-    {
-        PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
-    }
 }
 
 function faqdisplayarticle($ID)

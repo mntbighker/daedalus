@@ -23,7 +23,6 @@ echo "<tr align=center>";
 print "<td><h4><a href=\"../users/setup-users.php\">Setup Users</a></h4></td>";
 print "<td><h4><a href=\"../users/setup-asset-index.php\">Asset Search Defaults</a></h4></td>";
 print "<td><h4><a href=\"../users/setup-dropdowns-index.php\">Manage DropDowns</a></h4></td>";
-print "<td><h4><a href=\"../users/setup-irm.php\">Configure IRM</a></h4></td>";
 print "<td><h4><a href=\"../users/setup-knowledgebase.php\">Setup the Knowledge Base</a></h4></td>";
 
 echo "</tr>";

@@ -177,7 +177,6 @@ function showLicenses($ID)
 	}
 }
 
-
 function Count_Installations($sID)
 {
 	global $adb;
@@ -189,7 +188,7 @@ function Count_Installations($sID)
 	if($sth)
 	{
 		$res = $sth->execute();
-		return $sth->rows();
+		return $sth->fetchAll();
 	} else {
 		print "Failure to prepare query $query in Count_Installations";
 		return 0 ;
@@ -217,6 +216,7 @@ function Count_licenses($sID)
 	}
 	return $total_entitlement;
 }
+
 function templcompsoftShow($showID) 
 {
 	global $USERPREFIX, $adb, $bgcl, $bgcd;
@@ -226,7 +226,7 @@ function templcompsoftShow($showID)
 	if($sth)
 	{
 		$res = $sth->execute();
-		$numRows = $sth->rows();
+		$numRows = $sth->fetchAll();
 		PRINT "<TABLE BORDER=1 WIDTH=100%><TR $bgcd><th colspan=2>Installed Software</th></TR>";
 
 		for ($i =0; $i < $numRows; $i++) 
@@ -260,7 +260,6 @@ PRINT " to template.</TD><TD><input type=submit value=Add></form></TD></TR>";
 	PRINT "</TABLE>";
 }
 
-
 function compsoftShow($showID) 
 {
 	global $USERPREFIX, $adb, $bgcl, $bgcd;
@@ -269,7 +268,7 @@ function compsoftShow($showID)
 	if($sth)
 	{
 		$res = $sth->execute();
-		$numRows = $sth->rows();
+		$numRows = $sth->fetchAll();
 		PRINT "<TABLE BORDER=1 WIDTH=100%><TR BGCOLOR=#BBBBB><th colspan=2>Installed Software</th></TR>";
 		
 		for ($i=0; $i < $numRows; $i++) 
@@ -311,7 +310,7 @@ function SoftwareDropdown($where = "")
 	if($sth)
 	{
 		$res = $sth->execute();
-		$numRows = $sth->rows();
+		$numRows = $sth->fetchAll();
 		PRINT "<SELECT NAME=sID SIZE=1>\n";
 		for($i = 0; $i < $numRows; $i++) 
 		{

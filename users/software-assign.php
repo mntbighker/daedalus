@@ -16,6 +16,14 @@ include_once("../include/func.software_assign");
 // Declare Global variables for database handle and login name
 global $adb, $IRMName;
 
+$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
+
+if(isset($_POST['tablename'])) $tablename = $_POST['tablename'];
+if(isset($_POST['required'])) $required = $_POST['required'];
+if(isset($_POST['submit'])) $submit = $_POST['submit'];
+if(isset($_POST['success'])) $success = $_POST['success'];
+$ID = $_POST['ID'];
+
 // Test "$submit and do action
 
 #commonHeader("Daedalus $name - Search Results");

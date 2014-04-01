@@ -13,13 +13,23 @@ AuthCheck("admin");
 
 $update = $_REQUEST['update'];
 $username = $_REQUEST['username'];
+$comments = ''; // TO_DO - re-add comments back into user forms
 
-if (!isset($fullname)) $fullname = '';
-if (!isset($email)) $email = '';
-if (!isset($building)) $building = '';
-if (!isset($phone)) $phone = '';
-if (!isset($type)) $type = '';
-if (!isset($comments)) $comments = '';
+if(isset($_REQUEST['fullname'])){
+    $fullname = $_REQUEST['fullname'];
+}
+if(isset($_REQUEST['email'])){
+    $email = $_REQUEST['email'];
+}
+if(isset($_REQUEST['building'])){
+    $building = $_REQUEST['building'];
+}
+if(isset($_REQUEST['phone'])){
+    $phone = $_REQUEST['phone'];
+}
+if(isset($_REQUEST['type'])){
+    $type = $_REQUEST['type'];
+}
 
 commonHeader("Daedalus User Setup - User Update");
 

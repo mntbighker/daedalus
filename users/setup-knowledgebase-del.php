@@ -11,11 +11,14 @@ include_once("../include/func.header_footer");
 
 AuthCheck("tech");
 
+$id = $_REQUEST['id'];
+$categoryname = $_REQUEST['categoryname'];
+
 commonHeader("Daedalus Knowledge Base Setup - Category Deleted");
 
 $query = "DELETE FROM kbcategories WHERE (ID = \"$id\")";
 $count =  $adb->dbh->exec($query);
-$query = "DELETE FROM kbarticles WHERE ($parentID = \"$id\")";
+$query = "DELETE FROM kbarticles WHERE (categoryID = \"$id\")";
 $count =  $adb->dbh->exec($query);
 
 ?>
@@ -23,7 +26,7 @@ $count =  $adb->dbh->exec($query);
 Category <?php echo "($id) $categoryname"; ?> Deleted!  Note: All articles under this 
 <?php
 
-PRINT "category has been deleted. <a href=\"$USERPREFIX/setup-knowledgebase.php\">Go Back</a>";
+PRINT "category have been deleted. <a href=\"$USERPREFIX/setup-knowledgebase.php\">Go Back</a>";
 
 commonFooter();
 ?>

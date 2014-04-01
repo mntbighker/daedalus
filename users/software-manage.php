@@ -16,6 +16,10 @@ include_once("../include/func.software_list");
 // Declare Global variables for database handle and login name
 global $adb, $IRMName;
 
+$ID = $_REQUEST['ID'];
+if(isset($_REQUEST['submit'])) $submit = $_REQUEST['submit'];
+if(isset($_REQUEST['success'])) $success = $_REQUEST['success'];
+
 // Do Authorization
 AuthCheck("Tech");
 

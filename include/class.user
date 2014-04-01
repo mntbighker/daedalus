@@ -149,26 +149,36 @@ class User
         $this->udata["Access"] = $result["access"];
         $this->udata["Comments"] = $result["comments"];
     }
-
+	// TO-DO - Add error reporting return redirect back to setup-users
     function add($isLDAP = false)
     {
         global $adb;
         if($this->udata["Name"] == "")
         {
-            PRINT "Error adding user: username not set<BR>\n";
+            PRINT "Error adding user: username not set, hit the back button to re-try<BR>\n";
+            die(0);
         }
         if($this->udata["Password"] == "" && ($isLDAP == false))
         {
-            PRINT "Error adding user: password not set<BR>\n";
+            PRINT "Error adding user: password not set, hit the back button to re-try<BR>\n";
+            die(0);
         }
         if($this->udata["Fullname"] == "")
         {
-            PRINT "Error adding user: password not set<BR>\n";
+            PRINT "Error adding user: Fullname not set, hit the back button to re-try<BR>\n";
+            die(0);
         }
         if($this->udata["Access"] == "")
         {
-            PRINT "Error adding user: type not set<BR>\n";
+            PRINT "Error adding user: type not set, hit the back button to re-try<BR>\n";
+            die(0);
         }
+		$uExists = $this->exists($this->udata["Name"]);
+		if($uExists)
+		{
+			PRINT "User \"".$this->udata['Name']."\" already exists, hit the back button to re-try<BR>\n";
+			die(0);
+		}
 
         $query = "INSERT INTO users VALUES ('".$this->udata["Name"]."', '".$this->udata["Password"]."', '".$this->udata["Fullname"]."', '".$this->udata["Email"]."', '".$this->udata["Location"]."', '".$this->udata["Phone"]."', '".$this->udata["Access"]."', '".$this->udata["Comments"]."')";
         $adb->dbh->exec($query);
@@ -367,8 +377,8 @@ class User
 		if($sth)
 		{
 			$res = $sth->execute();
-			$numRows = $sth->rows();
-			if($numRows > 0)
+			$numRows = $sth->fetchAll();
+			if ($numRows)
 			{
 				return(TRUE);
 			} else

@@ -54,42 +54,6 @@ if( !$adb->dbh ){
   exit();
 }
 
-# Setup config values.
-$query = "select * from config";
-$sth = $adb->prepare($query);
-if($sth)
-{
-    $res = $sth->execute();
-    $result = $sth->fetchrow_hash();
-    $cfg_notifyassignedbyemail = $result["notifyassignedbyemail"];
-    $cfg_notifynewtrackingbyemail = $result["notifynewtrackingbyemail"];
-    $cfg_newtrackingemail = $result["newtrackingemail"];
-    $cfg_groups = $result["groups"];
-    $cfg_usenamesearch = $result["usenamesearch"];
-    $cfg_userupdates = $result["userupdates"];
-    $cfg_sendexpire = $result["sendexpire"];
-    $cfg_showjobsonlogin = $result["showjobsonlogin"];
-    $cfg_minloglevel = $result["minloglevel"];
-    $LOGO = $result["logo"];
-    $cfg_snmp = $result["snmp"];
-    $cfg_snmp_rcommunity = $result["snmp_rcommunity"];
-    $cfg_snmp_ping = $result["snmp_ping"];
-    $cfg_knowledgebase = $result["knowledgebase"];
-        $cfg_anonymous = $result["anonymous"];
-        $cfg_anon_faq = $result["anon_faq"];
-         $cfg_anon_req = $result["anon_req"];
-    $irm_version = $result["version"];
-    #$irm_build = $result["build"];
-    $sth->finish();
-} else {
-  PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
-}
-
-if ($cfg_snmp == 1) {
-  include("$include_path/snmp.inc.php");
-}
-
-
 function AuthCheck($authtype) 
 {
   global $IRMName, $IRMPass, $USERPREFIX, $adb, $bgcl, $bgcd, $cfg_dbdb;
