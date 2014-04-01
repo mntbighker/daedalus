@@ -5,7 +5,7 @@ ini_set('display_errors', '1');
 
 function commonHeader($title) 
 {
-  global $cfg_dbdb, $adb, $IRMName, $cfg_knowledgebase, $USERPREFIX, $PREFIX, $LOGO;
+  global $cfg_dbdb, $adb, $DName, $cfg_knowledgebase, $USERPREFIX, $PREFIX, $LOGO;
 
   PRINT "<html>";
 
@@ -20,7 +20,7 @@ STYLE;
 
   PRINT "<!-- Main Information -->";
 
-  $user = new User($IRMName);
+  $user = new User($DName);
   $usertype = $user->getAccess();
   $LOGO = "daedalus.jpg";
 
@@ -51,7 +51,7 @@ STYLE;
   | <a href="$USERPREFIX/surplus-index.php">Surplus</a>
   | <a href="$USERPREFIX/setup-index.php">Setup</a>
   | <a href="$USERPREFIX/passwd.php">Change PW</a>
-  | <a href="$USERPREFIX/logout.php">Logout <font color='darkgreen'>$IRMName </font></a> 
+  | <a href="$USERPREFIX/logout.php">Logout <font color='darkgreen'>$DName </font></a> 
 ANCHOR;
 
 

@@ -19,7 +19,7 @@ if ( $submit == 'Surplus' ) {
 
 commonHeader("Daedalus Surplus $message");
 
-//logevent(-1, "IRM", 5, "surplus", "$IRMName surplussed $tablename $ID");
+//logevent(-1, "IRM", 5, "surplus", "$DName surplussed $tablename $ID");
 
 if ( $submit == 'Surplus' ) {
 showItem($ID, $tablename, $col1, $col2);  

@@ -4,7 +4,7 @@
 
 $root_path = __DIR__ . '/..';
 
-global $IRMName, $IRMPass, $cfg_dbdb;
+global $DName, $IRMPass, $cfg_dbdb;
 
 #This really needs to be changed to something like:
 #$bgcd = #BBBBBB"; so that we can put it in the configuration page.
@@ -23,17 +23,17 @@ ini_set("include_path", $include_path."/DBI");
 # Start and register session variables
 session_start();
 //print_r($_SESSION);
-#session_register("IRMName", "IRMPass", "cfg_dbdb");
+#session_register("DName", "IRMPass", "cfg_dbdb");
 
 if ( !isset($_SESSION['cfg_dbdb']) || $_SESSION['cfg_dbdb'] == '' ) {
   $_SESSION['cfg_dbdb'] = isset($_REQUEST['dbuse']) ? $_REQUEST['dbuse'] : null;
 }
 $cfg_dbdb = $_SESSION['cfg_dbdb'];
 
-if ( !isset($_SESSION['IRMName']) || $_SESSION['IRMName'] == '' ) {
-  $_SESSION['IRMName'] = isset($_REQUEST['name']) ? $_REQUEST['name'] : null;
+if ( !isset($_SESSION['DName']) || $_SESSION['DName'] == '' ) {
+  $_SESSION['DName'] = isset($_REQUEST['name']) ? $_REQUEST['name'] : null;
 }
-$IRMName = $_SESSION['IRMName'];
+$DName = $_SESSION['DName'];
 
 if ( !isset($_SESSION['IRMPass']) || $_SESSION['IRMPass'] == '' ) {
   $_SESSION['IRMPass'] = isset($_REQUEST['password']) ? $_REQUEST['password'] : null;
@@ -56,11 +56,11 @@ if( !$adb->dbh ){
 
 function AuthCheck($authtype) 
 {
-  global $IRMName, $IRMPass, $USERPREFIX, $adb, $bgcl, $bgcd, $cfg_dbdb;
+  global $DName, $IRMPass, $USERPREFIX, $adb, $bgcl, $bgcd, $cfg_dbdb;
   
-  $user = new User($IRMName);
+  $user = new User($DName);
   $type = $user->getAccess();
-  if (IsSet($IRMName) == FALSE) 
+  if (IsSet($DName) == FALSE) 
     {
       commonHeader("Not Logged In");
       PRINT "  You were not logged in. (Check your browsers cookies)  ";

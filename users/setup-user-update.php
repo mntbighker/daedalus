@@ -37,7 +37,7 @@ if($update == "act")
 {
 	$query = "UPDATE users SET fullname = '$fullname', email = '$email', building = '$building', phone = '$phone', access = '$type', comments = '$comments' WHERE name = '$username'";
 	$adb->dbh->exec($query);
-	logevent(-1, "IRM", 5, "setup", "$IRMName updated user $username");
+	logevent(-1, "IRM", 5, "setup", "$DName updated user $username");
 	PRINT "Updated $username <a href=\"$USERPREFIX/setup-users.php\">Go back</a>";
 } else if($update == "edit")
 {

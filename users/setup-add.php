@@ -12,6 +12,6 @@ include_once("../include/func.header_footer");
 AuthCheck("tech");
 $query = "INSERT INTO $tablename VALUES ('$name')";
 $count =  $adb->dbh->exec($query);
-logevent(-1, "IRM", 5, "setup", "$IRMName added entry $name to $tablename.");
+logevent(-1, "IRM", 5, "setup", "$DName added entry $name to $tablename.");
 header("Location: $HTTP_REFERER");
 ?>

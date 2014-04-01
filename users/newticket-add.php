@@ -132,7 +132,7 @@ if ( ! $count ) {
 $tID = $adb->insert_id();
 
 // Log activity
-logevent($tID, "tracking", 4, "database", "$IRMName added record");
+logevent($tID, "tracking", 4, "database", "$DName added record");
 
 if ( $newfollowup ) {
    $sql = "INSERT followups
@@ -151,7 +151,7 @@ if ( ! $count ) {
 $fID = $adb->insert_id();
 
 // Log activity
-logevent($fID, "followups", 4, "database", "$IRMName added record");
+logevent($fID, "followups", 4, "database", "$DName added record");
 
 exit(header("Location: ../users/index.php"));
 

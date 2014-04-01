@@ -11,7 +11,7 @@ include_once("../include/func.header_footer");
 include_once("../include/func.surplus_header");
 
 // Declare Global variables for database handle and login name
-global $adb, $IRMName;
+global $adb, $DName;
 
 
 

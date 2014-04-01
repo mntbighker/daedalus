@@ -4,7 +4,7 @@
 function freeSoftware($ID) {
 
    // Declare Global variables for database handle and login name
-   global $adb, $IRMName;
+   global $adb, $DName;
 
    // Unassign Software in 'computer_software' Table
    // Decrement 'license_used' in 'software' Table
@@ -31,7 +31,7 @@ function freeSoftware($ID) {
 function moveSoftware($ID) {
 
    // Declare Global variables for database handle and login name
-   global $adb, $IRMName;
+   global $adb, $DName;
 
    // localize mID from $_POST
    $mID = $_POST['mID'] ? $_POST['mID'] : 0;
@@ -80,7 +80,7 @@ function addSoftware($ID) {
    // Use '$_POST' to get form data
 
    // Declare Global variables for database handle and login name
-   global $adb, $IRMName;
+   global $adb, $DName;
 
    // Local variables
    $count = 0;

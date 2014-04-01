@@ -12,7 +12,7 @@ include_once("../include/func.getjobs");
 include_once("../include/func.displaytickets");
 
 // Declare Global variables for database handle and login name
-global $adb, $IRMName;
+global $adb, $DName;
 
 $year = date("Y");
 
@@ -69,7 +69,7 @@ $vars4 = "tablename=$tablename&logical=$logical_str&value=$value_str&test=$test_
 $new         = getJobs('status', 'new');
 $high        = getJobs('priority', 'high', 'status', 'complete', 'NOT');
 $assign      = getJobs('status', 'assigned');
-$user_assign = getJobs('status', 'assigned', 'assign', $IRMName);
+$user_assign = getJobs('status', 'assigned', 'assign', $DName);
 $hold        = getJobs('status', 'hold');
 $unresolved  = getJobs('status', 'unresolved');
 $completed   = getJobs('status', 'complete', 'date', $year);
@@ -84,7 +84,7 @@ $assign &&
        $assign = "<a href=\"$form?$vars1&value=assign\">$assign</a>";
 
 $user_assign && 
-  $user_assign = "<a href=\"$form?$vars3&value=assigned|$IRMName\">$user_assign</a>";
+  $user_assign = "<a href=\"$form?$vars3&value=assigned|$DName\">$user_assign</a>";
 
 $hold && $hold = "<a href=\"$form?$vars1&value=hold\">$hold</a>";
 
@@ -104,7 +104,7 @@ print "<h3>Ticket Status</h3>";
 print "<tr>";
 print "<th>&nbsp;New&nbsp;</th>";
 print "<th>&nbsp;High Priority&nbsp;</th>";
-print "<th>&nbsp;Assigned to $IRMName&nbsp;</th>";
+print "<th>&nbsp;Assigned to $DName&nbsp;</th>";
 print "<th>&nbsp;Assigned&nbsp;</th>";
 print "<th>&nbsp;Held&nbsp;</th>";
 print "<th>&nbsp;Unresolved&nbsp;</th>";

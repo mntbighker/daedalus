@@ -14,7 +14,7 @@ include_once("../include/func.software_assign");
 //                  $required  - required table fields (field1,field2 ...)
 
 // Declare Global variables for database handle and login name
-global $adb, $IRMName;
+global $adb, $DName;
 
 $HTTP_REFERER = $_SERVER['HTTP_REFERER'];
 
@@ -42,7 +42,7 @@ $ID = $_POST['ID'];
 #commonFooter();
 
 // Log activity
-#logevent($cID, "$tablename", 4, "database", "$IRMName added record");
+#logevent($cID, "$tablename", 4, "database", "$DName added record");
 
 // fix URL separators
 $sept = ( strrpos ($HTTP_REFERER, '?') ) ? '&' : '?';

@@ -14,7 +14,7 @@ include_once("../include/func.listcolumn");
 //   $tablename - name of table in batabase
 
 // Declare Global variables for database handle and login name
-global $adb, $IRMName;
+global $adb, $DName;
 
 $tablename = $_REQUEST['tablename'];
 
@@ -66,7 +66,7 @@ if ( mysql_errno() ) { print( mysql_error().': '.$sql ); }
 $add = ($count) ? 1 : 0;
 
 // Log activity
-logevent($cID, "$tablename", 4, "database", "$IRMName added record");
+logevent($cID, "$tablename", 4, "database", "$DName added record");
 
 // fix URL separators
 $sept = ( strrpos ($HTTP_REFERER, '?') ) ? '&' : '?';

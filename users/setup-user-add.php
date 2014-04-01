@@ -34,7 +34,7 @@ $user->setAccess($type);
 $user->setComments($comments);
 $user->add();
 
-logevent(-1, "IRM", 5, "setup", "$IRMName add user $username.");
+logevent(-1, "IRM", 5, "setup", "$DName add user $username.");
 
 header("Location: $HTTP_REFERER");
 

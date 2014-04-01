@@ -17,7 +17,7 @@ if ( $submit == 'Verify' ) {
    $error = moveSurplus($tablename, $ID);
 
    if ( ! $error ) {
-     //logevent(-1, "IRM", 5, "surplus", "$IRMName surplussed $tablename $ID");
+     //logevent(-1, "IRM", 5, "surplus", "$DName surplussed $tablename $ID");
      exit(header("Location: ../users/general-index.php?tablename=$tablename"));
    }
 }

@@ -15,7 +15,7 @@ $oldpassword = $_REQUEST['oldpassword'];
 $newpassword = $_REQUEST['newpassword'];
 $confirm = $_REQUEST['confirm'];
 
-$user = new User($IRMName);
+$user = new User($DName);
         $currentpass  = $user->getPassword();
         
 if($currentpass != $oldpassword)
@@ -38,7 +38,7 @@ if($currentpass != $oldpassword)
      exit(header("Location: ../users/passwd.php?error=$error"));
 } else
 {
-	$user = new User($IRMName);
+	$user = new User($DName);
 	$user->setPassword($newpassword);
 	$user->commit();
 

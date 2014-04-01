@@ -46,7 +46,7 @@ if(isset($_REQUEST['addtoknowledgebase'])){
 }
 
 // Declare Global variables for database handle and login name
-global $adb, $IRMName, $tID;
+global $adb, $DName, $tID;
 
 // Set current Date Time in Mysql Format
 $now = date("Y-m-d H:i");
@@ -172,7 +172,7 @@ if ( $trimmedFollowup and $oldstatus != 'complete' ) {
    // Setup SQL 'followups' Table UPDATE statement 
    $sql = " INSERT INTO followups 
             SET tracking = '$tID', date = '$dateFollowup', 
-                author ='$IRMName', contents = '$escapeFollowups' ";
+                author ='$DName', contents = '$escapeFollowups' ";
 
    // Execute SQL 
    $count2 = $adb->dbh_do($sql) or print( mysql_error().': '.$sql);
@@ -183,14 +183,14 @@ if ( $trimmedFollowup and $oldstatus != 'complete' ) {
 INSERT INTO followups 
 SET tracking = :tID, 
     date     = :dateFollowup,
-    author   = :IRMName,
+    author   = :DName,
     contents = :trimmedFollowup
 EOT;
    $followupsStmt = $adb->prepare($followupsSql);
    $count2 = $followupsStmt->execute(array(
        'tID'             => $tID, 
        'dateFollowup'    => $dateFollowup, 
-       'IRMName'         => $IRMName, 
+       'DName'         => $DName, 
        'trimmedFollowup' => $trimmedFollowup
    ));
    
@@ -215,8 +215,8 @@ $error && $msg = "<hr4><font color=\"red\">$error</font></h4>";
 
 
 // Log activity
-$count1 && logevent($tID,"tracking", 4, "database", "$IRMName modified record");
-$count2 && logevent($tID,"followups", 4, "database", "$IRMName added record");
+$count1 && logevent($tID,"tracking", 4, "database", "$DName modified record");
+$count2 && logevent($tID,"followups", 4, "database", "$DName added record");
 
 // fix URL separators
 $sept = ( strrpos ($HTTP_REFERER, '?') ) ? '&' : '?';

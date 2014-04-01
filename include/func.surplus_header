@@ -2,7 +2,7 @@
 
 function commonSurplusHeader($title) 
 {
-  global $adb, $IRMName, $cfg_knowledgebase, $USERPREFIX, $PREFIX;
+  global $adb, $DName, $cfg_knowledgebase, $USERPREFIX, $PREFIX;
 
   PRINT "<html>";
 
@@ -17,7 +17,7 @@ STYLE;
 
   PRINT "<!-- Main Information -->";
 
-  $user = new User($IRMName);
+  $user = new User($DName);
   $usertype = $user->getAccess();
 
   PRINT "<br>";
@@ -32,7 +32,7 @@ STYLE;
   | <a href="$USERPREFIX/general-index.php?tablename=surplus_software">Surplus Software</a>
   | <a href="$USERPREFIX/general-index.php?tablename=surplus_customer">Surplus Customer</a>
   | <a href="$USERPREFIX/index.php">Home</a>
-  | <a href="$USERPREFIX/logout.php">Logout <font color='darkgreen'>$IRMName </font></a> 
+  | <a href="$USERPREFIX/logout.php">Logout <font color='darkgreen'>$DName </font></a> 
 ANCHOR;
 
   print "<td align=\"right\">".date("M d H:i")." </td>";

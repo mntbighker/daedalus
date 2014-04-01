@@ -9,7 +9,7 @@ function addFollowupForm($ID) {
 
   // NOTE: This Function creates 1 row in a table
 
-   global $IRMName;
+   global $DName;
 
    include_once("../include/func.dropdown_date");
 
@@ -34,7 +34,7 @@ function addFollowupForm($ID) {
 
    echo "</td>";
 
-   echo "<td>$IRMName</td>";
+   echo "<td>$DName</td>";
 
    echo "<td valign=top>
         <textarea cols=60 Rows=7 name=newfollowup WRAP=soft></textarea></td>";

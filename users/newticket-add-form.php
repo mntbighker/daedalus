@@ -30,7 +30,7 @@ if (!isset($summary)) $summary = '';
 if (!isset($contents)) $contents = '';
 if (!isset($newfollowup)) $newfollowup = '';
 
-global $adb, $IRMName;
+global $adb, $DName;
 
 // Get/Check 'user' or 'owner' Based On 'ID' From 'computer' Table
 $tablename = 'computer';
@@ -82,7 +82,7 @@ echo "</tr>";
 
 echo "<tr>";
 echo "<td><b>Assigned To</b><br>";
-$assign || $assign = $IRMName;
+$assign || $assign = $DName;
 dropFilterList('users','name','assign',$blank=0,$assign);
 echo "</td>";
 echo "<td><b>Status</b><br>";
@@ -153,7 +153,7 @@ print "</table>";
 print "<input type=hidden name=computer_id  value=$ID>";
 print "<input type=hidden name=customer  value=$user>";
 print "<input type=hidden name=groupname value=$groupname>";
-print "<input type=hidden name=author    value=$IRMName>";
+print "<input type=hidden name=author    value=$DName>";
 
 print "</form>";
 
