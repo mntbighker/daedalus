@@ -116,7 +116,7 @@ function TrackingSearchView($tablename, $logical, $value,
 
   array_unshift($logical, '');
   
-  foreach ( range(1, count($test)) as $i) {
+  for($i=1; $i < count($test); $i++){
   
     if ( $value[$i] == '' ) { continue; }
 

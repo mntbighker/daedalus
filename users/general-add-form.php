@@ -24,6 +24,7 @@ $PHP_SELF = $_SERVER['PHP_SELF'];
 
 $tablename = $_REQUEST['tablename'];
 $submit = (isset($_REQUEST['submit'])) ? $_REQUEST['submit'] : $submit = '';
+$required = (isset($_REQUEST['required'])) ? $_REQUEST['required'] : $required = '';
 
 if (isset($_REQUEST['ID'])) {
   $ID = $_REQUEST['ID'];
