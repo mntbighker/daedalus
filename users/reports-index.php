@@ -16,7 +16,7 @@ AuthCheck("admin");
 
 commonHeader("Daedalus Reports"); 
 
-// echo "<p>IRM Home: /var/www/html/irm</p>";
+// echo "<p>Daedalus Home: /var/www/html/daedalus</p>";
 
 echo "<form method=POST action=\"reports-display.php\">";
 

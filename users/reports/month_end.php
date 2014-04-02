@@ -1,30 +1,10 @@
 <?php
-#    IRM - The Information Resource Manager
-#    Copyright (C) 1999 Yann Ramin
-#
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License (in file COPYING) for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-#
-#    $Id: tracking.php,v 1.3 2002/05/16 05:58:18 theatrus Exp $
-#
 ################################################################################
 #                                  CHANGELOG                                   #
 ################################################################################
-#  11/06/99 - Yann Ramin: 	Added reports feature. #
 ################################################################################
 
-include("../../include/irm.inc");
+include("../../include/daedalus.inc");
 include("../../include/reports.inc.php");
 AuthCheck("normal");
 PRINT "<html><body bgcolor=#ffffff>";
@@ -47,7 +27,7 @@ function getTrackingByUser($startdate, $enddate, $username)
 if ($go == "yes") 
 {
 
-	commonHeader("IRM Tracking Report Results");
+	commonHeader("Daedalus Tracking Report Results");
 	# 1. Get some number data
 	$startdate = $startyear . "-" . $startmonth . "-" . $startday;
 	$enddate = $endyear . "-" . $endmonth . "-" . $endday;
@@ -101,7 +81,7 @@ if ($go == "yes")
 	PRINT "</table>";
 } else 
 {
-	commonHeader("IRM Tracking Report");
+	commonHeader("Daedalus Tracking Report");
 	?>
 	Welcome to the Default Tracking Report! This report is designed to inform
 	you of the tracking requests that have been completed or marked old during
