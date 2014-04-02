@@ -1,0 +1,151 @@
+<?php
+
+function SearchCVS($tablename, $logical, $value, 
+                    $test, $match, $field,
+                    $sort, $col1, $col2,
+                    $display, $page, $limit)
+{
+
+  include_once("../include/func.strings");
+  include_once("../include/iam_csvdump.php");
+
+
+  // Declare Global variables for database handle 
+  global $cfg_dbdb, $adb, $PHP_SELF;
+  
+  $PHP_SELF = $_SERVER['SCRIPT_NAME'];
+  
+  if (!isset($count)) $count = 0;
+
+  // Change Input Arrays to String
+  if ( is_string($logical) ) $logical = explode("|", $logical);
+  if ( is_string($value) )   $value   = explode("|", $value);
+  if ( is_string($test) )    $test    = explode("|", $test);
+  if ( is_string($match) )   $match   = explode("|", $match);
+  if ( is_string($field) )   $field   = explode("|", $field);
+  if ( is_string($display) ) $display = explode("|", $display);
+
+  // Setup Labels
+
+  // Add to Display Array any Search Fields
+   $dpy_field[] = $field[0];
+
+   while ( ++$count < count($value) ) { 
+    ($value[$count] != '') && $dpy_field[] = $field[$count];  
+   } // End While
+
+  // Build Display Array with Sort, Search and Display
+#  $labels_tmp = array_merge(array($col1,$col2,$sort), $dpy_field, $display);
+  $labels_tmp = array_merge($dpy_field, $display);
+
+  // Delete Duplicate Fields and Collapse Array
+  $labels = array_values(array_unique($labels_tmp));
+
+  // Remove col1 from array
+  if (in_array($col1, $labels)) {
+     $index = array_search( $col1, $labels);
+     array_splice($labels , $index, 1);
+  }
+
+  // Remove col2 from array
+  if (in_array($col2, $labels)) {
+     $index = array_search( $col2, $labels);
+     array_splice($labels , $index, 1);
+  }
+  // Remove sort from array
+  if (in_array($sort, $labels)) {
+     $index = array_search( $sort, $labels);
+     array_splice($labels , $index, 1);
+  }
+
+  // Move comments to end of list
+  if (in_array('comments', $labels)) {
+     $index = array_search( 'comments', $labels);
+     array_splice($labels , $index, 1);
+     array_push($labels, 'comments');
+  }
+
+  // Move contents to end of list
+  if (in_array('contents', $labels)) {
+     $index = array_search( 'contents', $labels);
+     array_splice($labels , $index, 1);
+     array_push($labels, 'contents');
+  }
+
+
+  // Only Add Sort if not equal to Col1 or Col2
+  if ( $sort != $col1 && $sort != $col2 ) {
+     $labels = array_merge(array($sort), $labels); 
+  } 
+
+  //  Add Col1 and Col2 to Front of Array
+  $display_labels = array_merge(array($col1, $col2), $labels);
+
+  $logical_str = implode("|", $logical);
+  $value_str   = implode("|", $value);
+  $test_str    = implode("|", $test);
+  $match_str   = implode("|", $match);
+  $field_str   = implode("|", $field);
+  $display_str = implode("|", $display_labels);
+
+  if (!($limit)){
+  $limit = 10;} // Default results per-page.
+  if (!($page)){
+  $page = 0;} // Default page value.
+
+
+  // Setup Where Clause
+  // -------------------------------------------
+
+  if ( $match[0] == 'contains' ) {
+    $value[0] = " '%$value[0]%' ";
+  } else {
+    $value[0] = " '$value[0]' ";
+  } 
+
+  $where = " $field[0] $test[0] $value[0] ";
+
+  array_unshift($logical, '');
+
+  foreach ( range(1, count($test)) as $i) {
+  
+    if ( $value[$i] == '' ) { continue; }
+
+    if ( $match[$i] == 'contains' ) {
+       $value[$i] = " '%$value[$i]%' ";
+    } else {
+       $value[$i] = " '$value[$i]' ";
+    } 
+    $where .= " $logical[$i] $field[$i] $test[$i] $value[$i] ";
+  }
+
+  // Setup Querys
+  // -------------------------------------------
+
+  $list = implode(",", $display_labels);
+
+  $query_data = "SELECT $list
+          FROM $tablename ";
+
+  $query_data .= " WHERE $where ";
+
+  $query_data .= " ORDER BY $sort ASC 
+               LIMIT $page, $limit";
+
+  // -------------------------------------------
+
+
+  $dumpfile = new iam_csvdump;
+
+  if ( isset( $_GET["dump"] ) ) {
+     $dumpfile->dump("$query_data", $tablename, "csv", "$cfg_dbdb", 
+                     "dbuser", "password", "localhost" );
+  } else {
+     $dumpfile->dump("$query_data", "", "", "$cfg_dbdb", 
+                     "dbuser", "password", "localhost" );
+  }
+
+
+} // End SearchCVS
+
+?>
