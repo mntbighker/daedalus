@@ -30,6 +30,8 @@ include_once("../include/func.csv");
 // Do Authorization
 AuthCheck("normal");
 
+$QUERY_STRING = $_SERVER['QUERY_STRING'];
+
 $tablename = $_REQUEST['tablename'];
 $logical = (isset($_REQUEST['logical'])) ? $_REQUEST['logical'] : $logical = array('','','','');
 $value = (isset($_REQUEST['value'])) ? $_REQUEST['value'] : $value = array('','','','');
@@ -56,7 +58,7 @@ $normal = strpos($tablename, 'surplus');
 
 if ( ! isset( $_GET["dump"] ) ) {
    commonHeader("Daedalus $name - Search Results");
-   echo "<p><a href=\"general-index.php?$_SERVER\[\'QUERY_STRING\'\]\">Restart Search</a></p>";
+   echo "<p><a href=\"general-index.php?$QUERY_STRING\">Restart Search</a></p>";
 }         
 
 // Call Function to Display CSV

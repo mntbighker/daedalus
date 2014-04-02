@@ -69,12 +69,11 @@ $cfg_dbname = "localhost";
 # Syntax: $cfg_dbuser = "<db-user>";
 # Default: $cfg_dbuser = "admin";
 
-$cfg_dbuser = "admin"; 
+$cfg_dbuser = "username"; 
 
 # cfg_dbpasswd: The dbuser's password.
 # Syntax: $cfg_dbpasswd = "<password>";
-# Default: $cfg_dbpasswd = "";
-$cfg_dbpasswd = "el0ret_kts";
+Default: $cfg_dbpasswd = "";
 
 # cfg_dbtype: Database type
 # Syntax: $cfg_dbtype = "<database type>";

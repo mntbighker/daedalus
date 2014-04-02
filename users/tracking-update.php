@@ -198,7 +198,7 @@ EOT;
 
 // Test for Adding Information to Knowledge Base
 if ($status == 'complete' and $addtoknowledgebase == 'yes' ) {
- exit(header("Location: knowledgebase-article-add.php?from_tracking=$tID"));
+  exit(header("Location: knowledgebase-article-add.php?from_tracking=$tID"));
 }
 
 // Mark Update Succesfully or Not
@@ -212,7 +212,6 @@ if ($oldstatus == 'complete' and ! $count2 ) {
 }
 
 $error && $msg = "<hr4><font color=\"red\">$error</font></h4>";
-
 
 // Log activity
 $count1 && logevent($tID,"tracking", 4, "database", "$DName modified record");

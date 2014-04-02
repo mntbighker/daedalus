@@ -139,10 +139,10 @@ function SearchCVS($tablename, $logical, $value,
 
   if ( isset( $_GET["dump"] ) ) {
      $dumpfile->dump("$query_data", $tablename, "csv", "$cfg_dbdb", 
-                     "root", "el0ret_kts", "localhost" );
+                     "admin", "el0ret_kts", "localhost" );
   } else {
      $dumpfile->dump("$query_data", "", "", "$cfg_dbdb", 
-                     "root", "el0ret_kts", "localhost" );
+                     "admin", "el0ret_kts", "localhost" );
   }
 
 
