@@ -12,7 +12,7 @@
 # Enjoy!
 #
 
-$irm_build = "05-01-2005";
+$daedalus_build = "04-01-2014";
 
 # Sections:
 # 1 - Installation and Graphic Options
@@ -22,27 +22,25 @@ $irm_build = "05-01-2005";
 # Section 1: Installation and Graphic Options
 # -------------------------------------------
 
-# PREFIX: The installed location of IRM, from the web-browsers point of view.
-# Syntax: $PREFIX = "<path, i.e. /helpdesk/irm, /irm, /~joeuser/irm>";
-# Default: $PREFIX = "/irm";
+# PREFIX: The installed location of Daedalus, from the web-browsers point of view.
+# Syntax: $PREFIX = "<path, i.e. /helpdesk/daedalus, /daedalus, /~joeuser/daedalus>";
+# Default: $PREFIX = "/daedalus";
 
 $PREFIX = "/daedalus";  // Should pull from $_SERVER
 
 # USERPREFIX: The location of the "users" directory relative to the installed
-# location of IRM. This should never need to be changed,  unless you move the 
-# "users" directory to another location.  The benefit of this option is that 
-# it should fix all of the path problems were created by using the irm.inc
-# file the way we do.
+# location of Daedalus. This should never need to be changed,  unless you move the 
+# "users" directory to another location.
 # Syntax: $USERPREFIX = "$PREFIX/users_path"
 # Default: $USERPREFIX = "$PREFIX/users"
 
 $USERPREFIX = "$PREFIX/users"; 
 
-# UPREFIX: The installed location of IRM including access protocol and server,
+# UPREFIX: The installed location of Daedalus including access protocol and server,
 # 		from the web-browsers point of view.
-# Syntax: $UPREFIX = "http<s>://your.webserver.com/<path, i.e. /helpdesk/irm,
-#		/irm, /~joeuser/irm>";
-# Default: $UPREFIX = "http://your.server.com/irm";
+# Syntax: $UPREFIX = "http<s>://your.webserver.com/<path, i.e. /helpdesk/daedalus,
+#		/daedalus, /~joeuser/daedalus>";
+# Default: $UPREFIX = "http://your.server.com/daedalus";
 
 $UPREFIX = "https://ebony.ndc.nasa.gov/daedalus";
 
@@ -58,7 +56,7 @@ $AUTHSOURCE = "DB";
 
 # Section 2: Database Configuration
 # ---------------------------------
-# Currently, IRM only supports MySQL. If there is interest, a pgSQL or MSSQL
+# Currently, Daedalus only supports MySQL. If there is interest, a pgSQL or MSSQL
 # version can be run off.
 
 # cfg_dbname: The database server and port.

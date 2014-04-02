@@ -7,10 +7,10 @@ function commonSurplusHeader($title)
   PRINT "<html>";
 
   PRINT "<head>";
-  PRINT "<title>IRM: $title</title>";
+  PRINT "<title>Daedalus: $title</title>";
 
   PRINT <<<STYLE
-     <LINK href="../include/irm.css" rel="stylesheet" type="text/css">
+     <LINK href="../include/daedalus.css" rel="stylesheet" type="text/css">
 STYLE;
 
   PRINT "</head>";

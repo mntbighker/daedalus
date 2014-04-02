@@ -4,11 +4,11 @@ session_start();
 $_SESSION = array();
 session_destroy();
 ?>
-<HTML><HEAD><TITLE>Daedalus - Information Resource Manager and Trouble Desk</TITLE>
+<HTML><HEAD><TITLE>Daedalus - Asset Manager and Trouble Desk</TITLE>
 </HEAD>
 <BODY BGCOLOR=#FFFFFF>
 <FONT FACE="Arial, Helvetica">
-<img src=irm-jr1.jpg>
+<img src=daedalus.jpg>
 <br>
   
 <a href="login.php">Login</a>
@@ -20,13 +20,13 @@ Username: <input type=text name=name>
 <br>Password: <input type=password name=password>
 <!-- <br>Database: -->
 <!-- Database selection disabled and static set -->
-<input type='hidden' name='dbuse' value='irm'>
+<input type='hidden' name='dbuse' value='daedalus'>
 <!-- <select name=dbuse size=1> -->
 
-<!-- Multiple database selection options.  The default is to use a database called 'irm'. -->
+<!-- Multiple database selection options.  The default is to use a database called 'daedalus'. -->
 <!-- To add more, simply add more option value=dbname lines here. -->
 
-<!-- <option value=irm>irm</option> -->
+<!-- <option value=daedalus>daedalus</option> -->
 
 <!-- End Multi-Database -->
 
@@ -54,14 +54,14 @@ free to post a request for help.
 
 <!-- <form method=post action=login.php><select name=dbuse size=1> -->
 
-<!-- Multiple database selection options.  The default is to use a database called 'irm'. -->
+<!-- Multiple database selection options.  The default is to use a database called 'daedalus'. -->
 <!-- To add more, simply add more option value=dbname lines here. -->
 
-<!-- <option value=irm>irm</option> -->
+<!-- <option value=daedalus>daedalus</option> -->
 
 <!-- End Multi-Database -->
 
-<!-- </select><input type='hidden' name='password' value='irmconnect'><input type='hidden' name='name' value='IRMConnect'> -->
+<!-- </select><input type='hidden' name='password' value='dconnect'><input type='hidden' name='name' value='DConnect'> -->
 <!-- <input type='hidden' name='f_req' value='yes'> -->
 <!-- <input type=submit value=Read FAQ></form> -->
 
@@ -70,14 +70,14 @@ free to post a request for help.
 <!-- instructions. Your request will be filed under the user name of <b>guest</b> so you will need to ensure that the contact information is correct if you wish to recieve updates and keep in touch with the helpdesk. -->
 <!-- <form method=post action=login.php><select name=dbuse size=1> -->
 
-<!-- Multiple database selection options.  The default is to use a database called 'irm'. -->
+<!-- Multiple database selection options.  The default is to use a database called 'daedalus'. -->
 <!-- To add more, simply add more option value=dbname lines here. -->
 
-<!-- <option value=irm>irm</option> -->
+<!-- <option value=daedalus>daedalus</option> -->
 
 <!-- End Multi-Database -->
 
-<!-- </select><input type='hidden' name='password' value='irmconnect'><input type='hidden' name='name' value='IRMConnect'><input type=submit value=Help Request></form> -->
+<!-- </select><input type='hidden' name='password' value='dconnect'><input type='hidden' name='name' value='DConnect'><input type=submit value=Help Request></form> -->
 </td>
 </tr>
 </table></form>
