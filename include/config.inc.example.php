@@ -17,7 +17,6 @@ $daedalus_build = "04-01-2014";
 # Sections:
 # 1 - Installation and Graphic Options
 # 2 - Database Configuration
-# 3 - LDAP Configuration
 
 # Section 1: Installation and Graphic Options
 # -------------------------------------------
@@ -44,11 +43,9 @@ $USERPREFIX = "$PREFIX/users";
 
 $UPREFIX = "https://dactyl.arc.nasa.gov/daedalus";
 
-# AUTHSOURCE: The source of authentication information.  Note, even if LDAP is
-#               selected, permissions and preferences will be stored in
-#               the database.
+# AUTHSOURCE: The source of authentication information.
 #       
-# Syntax: $AUTHSOURCE = "<DB|LDAP>";
+# Syntax: $AUTHSOURCE = "<DB>";
 # Default: $AUTHSOURCE = "DB";
 
 $AUTHSOURCE = "DB";
@@ -81,49 +78,4 @@ Default: $cfg_dbpasswd = "";
 
 $cfg_dbtype = "mysql";
 
-
-# Section 3: LDAP Configuration 
-# ---------------------------------
-# Use this section if you selected "LDAP" for the "$AUTHSOURCE" variable.
-# Here you will specify all the options needed to bind to an ldap source.
-# NOTE: We currently only bind to ldap servers anonymously.  In the future
-# we will support authenticated binds.
-
-# cfg_ldapserver: Hostname of the LDAP server
-# Syntax: $cfg_ldapserver = "host";
-# Default: $cfg_ldapserver = "ldap.host.com";
-$cfg_ldapserver = "ldap.host.com";
-
-# cfg_serverroot: Hostname of the LDAP server
-# Syntax: $cfg_serverroot = "<root string>";
-# Default: $cfg_serverroot = "o=host.com";
-$cfg_serverroot = "o=host.com";
-
-# cfg_ldapfullname: The identifier that we should use to determine a
-# Full Name "First Name Last Name" style from the LDAP database.
-# Make sure you do NOT add the "=" at the end.
-# Syntax: $cfg_ldapfullname = "<fullname identifier string>";
-# Default: $cfg_ldapfullname = "gecos";
-$cfg_ldapfullname = "gecos";
-
-# cfg_ldapemail: The identifier that we should use to determine an
-# email address from the LDAP database.
-# Make sure you do NOT add the "=" at the end.
-# Syntax: $cfg_ldapemail = "<email identifier string>";
-# Default: $cfg_ldapemail = "mail";
-$cfg_ldapemail = "mail";
-
-# cfg_ldaplocation: The identifier that we should use to determine a
-# location from the LDAP database.
-# Make sure you do NOT add the "=" at the end.
-# Syntax: $cfg_ldaplocation = "<location identifier string>";
-# Default: $cfg_ldaplocation = "officelocation";
-$cfg_ldaplocation = "officelocation";
-
-# cfg_ldapphone: The identifier that we should use to determine a
-# phone number from the LDAP database.
-# Make sure you do NOT add the "=" at the end.
-# Syntax: $cfg_ldapphone = "<phone number identifier string>";
-# Default: $cfg_ldapphone = "officephonenumber";
-$cfg_ldapphone = "officephonenumber";
 ?>

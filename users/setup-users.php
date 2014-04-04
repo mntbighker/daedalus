@@ -21,7 +21,6 @@ if($AUTHSOURCE == "DB")
 } else
 {
 	PRINT "view and update users in the Daedalus database. \n";
-	PRINT "<a href=\"./ldapupdate.php\">Click here to update the database information from LDAP.</a>\n";
 }
 
 PRINT "<hr noshade>\n";

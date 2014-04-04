@@ -5,19 +5,8 @@ class User
 
     var $udata; # user data
 
-# maybe move the above to a hash?
-
     function User($name = "")
     {
-
-        //$this->driver = new UserDriver();
-
-        //if (!isSet($this->driver)) 
-        //{
-        //    print "We had a booboo, I couldn't load the UserDriver class!";
-        //    exit();
-        //}
-
         if($name != "")
         {
             $this->setName($name);
@@ -27,7 +16,7 @@ class User
     
     function authenticate($u, $p) 
     {
-        global $adb, $AUTHSOURCE, $cfg_ldapserver, $cfg_serverroot, $cfg_ldapserver;
+        global $adb, $AUTHSOURCE, $cfg_serverroot;
 
         # TODO: MD5 Password hashes, encryption
 
@@ -39,96 +28,9 @@ class User
 
             return $r['name'] ? 0 : 1;
  
-        } else if ($AUTHSOURCE == "LDAP")
-        {
-            if(!($u) || !($p))
-            {
-                PRINT "Sorry, you must enter a username and a password.<BR>\n";
-                return(1);
-            }
-
-            // Generate a DN from a uid
-            $dn = "uid=$u, " . $cfg_serverroot;
-
-            // Connect to ldap server
-            $dsCon = ldap_connect($cfg_ldapserver);
-
-            // Make sure we connected
-            if (!($dsCon))
-            {
-                PRINT "Sorry, cannot contact LDAP server\n";
-                return(1);
-            }
-            
-            // Attempt to bind, if it works, the password is acceptable
-            $bind = ldap_bind($dsCon, $dn, $p);
-
-            if(!($bind))
-            {
-                PRINT "Sorry, your username/password were not accepted.<BR>\n";
-                PRINT "Hit the \"back\" button on your browser, and try again.<BR>\n";
-                return(1);
-            }
-
-            // If we got here, the username/password worked.
-
-
-            ldap_close($dsCon);
-
-            // If LDAP user does not exist in mysql database, create it.
-            $this->ldapAddUser($u);
-            return (0);
         } else
         {
             PRINT "Error: No proper authorization source entered in config.inc.php";
-        }
-    }
-
-    function ldapAddUser($u)
-    {
-        global $cfg_ldapfullname, $cfg_ldapemail, $cfg_ldapserver, $cfg_serverroot, $cfg_ldaplocation, $cfg_ldapphone;
-        if(!($this->exists($u)))
-        {
-            // Before this will work, we need to have the Full Name.
-            // We should also need to set the email address in most cases.
-
-            // Generate a DN from a uid
-            $dn = "uid=$u, $cfg_serverroot";
-
-            // Connect to ldap server
-            $dsCon = ldap_connect($cfg_ldapserver);
-
-            // Make sure we connected
-            if (!($dsCon))
-            {
-                PRINT "Sorry, cannot contact LDAP server\n";
-                exit;
-            }
-
-            $bind = ldap_bind($dsCon);
-            if(!($bind))
-            {
-                PRINT "Sorry, could not do an anonymous bind to your ldap server.<BR>\n";
-                exit;
-            }
-
-            $pieces[0] = $cfg_ldapemail;
-            $pieces[1] = $cfg_ldapfullname;
-            $pieces[2] = $cfg_ldapphone;
-            $pieces[3] = $cfg_ldaplocation;
-            $searchResult = ldap_search($dsCon, $cfg_serverroot, "uid=".$u, $pieces);
-            $info = ldap_get_entries($dsCon, $searchResult);
-
-            $fullname = $info[0][$cfg_ldapfullname][0];
-            $email = $info[0][$cfg_ldapemail][0];
-            $officephone = $info[0][$cfg_ldapphone][0];
-            $officelocation = $info[0][$cfg_ldaplocation][0];
-            $this->setEmail($email);
-            $this->setFullname($fullname);
-            $this->setLocation($officelocation);
-            $this->setPhone($officephone);
-            $this->setAccess("normal");
-            $this->add(true);
         }
     }
 
@@ -150,7 +52,7 @@ class User
         $this->udata["Comments"] = $result["comments"];
     }
 	// TO-DO - Add error reporting return redirect back to setup-users
-    function add($isLDAP = false)
+    function add()
     {
         global $adb;
         if($this->udata["Name"] == "")
@@ -158,7 +60,7 @@ class User
             PRINT "Error adding user: username not set, hit the back button to re-try<BR>\n";
             die(0);
         }
-        if($this->udata["Password"] == "" && ($isLDAP == false))
+        if($this->udata["Password"] == "")
         {
             PRINT "Error adding user: password not set, hit the back button to re-try<BR>\n";
             die(0);
@@ -318,30 +220,6 @@ class User
                PRINT " [delete]</A>";
                PRINT "</TD>\n";
                PRINT "</TR>\n";
-	}
-
-	function displayLong()
-	{
-		$uExists = $this->exists($this->udata["Name"]);
-		if(!$uExists)
-		{
-			PRINT "User \"".$this->udata['Name']."\" is no longer a registered user on this system<BR>\n";
-			return(0);
-		}
-		PRINT "<table width=100% border=1 noshade bordercolor=#000000>\n";
-		PRINT "<tr bgcolor=#CCCCCC><td colspan=2><strong>".$this->udata['Name']."</strong>\n";
-		PRINT "</td></tr>\n";
-		PRINT "<tr bgcolor=#DDDDDD><td><font face=\"arial, helvetica\">Name:\n";
-		PRINT "<br> ".$this->udata['Fullname']." </font></td><td><font face=\"arial,\n";
-		PRINT "helvetica\">&nbsp;</td></tr>";
-		PRINT "<tr bgcolor=#DDDDDD><td><font face=\"arial, helvetica\">E-mail:\n";
-		PRINT "<br>".$this->udata['Email']." </font></td><td><font face=\"arial, helvetica\">Phone:<br>\n";
-		PRINT "".$this->udata['Phone']." </td></tr>";
-		PRINT "<tr bgcolor=#DDDDDD><td><font face=\"arial, helvetica\">Location:\n";
-		PRINT "<br> ".$this->udata['Location']."</font></td><td><font face=\"arial,\n";
-		PRINT "helvetica\">User Access:<br>\n";
-		PRINT "".$this->udata['Access']."</td></tr>";
-		PRINT "</table><br>";
 	}
 
 	function displayAllUsers()
