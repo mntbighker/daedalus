@@ -1,0 +1,59 @@
+<?php
+
+// TO-DO - saved for database table setup
+function setup_db($tablearray) 
+{
+	global $adb;
+	if(is_array($tablearray) == false)
+	{
+		PRINT "Error: non-array variable was passed to create_table function\n";
+		return(0);
+	}
+	
+	$array_size = sizeof($tablearray);
+
+	if($array_size > 0)
+	{
+		$sth = $adb->prepare($tablearray[0]);
+		if($sth)
+		{
+			$res = $sth->execute();
+		} else
+		{
+			PRINT "Could not prepare query: ".$sth->errstr."<BR>\n";
+			return(0);
+		}
+		if($res == 0)
+		{
+			PRINT "<FONT COLOR=red> Could not create table - </FONT>\n";
+			return(0);
+		}
+		if($array_size > 1)
+		{
+			for($i = 1; $i < $array_size; $i++)
+			{
+				$sth2 = $adb->prepare($tablearray[$i]);
+				if($sth2)
+				{
+					$res = $sth2->execute();
+				} else
+				{
+					PRINT "Could not prepare query: ".$sth2->errstr."<BR>\n";
+					return(0);
+				}
+				if($res == 0)
+				{
+					PRINT "Error adding data to table\n";
+					return(0);
+				}
+			}
+		}
+	} else
+	{
+		PRINT "function create_table received an empty array\n";
+		return(0);
+	}
+	return(1);
+}
+
+?>
