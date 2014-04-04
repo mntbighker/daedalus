@@ -131,9 +131,6 @@ if ( ! $count ) {
 // Get the Tracking ID of New Call
 $tID = $adb->insert_id();
 
-// Log activity
-logevent($tID, "tracking", 4, "database", "$DName added record");
-
 if ( $newfollowup ) {
    $sql = "INSERT followups
              SET tracking = '$tID', date = '$now', 

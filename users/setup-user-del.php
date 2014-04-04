@@ -19,7 +19,7 @@ $user = new User($username);
 
 $user->delete();
 
-logevent(-1, "IRM", 5, "setup", "$DName removed user $username");
+logevent(-1, "Daedalus", 5, "setup", "$DName removed user $username");
 
 ?>
 

@@ -104,10 +104,10 @@ function AuthCheck($authtype)
 }
 
 function logevent($item, $itemtype, $level, $service, $event) {
-  // if ($level <= $cfg_minloglevel)
-  if ($level <= 2)
+  global $adb;
+  if ($level <= 4)
         {
-          $sql = "INSERT INTO event_log VALUES (NULL, $item, '$itemtype', NOW(), '$service', $level, '$event')";
+          $sql = "INSERT INTO event_log VALUES (NULL, '$item', '$itemtype', NOW(), '$service', '$level', '$event')";
 		  $adb->dbh->exec($sql);
   }
 }
