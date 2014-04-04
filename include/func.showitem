@@ -3,7 +3,7 @@
 function showItem($ID, $tablename, $col1, $col2) 
 {
  
-  global $cfg_snmp, $cfg_snmp_ping, $adb;
+  global $adb;
 
   if (!isset($z)) $z = 0;
   if (!isset($label)) $label = '';
