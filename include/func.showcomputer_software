@@ -30,13 +30,7 @@ function ShowComputer_Software($customer_id)
   $sth = $adb->prepare($query);
   $res = $sth->execute()  or die( mysql_error().': '.$query );
 
-  $rows = $sth->fetch();
-  if ($rows) {
-     foreach($rows as $row){
-        $surplus++;
-     }
-   }
-
+  $surplus = $sth->rowCount($res);
 
   // Get all computer_ids for this customer
    while ( $row = $sth->fetchrow_hash() ) {

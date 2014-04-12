@@ -18,19 +18,7 @@ session_destroy();
 <form method=post action=login.php>
 Username: <input type=text name=name>
 <br>Password: <input type=password name=password>
-<!-- <br>Database: -->
-<!-- Database selection disabled and static set -->
 <input type='hidden' name='dbuse' value='daedalus'>
-<!-- <select name=dbuse size=1> -->
-
-<!-- Multiple database selection options.  The default is to use a database called 'daedalus'. -->
-<!-- To add more, simply add more option value=dbname lines here. -->
-
-<!-- <option value=daedalus>daedalus</option> -->
-
-<!-- End Multi-Database -->
-
-<!-- </select> -->
 <br>
 <input type=submit value=Login>
 </form>
@@ -52,32 +40,6 @@ free to post a request for help.
 <p>Dactyl is the first natural satellite of an asteroid ever discovered and photographed.
 <a href=http://solarviews.com/eng/asteroid.htm>Asteroid Intro</a>
 
-<!-- <form method=post action=login.php><select name=dbuse size=1> -->
-
-<!-- Multiple database selection options.  The default is to use a database called 'daedalus'. -->
-<!-- To add more, simply add more option value=dbname lines here. -->
-
-<!-- <option value=daedalus>daedalus</option> -->
-
-<!-- End Multi-Database -->
-
-<!-- </select><input type='hidden' name='password' value='dconnect'><input type='hidden' name='name' value='DConnect'> -->
-<!-- <input type='hidden' name='f_req' value='yes'> -->
-<!-- <input type=submit value=Read FAQ></form> -->
-
-<!-- <h4>Request help</h4> -->
-<!-- You can request help without loging in to Daedalus. To do this you need to select the appropriate department, click the <b>Help</b> button below and then follow the -->
-<!-- instructions. Your request will be filed under the user name of <b>guest</b> so you will need to ensure that the contact information is correct if you wish to recieve updates and keep in touch with the helpdesk. -->
-<!-- <form method=post action=login.php><select name=dbuse size=1> -->
-
-<!-- Multiple database selection options.  The default is to use a database called 'daedalus'. -->
-<!-- To add more, simply add more option value=dbname lines here. -->
-
-<!-- <option value=daedalus>daedalus</option> -->
-
-<!-- End Multi-Database -->
-
-<!-- </select><input type='hidden' name='password' value='dconnect'><input type='hidden' name='name' value='DConnect'><input type=submit value=Help Request></form> -->
 </td>
 </tr>
 </table></form>

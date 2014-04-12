@@ -95,11 +95,10 @@ if ( ! $fcount && ! $trimmedFollowup ) {
 
 // Get Old Status for Tracking ID
 // ***5 Replace all these built up sql statements with prepared statements
-//     query = "SELECT status FROM tracking WHERE ID = $tID";
 $statusQuery = "SELECT status FROM tracking WHERE ID = $tID";
 $statusStmt  = $adb->prepare($statusQuery);
 
-// ^^^5 No need to check for errors, exception will be tossed
+// ***5 No need to check for errors, exception will be tossed
 // res = $sth->execute() or print( mysql_error().': '.$query);
 $statusStmt->execute(array('tID' => $tID));
 
@@ -143,7 +142,7 @@ $sql = "UPDATE tracking ";
 $sql .= " SET ";
 $sql .= " status = '$status' ";
 
-// Only update if Call is Not complete
+// Only update if call is not complete
 if ($oldstatus != 'complete' ) {
    $sql .= " ,summary = '$summary' , assign = '$assign' , priority = '$priority' , category = '$category' ";
 }
@@ -165,18 +164,7 @@ $trimmedFollowup = trim($newfollowup);
 
 // Insert followup only if contents exist and status not Complete
 if ( $trimmedFollowup and $oldstatus != 'complete' ) {
-/*
-   // Protect for Bad User Input
-   $escapeFollowups = mysql_escape_string($trimmedFollowup);
 
-   // Setup SQL 'followups' Table UPDATE statement 
-   $sql = " INSERT INTO followups 
-            SET tracking = '$tID', date = '$dateFollowup', 
-                author ='$DName', contents = '$escapeFollowups' ";
-
-   // Execute SQL 
-   $count2 = $adb->dbh_do($sql) or print( mysql_error().': '.$sql);
-*/
     // **5 Use prepared statements for inserts
 
     $followupsSql = <<<EOT
@@ -190,16 +178,11 @@ EOT;
    $count2 = $followupsStmt->execute(array(
        'tID'             => $tID, 
        'dateFollowup'    => $dateFollowup, 
-       'DName'         => $DName, 
+       'DName'           => $DName, 
        'trimmedFollowup' => $trimmedFollowup
    ));
    
 } // End If
-
-// Test for Adding Information to Knowledge Base
-if ($status == 'complete' and $addtoknowledgebase == 'yes' ) {
-  exit(header("Location: knowledgebase-article-add.php?from_tracking=$tID"));
-}
 
 // Mark Update Succesfully or Not
 $msg = "<hr4><font color=\"darkgreen\">Database Change Succeeded</font></h4>";

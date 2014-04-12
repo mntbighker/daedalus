@@ -12,6 +12,12 @@ include_once("../include/func.showitem");
 
 AuthCheck("tech");
 
+$ID = $_POST['ID'];
+$tablename = $_POST['tablename'];
+$col1 = $_POST['col1'];
+$col2 = $_POST['col2'];
+$submit = $_POST['submit'];
+
 $message = '';
 if ( $submit == 'Surplus' ) {
    $message = "<font color=\"red\"> - Please Verify to Surplus Item </font>";

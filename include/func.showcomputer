@@ -13,13 +13,12 @@ function ShowComputer($software_id)
 
   // Setup info for anchor
   $form = "general-info.php";
- $vars = "tablename=computer&field=computer_id&merge1=computer_id&merge2=owner";
+  $vars = "tablename=computer&field=computer_id&merge1=computer_id&merge2=owner";
 
   // Get computer list for software_id 
   $query = "SELECT computer_id 
             FROM computer_software 
             WHERE software_id = $software_id";
-
 
   $sth1 = $adb->prepare($query);
   $res1 = $sth1->execute()  or die( mysql_error().': '.$query );
@@ -63,10 +62,10 @@ function ShowComputer($software_id)
 
   $rows = ceil( count($slist) / $cols);
 
-  $slist = array_pad ($slist, $cols*$rows, '');
+  $slist = array_pad($slist, $cols*$rows, '');
 
-  // Brake array into rowsand pad
-  $newslist = array_chunk ($slist, $rows);  
+  // Break array into rowsand pad
+  $newslist = array_chunk($slist, $rows);  
 
   // build output array
   for ($i = 0; $i < count($newslist[0]); $i++) {

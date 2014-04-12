@@ -27,7 +27,6 @@ include_once("../include/func.asset_info");
 
 // Start of Generic code
 
-// initvar('test','logical','value','match','field','sort','fail','count','display');
 initvar('count');
 
 // Do Authorization

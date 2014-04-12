@@ -3,7 +3,7 @@
 function AddDB($tablename, $required)
 {
 
-  // Required inputs: $tablename - name of table in batabase
+  // Required inputs: $tablename - name of table in database
   //                  $required  - Array of required fields
 
   include_once("../include/func.listcolumn");
@@ -90,7 +90,7 @@ if ( $test ) {
 }
 
 if ( $count == 1 ) {
-  $msg = "<hr4><font color=\"blue\">Database Change Successfully</font></h4><hr noshade>";
+  $msg = "<hr4><font color=\"blue\">Database Changed Successfully</font></h4><hr noshade>";
 }
 
 if ( mysql_errno() and mysql_errno() == 1062 )  {  
