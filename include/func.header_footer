@@ -40,6 +40,7 @@ STYLE;
     PRINT <<<ANCHOR
   | <a href="$USERPREFIX/newticket.php">New Ticket</a>
   | <a href="$USERPREFIX/tracking-index.php">Tracking</a> 
+  | <a href="$USERPREFIX/reports-index.php">Reports</a>
   | <a href="$USERPREFIX/general-index.php?tablename=computer">Computer</a>
   | <a href="$USERPREFIX/general-index.php?tablename=ext_device">Ext_Device</a>
   | <a href="$USERPREFIX/general-index.php?tablename=software">Software</a>
@@ -54,7 +55,6 @@ STYLE;
 ANCHOR;
 
 // reports are broken at the moment
-//  | <a href="$USERPREFIX/reports-index.php">Reports</a>
 
   print "<td id=\"banner_lower\" align=\"right\">".date("M d H:i")." </td>";
   print "</tr>";

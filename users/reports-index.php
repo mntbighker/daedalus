@@ -10,7 +10,6 @@ include_once("../include/class.user");
 include_once("../include/func.header_footer");
 include_once("../include/func.dropdown_date");
 
-
 // Do Authorization
 AuthCheck("admin");
 

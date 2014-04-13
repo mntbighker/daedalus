@@ -8,7 +8,7 @@ function getKBCategories()
     if($sth)
     {
         $res = $sth->execute();
-        $rows = $sth->fetchAll();
+        $rows = $sth->rowCount();
         $catNumbers = array();
         foreach($rows as $row)
         {

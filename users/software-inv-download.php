@@ -5,11 +5,13 @@
 #                                                                              #
 ################################################################################
 
+$type = $_REQUEST['type'];
+
 $date = date('M-d-Y');
 
 $filename = "software-inv-$type-$date.xls";
 
-$command = "/var/www/html/irm/perl/software-inv-${type}-dl.pl";
+$command = "/var/www/html/daedalus/perl/software-inv-${type}-dl.pl";
 
 header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header ("Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT");

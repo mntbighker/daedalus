@@ -19,7 +19,7 @@ if ($go == "yes")
 	{
 		$res = $sth->execute();
 		$result = $sth->fetchrow_hash();
-		$number_of_computers = $sth->rows();
+		$number_of_computers = $sth->rowCount();
 		$sth->finish();
 	} else
 	{
@@ -31,7 +31,7 @@ if ($go == "yes")
 	{
   	$res = $sth->execute();
   	$result = $sth->fetchrow_hash();
-  	$number_of_software = $sth->rows();
+  	$number_of_software = $sth->rowCount();
   	$sth->finish();
 	} else
 	{
@@ -53,7 +53,7 @@ if ($go == "yes")
 	if($sth)
 	{
 		$res = $sth->execute();
-		$numRows = $sth->rows();
+		$numRows = $sth->rowCount();
 		for($i = 0; $i < $numRows; $i++) 
 		{
 			$result = $sth->fetchrow_hash();
@@ -63,7 +63,7 @@ if ($go == "yes")
 			if($sth2)
 			{
 				$sth2->execute();
-				$numRows2 = $sth2->rows();
+				$numRows2 = $sth2->rowCount();
 				PRINT "<tr><td>$os</td><td>$numRows2</td></tr>";
 			} else
 			{
