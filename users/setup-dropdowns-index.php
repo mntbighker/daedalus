@@ -17,9 +17,23 @@ AuthCheck("normal");
 
 $tablename = $_REQUEST['tablename'];
 
+if (isset($_REQUEST['type'])) {
+  $type = $_REQUEST['type'];
+}
+if (isset($_REQUEST['new'])) {
+  $new = $_REQUEST['new'];
+}
+if (isset($_REQUEST['selected'])) {
+  $selected = $_REQUEST['selected'];
+}
+if (isset($_REQUEST['submit'])) {
+  $submit = $_REQUEST['submit'];
+}
+
 $tablename && $field1 = array_pop(explode("_", $tablename, 2));
 
 if ( $submit == 'Add' ) {
+
    if ($tablename == 'computer_model') {
       if ( $type && $new ) {
          dropInsert($tablename,$field1,$new,'type',$type);
@@ -41,7 +55,7 @@ if ( $submit == 'Delete' ) {
 
    if (count($select) == 1) {  
       $item = array_pop($select);
-      $error = dropDelete ($tablename,$field1,$item);
+      $error = dropDelete($tablename,$field1,$item);
    } else {
       if (count($select) > 1) $less = 'ONLY'; 
       $error = "Please choose $less 1. <br />";

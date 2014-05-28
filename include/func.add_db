@@ -80,7 +80,8 @@ if ( $test == 0 ) {
   $msg = "<hr4><font color=\"red\">Required Field(s) Missing!</font></h4><hr noshade>";
 }
 
-// Execute SQL if No Required Fields or Required Fields Exists
+
+// Execute SQL if No Required Fields or Required Fields Exist
 if ( $test ) {
    $count = $adb->dbh->exec($sql);
    if ( mysql_errno() and mysql_errno() != 1062 ) { 
@@ -93,7 +94,8 @@ if ( $count == 1 ) {
   $msg = "<hr4><font color=\"blue\">Database Changed Successfully</font></h4><hr noshade>";
 }
 
-if ( mysql_errno() and mysql_errno() == 1062 )  {  
+
+if ( mysql_errno() and mysql_errno() == 1062 )  { 
    $msg = "<hr4><font color=\"red\">Duplicate Record!</font></h4><hr noshade>";
 } 
 

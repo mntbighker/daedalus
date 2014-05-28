@@ -143,6 +143,7 @@ function addSoftware($ID) {
          $sql1 = "INSERT computer_software
                      SET computer_id = \"$ID\", software_id = \"$sid\" ";
          $count += $adb->dbh->exec($sql1);
+         trigger_error(PDO::errorCode(),E_USER_NOTICE);
          if ( mysql_errno() and mysql_errno() != 1062 )  {
             die(mysql_error().': '.$sql1);
          }

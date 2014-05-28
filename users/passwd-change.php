@@ -2,7 +2,7 @@
 ################################################################################
 #                                  CHANGELOG                                   #
 ################################################################################
-#                                                                              #
+#need to change REQUESTs to POSTs                                              #
 ################################################################################
 
 include_once("../include/daedalus_conf.php");
@@ -16,7 +16,7 @@ $newpassword = $_REQUEST['newpassword'];
 $confirm = $_REQUEST['confirm'];
 
 $user = new User($DName);
-        $currentpass  = $user->getPassword();
+$currentpass  = $user->getPassword();
         
 if($currentpass != $oldpassword)
 {
@@ -38,6 +38,7 @@ if($currentpass != $oldpassword)
      exit(header("Location: ../users/passwd.php?error=$error"));
 } else
 {
+	//$newpassword = md5($newpassword);
 	$user = new User($DName);
 	$user->setPassword($newpassword);
 	$user->commit();

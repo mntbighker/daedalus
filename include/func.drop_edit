@@ -1,11 +1,11 @@
 <?php
 
-function dropInsert ($tablename,$field1,$item1,$field2='',$item2='')
-{                                      
-   global $adb;      
+function dropInsert($tablename,$field1,$item1,$field2='',$item2='')
+{
+   global $adb;
 
    $field2 && $item2 && $value2 = "$field2 = \"$item2\", ";
-     
+   
    $value1 = "$field1 = \"$item1\" ";
 
    $query = "INSERT INTO $tablename
@@ -13,30 +13,28 @@ function dropInsert ($tablename,$field1,$item1,$field2='',$item2='')
 
    $count =  $adb->dbh->exec($query);
 
-   if ( mysql_errno() )  {
-      return mysql_errno() . ": " . mysql_error(). "<br />"; 
-   }                                                                      
+//   if ( mysql_errno() )  {
+//      return mysql_errno() . ": " . mysql_error(). "<br />";
+//   }
 
 } // End dropInsert 
 
-
-function dropDelete ($tablename,$field,$item)
+function dropDelete($tablename,$field,$item)
 {                                      
    global $adb;      
 
-   $query = "DELETE  FROM $tablename
-                   WHERE $field  LIKE \"$item\" ";
+   $query = "DELETE FROM $tablename
+                   WHERE $field LIKE \"$item\" ";
 
    $count =  $adb->dbh->exec($query);
 
-   if ( mysql_errno() )  {
-      return mysql_errno() . ": " . mysql_error(). "<br />"; 
-   }
+//   if ( mysql_errno() )  {
+//      return mysql_errno() . ": " . mysql_error(). "<br />"; 
+//   }
 
 } // End dropDelete
 
-
-function dropTableList ()
+function dropTableList()
 {
    global $adb;      
 
@@ -58,8 +56,6 @@ function dropTableList ()
   return $tables;
                                                                                 
 } // End dropTableList 
-
-
 
 function dropShowTable($tablename, $field)
 {
@@ -106,13 +102,14 @@ echo "</form>";
 function dropShowModel($tablename, $field)
 {
 
-include_once("../include/func.drop_filter_list");
+  include_once("../include/func.drop_filter_list");
 
-$PHP_SELF = $_SERVER['SCRIPT_NAME'];
+  $PHP_SELF = $_SERVER['SCRIPT_NAME'];
 
-// Add 
-echo "<form method=POST action=\"$PHP_SELF\">";
-echo "<p><table border=1 noshade>
+  // Add 
+  
+  echo "<form method=POST action=\"$PHP_SELF\">";
+  echo "<p><table border=1 noshade>
    <tr>
     <th>Type</th>
     <th>New Model</th>
@@ -123,43 +120,45 @@ echo "<p><table border=1 noshade>
     echo "</td>";
     echo "<td><input type=text size=25 name=new></td>
    </tr>
-</table></p>";
+  </table></p>";
 
-echo "<p><input type=submit name='submit' value=\"Add\"></p>";
+  echo "<p><input type=submit name='submit' value=\"Add\"></p>";
 
-// Create Hidden Fields
-echo "<input type=hidden name=\"tablename\" value=\"$tablename\">";
 
-echo "</form>";
+  //echo "testing field:";
+  //echo isset($_POST['submit']);
 
-// Delete Model 
-echo "<form method=POST action=\"$PHP_SELF\">";
-echo "<p><table border=1 noshade>";
-   echo "<tr>";
-     foreach ($types as $type) {   
+
+  // Create Hidden Fields
+  echo "<input type=hidden name=\"tablename\" value=\"$tablename\">";
+
+  echo "</form>";
+
+  // Delete Model 
+  echo "<form method=POST action=\"$PHP_SELF\">";
+  echo "<p><table border=1 noshade>";
+    echo "<tr>";
+      foreach ($types as $type) {   
         echo "<th>" . ucfirst($type) . "</th>";
-     }
-   echo "</tr>";
+      }
+  echo "</tr>";
 
-   echo "<tr>";
-     foreach ($types as $type) {   
-        echo "<td>";
-        dropFilterList($tablename,$field,"selected[]",1,"","type",$type);
-        echo "</td>";
-     }
-   echo "</tr>";
-echo "</table></p>";
+  echo "<tr>";
+  foreach ($types as $type) {   
+    echo "<td>";
+    dropFilterList($tablename,$field,"selected[]",1,"","type",$type);
+    echo "</td>";
+  }
+  echo "</tr>";
+  echo "</table></p>";
 
-echo "<p><input type=submit name='submit' value=\"Delete\"></p>";
+  echo "<p><input type=submit name='submit' value=\"Delete\"></p>";
 
-// Ceate Hidden Fields
-echo "<input type=hidden name=\"tablename\" value=\"$tablename\">";
+  // Ceate Hidden Fields
+  echo "<input type=hidden name=\"tablename\" value=\"$tablename\">";
 
-echo "</form>";
-
+  echo "</form>";
 
 } //  dropShowModel
-
-
 
 ?>
