@@ -11,11 +11,14 @@ function dropInsert($tablename,$field1,$item1,$field2='',$item2='')
    $query = "INSERT INTO $tablename
                 SET $value2 $value1 ";
 
+   try {
    $count =  $adb->dbh->exec($query);
-
-//   if ( mysql_errno() )  {
-//      return mysql_errno() . ": " . mysql_error(). "<br />";
-//   }
+       	} catch (PDOException $e) {
+           $error=$e->getCode();
+             if ($error and $error != '23000') {
+             die($e->getCode().': '.$sql1);
+          	}
+       	}
 
 } // End dropInsert 
 
@@ -27,10 +30,6 @@ function dropDelete($tablename,$field,$item)
                    WHERE $field LIKE \"$item\" ";
 
    $count =  $adb->dbh->exec($query);
-
-//   if ( mysql_errno() )  {
-//      return mysql_errno() . ": " . mysql_error(). "<br />"; 
-//   }
 
 } // End dropDelete
 
