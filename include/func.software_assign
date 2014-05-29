@@ -120,86 +120,131 @@ function addSoftware($ID) {
 
    // Tie Computer to Software (Computer and Software Owner by Same Group)
    if ( $_POST[$groupname] ) {
-      foreach ( $_POST[$groupname] as $sid) {
-         $sql1 = "INSERT computer_software
-                     SET computer_id = \"$ID\", software_id = \"$sid\" ";
-         $count += $adb->dbh->exec($sql1);
-         if ( mysql_errno() and mysql_errno() != 1062 )  {
-            die(mysql_error().': '.$sql1);
-         }
-         // Increment "license_used" Field in "software" Table
-         if ( mysql_errno() != 1062 ) {
-            $sql3 = "UPDATE software
-                        SET license_used=license_used+1
-                      WHERE software_id = \"$sid\" ";
-            $count += $adb->dbh->exec($sql3) or die(mysql_error().': '.$sql3);
-         }
-      } // End Foreach
+	$error;
+  	foreach ( $_POST[$groupname] as $sid) {
+		$error=0;
+     	$sql1 = "INSERT computer_software
+                 SET computer_id = \"$ID\", software_id = \"$sid\" ";
+     	try {
+       	$count += $adb->dbh->exec($sql1);
+         	} catch (PDOException $e) {
+              $error=$e->getCode();
+            	if ($error and $error != '23000') {
+              	die($e->getCode().': '.$sql1);
+          	}
+       	}
+     	// Increment "license_used" Field in "software" Table
+     	if ( $error != '23000') {
+        	$sql3 = "UPDATE software
+                    	SET license_used=license_used+1
+                  	WHERE software_id = \"$sid\" ";
+    	try {
+        	$count += $adb->dbh->exec($sql3);
+         	} catch (PDOException $e) {
+             	die($e->getCode().': '.$sql3);
+       	}
+     	}
+  	} // End Foreach
    } // End If
 
-   // Tie Computer to Software for TS Site licenses 
+   // Tie Computer to Software for TS Site licenses
    if ( $_POST['TS_SITE'] ) {
-      foreach ( $_POST['TS_SITE'] as $sid) {
-         $sql1 = "INSERT computer_software
-                     SET computer_id = \"$ID\", software_id = \"$sid\" ";
-         $count += $adb->dbh->exec($sql1);
-         trigger_error(PDO::errorCode(),E_USER_NOTICE);
-         if ( mysql_errno() and mysql_errno() != 1062 )  {
-            die(mysql_error().': '.$sql1);
-         }
-         // Increment "license_used" Field in "software" Table
-         if ( mysql_errno() != 1062 ) {
-            $sql3 = "UPDATE software
-                        SET license_used=license_used+1
-                      WHERE software_id = \"$sid\" ";
-            $count += $adb->dbh->exec($sql3) or die(mysql_error().': '.$sql3);
-         }
-      } // End Foreach
+	$error;
+  	foreach ( $_POST['TS_SITE'] as $sid) {
+		$error=0;
+     	$sql1 = "INSERT computer_software
+                 SET computer_id = \"$ID\", software_id = \"$sid\" ";
+     	try {
+       	$count += $adb->dbh->exec($sql1);
+         	} catch (PDOException $e) {
+              $error=$e->getCode();
+            	if ($error and $error != '23000') {
+              	die($e->getCode().': '.$sql1);
+          	}
+       	}
+     	// Increment "license_used" Field in "software" Table
+     	if ( $error != '23000') {
+        	$sql3 = "UPDATE software
+                    	SET license_used=license_used+1
+                  	WHERE software_id = \"$sid\" ";
+    	try {
+        	$count += $adb->dbh->exec($sql3);
+         	} catch (PDOException $e) {
+             	die($e->getCode().': '.$sql3);
+       	}
+     	}
+  	} // End Foreach
    } // End If
-
-   // Tie Computer to Software for Ames Software
-   if ( $_POST['AMES'] ) { 
-      foreach ( $_POST['AMES'] as $sid) { 
-         $sql1 = "INSERT computer_software
-                     SET computer_id = \"$ID\", software_id = \"$sid\" ";
-         $count += $adb->dbh->exec($sql1);
-         if ( mysql_errno() and mysql_errno() != 1062 )  {
-            die(mysql_error().': '.$sql1);
-         }
-         // Increment "license_used" Field in "software" Table
-         if ( mysql_errno() != 1062 ) {
-            $sql3 = "UPDATE software
-                        SET license_used=license_used+1
-                      WHERE software_id = \"$sid\" ";
-            $count += $adb->dbh->exec($sql3) or die(mysql_error().': '.$sql3);
-         }
-      } // End Foreach
+   
+   // Tie Computer to Software for Ames site licenses
+   if ( $_POST['AMES'] ) {
+	$error;
+  	foreach ( $_POST['AMES'] as $sid) {
+		$error=0;
+     	$sql1 = "INSERT computer_software
+                 SET computer_id = \"$ID\", software_id = \"$sid\" ";
+     	try {
+       	$count += $adb->dbh->exec($sql1);
+         	} catch (PDOException $e) {
+              $error=$e->getCode();
+            	if ($error and $error != '23000') {
+              	die($e->getCode().': '.$sql1);
+          	}
+       	}
+     	// Increment "license_used" Field in "software" Table
+     	if ( $error != '23000') {
+        	$sql3 = "UPDATE software
+                    	SET license_used=license_used+1
+                  	WHERE software_id = \"$sid\" ";
+    	try {
+        	$count += $adb->dbh->exec($sql3);
+         	} catch (PDOException $e) {
+             	die($e->getCode().': '.$sql3);
+       	    }
+     	}
+  	} // End Foreach
    } // End If
 
    // Tie Computer to Software (Computer and Software Owner by Diff Group)
    // Move Current Software Owner to "transfer_owner" and Set New Owner
    foreach ( $groups as $gname) {
       if ( empty($_POST[$gname]) )  { continue; };
+      $error;
       foreach ( $_POST[$gname] as $sid) {
+         $error=0;
          $sql1 = "INSERT computer_software
-                     SET computer_id = \"$ID\", software_id = \"$sid\" ";
+                  SET computer_id = \"$ID\", software_id = \"$sid\" ";
+         try {
          $count += $adb->dbh->exec($sql1);
-         if ( mysql_errno() and mysql_errno() != 1062 )  {
-            die(mysql_error().': '.$sql1);
+            } catch (PDOException $e) {
+              $error=$e->getCode();
+            	if ($error and $error != '23000') {
+              	die($e->getCode().': '.$sql1);
+            }
          }
-         if ( mysql_errno() != 1062 ) {
+     	if ( $error != '23000') {
             $sql2 = "UPDATE software
-                        SET transfer_owner = \"$gname\", 
-                            groupname = \"$groupname\"
-                      WHERE software_id = \"$sid\" ";
-            $count += $adb->dbh->exec($sql2) or die( mysql_error().': '.$sql2);
+                     SET transfer_owner = \"$gname\", 
+                     groupname = \"$groupname\"
+                     WHERE software_id = \"$sid\" ";
+            try {
+            $count += $adb->dbh->exec($sql2);
+         	} catch (PDOException $e) {
+              $error=$e->getCode();
+             	die($e->getCode().': '.$sql2);
+       	    }
          }
          // Increment "license_used" Field in "software" Table
-         if ( mysql_errno() != 1062 ) {
+         if ( $error != '23000' ) {
             $sql3 = "UPDATE software
-                        SET license_used=license_used+1
-                      WHERE software_id = \"$sid\" ";
-            $count += $adb->dbh->exec($sql3) or die(mysql_error().': '.$sql3);
+                     SET license_used=license_used+1
+                     WHERE software_id = \"$sid\" ";
+            try {
+            $count += $adb->dbh->exec($sql3);
+         	} catch (PDOException $e) {
+              $error=$e->getCode();
+             	die($e->getCode().': '.$sql3);
+       	    }
          }
       } // End Inner Foreach
    } // End Outer Foreach

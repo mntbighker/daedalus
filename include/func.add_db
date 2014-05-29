@@ -83,10 +83,15 @@ if ( $test == 0 ) {
 
 // Execute SQL if No Required Fields or Required Fields Exist
 if ( $test ) {
+   $error;
+   try {
    $count = $adb->dbh->exec($sql);
-   if ( mysql_errno() and mysql_errno() != 1062 ) { 
-      echo( mysql_error().' Add DB: '.$sql ); 
-   }
+   } catch (PDOException $e) {
+     $error=$e->getCode();
+       if ($error and $error != '23000') {
+       die($e->getCode().' Add DB: '.$sql);
+     }
+  }
    $nID = $adb->insert_id();
 }
 
@@ -95,7 +100,7 @@ if ( $count == 1 ) {
 }
 
 
-if ( mysql_errno() and mysql_errno() == 1062 )  { 
+if ($error and $error == '23000') {
    $msg = "<hr4><font color=\"red\">Duplicate Record!</font></h4><hr noshade>";
 } 
 
